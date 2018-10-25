@@ -1,9 +1,6 @@
 import { default as requestPromise } from 'request-promise-native';
-import requestDebug from 'request-debug';
 import cheerio from 'cheerio';
 import WebSocket from 'ws';
-
-requestDebug(requestPromise);
 
 const request = requestPromise.defaults({
     gzip: true,
@@ -97,8 +94,6 @@ class Browser {
         });
 
         const wsUrl = `${wsAuthData.body.url}?l=${this._rooms[id].eventtime}`;
-
-        console.log('Connecting to', wsUrl);
 
         const ws = new WebSocket(wsUrl, {
             origin: this._chatRoot,
