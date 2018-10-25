@@ -1,0 +1,37 @@
+{
+  "name": "chatexchange",
+  "version": "0.1.0",
+  "description": "A node.js wrapper for the stackexchange chat system.",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "babel-node src/index.js",
+    "build": "rimraf dist && babel src --out-dir dist",
+    "prepublish": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danbopes/chatexchange.git"
+  },
+  "author": "Daniel Beaupre",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/danbopes/chatexchange/issues"
+  },
+  "homepage": "https://github.com/danbopes/chatexchange#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.5",
+    "ws": "^6.1.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/node": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "eslint": "^5.7.0",
+    "request-debug": "^0.2.0",
+    "rimraf": "^2.6.2"
+  }
+}
