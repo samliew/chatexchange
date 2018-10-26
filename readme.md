@@ -1,5 +1,7 @@
 # ChatExchange
 
+[![Build Status](https://travis-ci.org/danbopes/chatexchange.svg?branch=master)](https://travis-ci.org/danbopes/chatexchange)
+
 A node.js API for talking to Stack Exchange chat (Largely based on [ChatExchange](https://github.com/Manishearth/ChatExchange) for python)
 
 ## Installation

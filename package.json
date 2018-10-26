@@ -7,7 +7,8 @@
     "start": "babel-node src/index.js",
     "build": "rimraf dist && babel src --out-dir dist",
     "prepublish": "npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pretest": "npm run build",
+    "test": "jest && eslint src/"
   },
   "repository": {
     "type": "git",
@@ -30,7 +31,12 @@
     "@babel/core": "^7.1.2",
     "@babel/node": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
+    "assert": "^1.4.1",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.6.0",
+    "dotenv": "^6.1.0",
     "eslint": "^5.7.0",
+    "jest": "^23.6.0",
     "request-debug": "^0.2.0",
     "rimraf": "^2.6.2"
   }

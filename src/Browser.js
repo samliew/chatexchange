@@ -1,6 +1,25 @@
 import { default as requestPromise } from 'request-promise-native';
 import cheerio from 'cheerio';
 import WebSocket from 'ws';
+import ChatExchangeError from './Exceptions/ChatExchangeError';
+import LoginError from './Exceptions/LoginError';
+
+const lazy = async (getter, updater) => {
+    let result = getter();
+    if (typeof result !== 'undefined') {
+        return result;
+    }
+
+    await updater();
+
+    result = getter();
+
+    if (typeof result === 'undefined') {
+        throw new ChatExchangeError('Unable to find field.');
+    }
+
+    return result;
+};
 
 const request = requestPromise.defaults({
     gzip: true,
@@ -12,41 +31,49 @@ const request = requestPromise.defaults({
     },
 });
 
+/**
+ *
+ * @class Browser
+ * @property {boolean} loggedIn User logged in
+ * @property {Promise<string>} chatFKey The chat key for use with ws-auth, and other authy endpoints
+ * @property {Promise<number>} userId The user id of the logged in user
+ * @property {Promise<string>} userName The user name of the logged in user
+ */
 class Browser {
 
     constructor(host) {
         this.host = host;
+        this.loggedIn = false;
         this._cookieJar = request.jar();
         this._chatRoot = `https://chat.${this.host}/`;
         this._rooms = {};
     }
-
-    async chatFKey() {
-        if (typeof this._fkey !== 'undefined') {
-            return this._fkey;
-        }
-
-        const $ = await this.get$('chats/join/favorite');
-
-        this._loadFKey($);
-        this._loadUser($)
-
-        return this._fkey;
+    
+    get chatFKey() {
+        return lazy(() => this._chatFKey, () => this._updateChatFKeyAndUser());
     }
 
-    async loginAcct(acct) {
-        this._cookieJar.setCookie(`acct=${acct}`, `https://${this.host}`, {
-            httpOnly: true,
-            secure: true,
-            hostOnly: false,
-        });
+    get userId() {
+        return lazy(() => this._userId, () => this._updateChatFKeyAndUser());
+    }
+
+    get userName() {
+        return lazy(() => this._userName, () => this._updateChatFKeyAndUser());
+    }
+
+    async loginCookieJar(acct) {
+        // this._cookieJar.setCookie(`acct=${acct}`, `https://${this.host}`, {
+        //     httpOnly: true,
+        //     secure: true,
+        //     hostOnly: false,
+        // });
         
         const $ = await this.get$(`https://${this.host}/`);
 
         const res = $('.my-profile');
 
         if (res.length === 0) {
-            throw new Error('Login with acct string could not be verified, ' +
+            throw new LoginError('Login with acct string could not be verified, ' +
                 'try credential login instead.');
         }
     }
@@ -57,7 +84,7 @@ class Browser {
         const fkey = $('input[name="fkey"]').val();
 
         if (typeof fkey === 'undefined') {
-            throw new Error('Unable to find fkey element on /users/login');
+            throw new ChatExchangeError('Unable to find fkey element on /users/login');
         }
 
         await this.post(`https://${this.host}/users/login`, {
@@ -69,9 +96,11 @@ class Browser {
         const acctCookie = this.getCookie('acct');
 
         if (typeof acctCookie === 'undefined') {
-            throw new Error('failed to get acct cookie from Stack Exchange OpenID, ' +
+            throw new LoginError('failed to get acct cookie from Stack Exchange OpenID, ' +
                 'check credentials provided for accuracy');
         }
+
+        this.loggedIn = true
 
         return acctCookie.value;
     }
@@ -120,11 +149,20 @@ class Browser {
         });
     }
 
-    _loadFKey($) {
-        this._fkey = $('input[name="fkey"]').val();
+    async _updateChatFKeyAndUser() {
+        const $ = await this.get$('chats/join/favorite');
 
-        if (typeof this._fkey === 'undefined') {
-            throw new Error('Unable to find fkey.');
+        this._loadFKey($);
+        this._loadUser($);
+
+        return this._fkey;
+    }
+
+    _loadFKey($) {
+        this._chatFKey = $('input[name="fkey"]').val();
+
+        if (typeof this._chatFKey === 'undefined') {
+            throw new ChatExchangeError('Unable to find fkey.');
         }
     }
 
@@ -133,8 +171,8 @@ class Browser {
 
         const [, , userId, userName] = userLink.attr('href').split('/');
 
-        this.userId = parseInt(userId, 10);
-        this.userName = userName;
+        this._userId = parseInt(userId, 10);
+        this._userName = userName;
     }
 
 
@@ -167,7 +205,7 @@ class Browser {
     }
 
     async postKeyed(uri, data = {}, qs = {}) {
-        data.fkey = await this.chatFKey();
+        data.fkey = await this.chatFKey;
 
         return this.post(uri, data, qs);
     }
