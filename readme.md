@@ -26,13 +26,15 @@ const main = async () => {
 
     await client.login('EMAIL', 'PASSWORD');
 
+    const me = await client.getMe();
+
     const room = await client.joinRoom(167908);
 
     room.on('message', async msg => {
         console.log('Got Message', msg);
 
         // eventType 8 (Someone has messaged me)
-        if (msg.eventType === 8 && msg.targetUserId === client.getMe().id) {
+        if (msg.eventType === 8 && msg.targetUserId === me.id) {
             await msg.reply('Hello World!');
         }
     });
