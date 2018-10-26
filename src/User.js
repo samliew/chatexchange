@@ -1,9 +1,12 @@
 /* eslint-disable no-underscore-dangle */
-class User {
-    get name() {
-        return this.scrapeProfile('name');
-    }
 
+/**
+ * Represents a user
+ *
+ * @property {number} id The id of the user
+ * @class User
+ */
+class User {
     constructor(client, id) {
         this._client = client;
         this.id = id;

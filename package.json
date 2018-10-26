@@ -4,11 +4,12 @@
   "description": "A node.js wrapper for the stackexchange chat system.",
   "main": "dist/index.js",
   "scripts": {
+    "docs": "rimraf docs && jsdoc -R readme.md -d docs/ src/",
     "start": "babel-node src/index.js",
     "build": "rimraf dist && babel src --out-dir dist",
     "prepublish": "npm run build",
     "pretest": "npm run build",
-    "test": "jest --collectCoverageFrom=dist/**/*.js --coverage && eslint src/"
+    "test": "jest --collectCoverageFrom=src/**/*.js --coverage && eslint src/"
   },
   "repository": {
     "type": "git",
@@ -38,6 +39,7 @@
     "dotenv": "^6.1.0",
     "eslint": "^5.7.0",
     "jest": "^23.6.0",
+    "jsdoc": "^3.5.5",
     "request-debug": "^0.2.0",
     "rimraf": "^2.6.2"
   }
