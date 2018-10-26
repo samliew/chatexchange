@@ -225,7 +225,7 @@ module.exports = {
         "require-jsdoc": "error",
         "require-unicode-regexp": "error",
         "rest-spread-spacing": "error",
-        "semi": "off",
+        "semi": "error",
         "semi-spacing": "error",
         "semi-style": [
             "error",

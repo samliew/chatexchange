@@ -1,6 +1,7 @@
 import { default as requestPromise } from 'request-promise-native';
 import cheerio from 'cheerio';
 import WebSocket from 'ws';
+import { CookieJar } from 'tough-cookie';
 import ChatExchangeError from './Exceptions/ChatExchangeError';
 import LoginError from './Exceptions/LoginError';
 
@@ -61,13 +62,18 @@ class Browser {
         return lazy(() => this._userName, () => this._updateChatFKeyAndUser());
     }
 
-    async loginCookieJar(acct) {
-        // this._cookieJar.setCookie(`acct=${acct}`, `https://${this.host}`, {
-        //     httpOnly: true,
-        //     secure: true,
-        //     hostOnly: false,
-        // });
-        
+    /**
+     * Attempts to login to stack exchange, using the provided
+     * cookie jar string, which was retrieved from the `login`
+     * method.
+     *
+     * @param {string} cookieJar A cookie jar string
+     * @returns {void}
+     * @memberof Browser
+     */
+    async loginCookie(cookieJar) {
+        this._cookieJar._jar = CookieJar.deserializeSync(cookieJar); // eslint-disable-line
+
         const $ = await this.get$(`https://${this.host}/`);
 
         const res = $('.my-profile');
@@ -76,8 +82,21 @@ class Browser {
             throw new LoginError('Login with acct string could not be verified, ' +
                 'try credential login instead.');
         }
+
+        this.loggedIn = true;
     }
 
+    /**
+     * Attempts to login to stack exchange, using the provided
+     * email and password. Returns a cookie jar string, which
+     * you can pass back in to loginCookieJar for use with further
+     * logins.
+     *
+     * @param {string} email Email
+     * @param {string} password Password
+     * @returns {string} A cookie jar containing account pertitent details.
+     * @memberof Browser
+     */
     async login(email, password) {
         const $ = await this.get$(`https://${this.host}/users/login`);
 
@@ -100,9 +119,9 @@ class Browser {
                 'check credentials provided for accuracy');
         }
 
-        this.loggedIn = true
+        this.loggedIn = true;
 
-        return acctCookie.value;
+        return JSON.stringify(this._cookieJar._jar); // eslint-disable-line
     }
 
     async joinRoom(id) {

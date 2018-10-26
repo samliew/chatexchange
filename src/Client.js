@@ -5,6 +5,11 @@ import InvalidArgumentError from './Exceptions/InvalidArgumentError';
 
 const validHosts = ['stackexchange.com', 'meta.stackexchange.com', 'stackoverflow.com'];
 
+/**
+ * Represents the main chatexchange Client class.
+ *
+ * @class Client
+ */
 class Client {
     constructor(host) {
         if (typeof host === 'undefined' || host === '') {
@@ -15,7 +20,7 @@ class Client {
             throw new InvalidArgumentError(`Invalid host. Must be one of: ${validHosts.join(', ')}`);
         }
 
-        this.host = host
+        this.host = host;
         this._browser = new Browser(this.host);
 
     }
@@ -34,7 +39,7 @@ class Client {
      *
      * @param {string} email Email
      * @param {string} password Password
-     * @returns {Object} Request Cookie Jar (Optionally to save to `loginCookie`)
+     * @returns {Promise<string>} Request Cookie Jar (Optionally to save to `loginCookie`)
      * @memberof Client
      */
     login(email, password) {
@@ -46,15 +51,25 @@ class Client {
             throw new InvalidArgumentError('Password is required');
         }
 
-        return this._browser.login(email, password)
+        return this._browser.login(email, password);
     }
 
-    loginCookieJar(cookieJar) {
-        if (typeof cookieJar === 'undefined' || cookieJar === '') {
-            throw new InvalidArgumentError('cookieJar is required.');
+    /**
+     * Attempts to login to stack exchange, using the provided
+     * cookie jar string, which was retrieved from the `login`
+     * method.
+     *
+     * @param {string} cookieString A cookie jar string
+     * @returns {Promise<void>} A promise representing when login is complete
+     * @memberof Browser
+     */
+    loginCookie(cookieString) {
+        if (typeof cookieString !== 'string' || cookieString === '') {
+            console.log(typeof cookieString);
+            throw new InvalidArgumentError('cookieString is required.');
         }
 
-        return this._browser.loginCookieJar(cookieJar);
+        return this._browser.loginCookie(cookieString);
     }
 
     async joinRoom(id) {
@@ -66,4 +81,4 @@ class Client {
     }
 }
 
-export default Client
+export default Client;
