@@ -10,8 +10,8 @@ import { lazy } from './utils';
  * @property {Promise<string>} name The name of the user
  * @property {Promise<string>} about The about section of their chat profile
  * @property {Promise<boolean>} isModerator True if the user is a moderator, false otherwise
- * @property {Promise<number>} messageCount The number of messages
- * @property {Promise<number>} roomCount 
+ * @property {Promise<number>} messageCount The number of all time messages this user has sent
+ * @property {Promise<number>} roomCount All time number of rooms this user has been a part of
  * @property {Promise<number>} lastSeen The number of seconds since this user was last seen
  * @property {Promise<number>} lastMessage The number of seconds since this user posted a message in any chat
  * 

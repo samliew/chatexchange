@@ -39,6 +39,7 @@ describe('Profile', () => {
             reputation: 15026,
             lastSeen: 14,
             lastMessage: 2940,
+            messageCount: 8671,
             about: 'You\'re awesome!'
         });
     })

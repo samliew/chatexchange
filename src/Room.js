@@ -6,10 +6,17 @@ import InvalidArgumentError from './Exceptions/InvalidArgumentError';
 /**
  * Represents a chatroom
  *
- * @class Room
  * @extends {EventEmitter}
  */
 class Room extends EventEmitter {
+    
+    /**
+     * Creates an instance of Room.
+     * 
+     * @param {Client} client The Client instance
+     * @param {number} id The id of the room
+     * @memberof Room
+     */
     constructor(client, id) {
         super();
         this._client = client;
@@ -51,7 +58,7 @@ class Room extends EventEmitter {
         });
 
         ws.on('close', () => {
-            console.log('Disconnected');
+            this.emit('close');
         });
     }
 

@@ -1,5 +1,9 @@
+import fs from 'fs';
+import { EventEmitter } from 'events';
 import Room from '../../src/Room';
 import InvalidArgumentError from '../../src/Exceptions/InvalidArgumentError';
+import { delay } from '../../src/utils';
+import Message from '../../src/Message';
 
 describe('Room', () => {
     it('Should create a room with id', () => {
@@ -90,5 +94,49 @@ describe('Room', () => {
 
         expect(client._browser.watchRoom).toHaveBeenCalledWith(5);
         expect(mockWebsocketOn).toBeCalledTimes(2);
+    });
+
+    it('Should fire an event', async () => {
+        const websocketMock = new EventEmitter();
+
+        const client = {
+            _browser: {
+                sendMessage: jest.fn(),
+                watchRoom: jest.fn(() => websocketMock)
+            }
+        };
+
+        expect.assertions(5);
+
+        const room = new Room(client, 5);
+
+        const event = JSON.parse(fs.readFileSync('./tests/events/6.json').toString('utf8'));
+
+        const wrappedEvent = {
+            r5: {
+                e: [event]
+            }
+        };
+
+        const messageSpy = jest.fn();
+        const closeSpy = jest.fn();
+
+        room.on('message', messageSpy);
+        room.on('close', closeSpy);
+
+        await room.watch();
+
+        websocketMock.emit('message', JSON.stringify(wrappedEvent));
+        websocketMock.emit('message', '{}');
+        websocketMock.emit('close');
+
+        expect(client._browser.watchRoom).toHaveBeenCalledWith(5);
+        expect(messageSpy).toHaveBeenCalledTimes(1);
+        expect(closeSpy).toHaveBeenCalledTimes(1);
+
+        const msg = messageSpy.mock.calls[0][0];
+
+        expect(msg).toBeInstanceOf(Message);
+        expect(msg.id).toEqual(44396284);
     });
 })

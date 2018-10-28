@@ -13,8 +13,8 @@ describe('User', () => {
             name: 'test',
             about: 'Just a test user',
             isModerator: true,
-            messageCount: 5,
-            roomCount: 2,
+            messageCount: 8671,
+            roomCount: 51,
             lastSeen: 50,
             lastMessage: 120,
         }));
@@ -33,8 +33,8 @@ describe('User', () => {
         expect(await user.name).toEqual('test');
         expect(await user.about).toEqual('Just a test user');
         expect(await user.isModerator).toEqual(true);
-        expect(await user.messageCount).toEqual(5);
-        expect(await user.roomCount).toEqual(2);
+        expect(await user.messageCount).toEqual(8671);
+        expect(await user.roomCount).toEqual(51);
         expect(await user.lastSeen).toEqual(50);
         expect(await user.lastMessage).toEqual(120);
 

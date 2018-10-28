@@ -18,7 +18,7 @@ const request = requestPromise.defaults({
 });
 
 /**
- * Used internally by {@link Client}  to provide the low-level
+ * Used internally by {@link Client} to provide the low-level
  * interaction with SE servers. 
  *
  * @class Browser
@@ -51,7 +51,7 @@ class Browser {
 
     /**
      * Attempts to login to stack exchange, using the provided
-     * cookie jar string, which was retrieved from the `login`
+     * cookie jar string, which was retrieved from the {@Link Browser#login}
      * method.
      *
      * @param {string} cookieJar A cookie jar string
@@ -173,6 +173,7 @@ class Browser {
             .includes('♦');
 
         const roomCount = parseInt($('.user-room-count-xxl').text(), 10);
+        const messageCount = parseInt($('.user-message-count-xxl').text(), 10);
 
         let reputation = 0;
         const reputationElements = $('.reputation-score');
@@ -193,6 +194,7 @@ class Browser {
             .toArray();
 
         const stats = arrayToKvp(statsElements);
+        const { about } = stats;
 
         if (typeof stats['last message'] !== 'undefined') {
             lastMessage = parseAgoString(stats['last message']);
@@ -201,12 +203,11 @@ class Browser {
             lastSeen = parseAgoString(stats['last seen']);
         }
 
-        const { about } = stats;
-
         return {
             name,
             isModerator,
             roomCount,
+            messageCount,
             reputation,
             lastSeen,
             lastMessage,
@@ -241,7 +242,7 @@ class Browser {
         this._chatFKey = $('input[name="fkey"]').val();
 
         if (typeof this._chatFKey === 'undefined') {
-            throw new ChatExchangeError('Unable to find fkey.');
+            throw new InternalError('Unable to find fkey.');
         }
     }
 
