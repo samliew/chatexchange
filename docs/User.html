@@ -49,7 +49,8 @@
 
 
 <div class="description">
-    Represents a user
+    Represents a user. Most properties are promises, to
+lazily load them from the server if they're not present.
 </div>
 
 
@@ -110,6 +111,167 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Promise.&lt;string></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The name of the user</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>about</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Promise.&lt;string></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The about section of their chat profile</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>isModerator</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Promise.&lt;boolean></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">True if the user is a moderator, false otherwise</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>messageCount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Promise.&lt;number></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The number of messages</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>roomCount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Promise.&lt;number></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>lastSeen</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Promise.&lt;number></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The number of seconds since this user was last seen</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>lastMessage</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Promise.&lt;number></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The number of seconds since this user posted a message in any chat</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -145,7 +307,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="User.js.html">User.js</a>, <a href="User.js.html#line3">line 3</a>
+        <a href="User.js.html">User.js</a>, <a href="User.js.html#line5">line 5</a>
     </li></ul></dd>
     
 
@@ -191,6 +353,115 @@
     
 
     
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="scrapeProfile"><span class="type-signature">(async) </span>scrapeProfile<span class="signature">()</span><span class="type-signature"> &rarr; {void}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Used by most properties of this class to fetch their profile,
+and updates their associated values.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="User.js.html">User.js</a>, <a href="User.js.html#line61">line 61</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">void</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+    
 
     
 
@@ -205,13 +476,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Browser.html">Browser</a></li><li><a href="Client.html">Client</a></li><li><a href="Message.html">Message</a></li><li><a href="Room.html">Room</a></li><li><a href="User.html">User</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Browser.html">Browser</a></li><li><a href="Client.html">Client</a></li><li><a href="Message.html">Message</a></li><li><a href="Room.html">Room</a></li><li><a href="User.html">User</a></li></ul><h3>Global</h3><ul><li><a href="global.html#arrayToKvp">arrayToKvp</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Oct 26 2018 12:03:08 GMT-0400 (Eastern Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 28 2018 09:41:26 GMT-0400 (Eastern Daylight Time)
 </footer>
 
 <script> prettyPrint(); </script>

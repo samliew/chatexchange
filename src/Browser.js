@@ -3,8 +3,9 @@ import cheerio from 'cheerio';
 import WebSocket from 'ws';
 import { CookieJar } from 'tough-cookie';
 import ChatExchangeError from './Exceptions/ChatExchangeError';
+import InternalError from './Exceptions/InternalError';
 import LoginError from './Exceptions/LoginError';
-import { lazy } from './utils';
+import { lazy, parseAgoString, arrayToKvp } from './utils';
 
 const request = requestPromise.defaults({
     gzip: true,
@@ -17,6 +18,8 @@ const request = requestPromise.defaults({
 });
 
 /**
+ * Used internally by {@link Client}  to provide the low-level
+ * interaction with SE servers. 
  *
  * @class Browser
  * @property {boolean} loggedIn User logged in
@@ -87,10 +90,16 @@ class Browser {
         const fkey = $('input[name="fkey"]').val();
 
         if (typeof fkey === 'undefined') {
-            throw new ChatExchangeError('Unable to find fkey element on /users/login');
+            throw new InternalError('Unable to find fkey element on /users/login');
         }
 
-        await this._post(`https://${this.host}/users/login`, {
+        let loginHost = this.host;
+        
+        if (this.host === 'meta.stackexchange.com') {
+            loginHost = 'stackexchange.com';
+        }
+
+        await this._post(`https://${loginHost}/users/login`, {
             fkey,
             email,
             password,
@@ -159,11 +168,49 @@ class Browser {
         const $ = await this._get$(`users/${userId}`);
 
         const name = $('h1').text();
-        const isModerator = $('.user-status')[0].text().includes('♦');
+        const isModerator = $('.user-status').first()
+            .text()
+            .includes('♦');
+
+        const roomCount = parseInt($('.user-room-count-xxl').text(), 10);
+
+        let reputation = 0;
+        const reputationElements = $('.reputation-score');
+
+        if (reputationElements.length > 0) {
+            reputation = parseInt(reputationElements.attr('title'), 10);
+        }
+
+        let lastSeen = -1;
+        let lastMessage = -1;
+
+        // Filter out only text (Ignore HTML entirely)
+        const statsElements = $('.user-keycell,.user-valuecell').map((idx, el) => $(el)
+            .contents()
+            .filter((childIdx, child) => child.nodeType === 3)
+            .text()
+            .trim())
+            .toArray();
+
+        const stats = arrayToKvp(statsElements);
+
+        if (typeof stats['last message'] !== 'undefined') {
+            lastMessage = parseAgoString(stats['last message']);
+        }
+        if (typeof stats['last seen'] !== 'undefined') {
+            lastSeen = parseAgoString(stats['last seen']);
+        }
+
+        const { about } = stats;
 
         return {
             name,
             isModerator,
+            roomCount,
+            reputation,
+            lastSeen,
+            lastMessage,
+            about,
         };
     }
 
@@ -177,7 +224,7 @@ class Browser {
      */
     sendMessage(roomId, message) {
         return this._postKeyed(`chats/${roomId}/messages/new`, {
-            message,
+            text: message,
         });
     }
 
@@ -209,7 +256,7 @@ class Browser {
 
 
     // Request helpers
-    _request(method, uri, form, qs) {
+    async _request(method, uri, form, qs) {
         const options = {
             uri,
             method,
@@ -223,7 +270,13 @@ class Browser {
             options.uri = `${this._chatRoot}${uri}`;
         }
 
-        return request(options);
+        const res = await request(options);
+
+        if (res.statusCode >= 400) {
+            throw new ChatExchangeError(`Remote server threw ${res.statusCode} error.`);
+        }
+
+        return res;
     }
 
     async _get$(uri, qs = {}) {

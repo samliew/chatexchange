@@ -9,7 +9,9 @@
     "build": "rimraf dist && babel src --out-dir dist",
     "prepublish": "npm run build",
     "pretest": "npm run build",
-    "test": "jest --collectCoverageFrom=src/**/*.js --coverage && eslint src/"
+    "test": "jest --coverage --collectCoverageFrom=src/**/*.js --coverageReporters=lcov && eslint src/",
+    "pretest-coveralls": "npm run build",
+    "test-coveralls": "jest --coverage --collectCoverageFrom=src/**/*.js --coverageReporters=text-lcov | coveralls && eslint src/"
   },
   "repository": {
     "type": "git",
@@ -33,9 +35,11 @@
     "@babel/core": "^7.1.2",
     "@babel/node": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
+    "@babel/preset-flow": "^7.0.0",
     "assert": "^1.4.1",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
+    "coveralls": "^3.0.2",
     "dotenv": "^6.1.0",
     "eslint": "^5.7.0",
     "jest": "^23.6.0",

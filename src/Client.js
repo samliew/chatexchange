@@ -57,7 +57,7 @@ class Client {
      * @returns {Promise<string>} Request Cookie Jar (Optionally to save to `loginCookie`)
      * @memberof Client
      */
-    login(email, password) {
+    async login(email, password) {
         if (typeof email === 'undefined' || email === '') {
             throw new InvalidArgumentError('Email is required.');
         }
@@ -66,7 +66,9 @@ class Client {
             throw new InvalidArgumentError('Password is required');
         }
 
-        return this._browser.login(email, password);
+        const result = await this._browser.login(email, password);
+
+        return result;
     }
 
     /**
@@ -78,13 +80,12 @@ class Client {
      * @returns {Promise<void>} A promise representing when login is complete
      * @memberof Client
      */
-    loginCookie(cookieString) {
+    async loginCookie(cookieString) {
         if (typeof cookieString !== 'string' || cookieString === '') {
-            console.log(typeof cookieString);
             throw new InvalidArgumentError('cookieString is required.');
         }
 
-        return this._browser.loginCookie(cookieString);
+        await this._browser.loginCookie(cookieString);
     }
 
     /**

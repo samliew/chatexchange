@@ -1,6 +1,8 @@
 # ChatExchange
 
 [![Build Status](https://travis-ci.org/danbopes/chatexchange.svg?branch=master)](https://travis-ci.org/danbopes/chatexchange)
+[![Dependency Status](https://david-dm.org/danbopes/chatexchange.svg)](https://david-dm.org/danbopes/chatexchange)
+[![Coverage Status](https://coveralls.io/repos/github/danbopes/chatexchange/badge.svg?branch=master)](https://coveralls.io/github/danbopes/chatexchange?branch=master)
 
 A node.js API for talking to Stack Exchange chat (Largely based on [ChatExchange](https://github.com/Manishearth/ChatExchange) for python)
 
@@ -14,7 +16,7 @@ $ npm i chatexchange
 
 ## Word of Caution
 
-This API is still heavily in development, and should NOT be used in production scripts.
+This API is still in development. While 
 
 ## Example
 

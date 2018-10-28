@@ -48,7 +48,7 @@ module.exports = {
         "dot-notation": "error",
         "eol-last": [
             "error",
-            "never"
+            "always"
         ],
         "eqeqeq": "error",
         "func-call-spacing": "error",
@@ -79,7 +79,7 @@ module.exports = {
         "line-comment-position": "error",
         "linebreak-style": [
             "error",
-            "windows"
+            "unix"
         ],
         "lines-around-comment": "error",
         "lines-around-directive": "error",
@@ -87,7 +87,7 @@ module.exports = {
         "max-classes-per-file": "error",
         "max-depth": "error",
         "max-len": "off",
-        "max-lines": "error",
+        "max-lines": "off",
         "max-lines-per-function": "error",
         "max-nested-callbacks": "error",
         "max-statements-per-line": "error",

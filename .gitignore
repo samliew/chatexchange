@@ -77,3 +77,6 @@ typings/
 
 # Distribuation folder
 dist/
+
+# Debug folder
+debug/

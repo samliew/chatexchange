@@ -46,7 +46,7 @@ class Room extends EventEmitter {
             const events = json[`r${this.id}`].e;
 
             for (const event of events) {
-                this.emit('message', new Message(this, event));
+                this.emit('message', new Message(this, event.message_id, event));
             }
         });
 
