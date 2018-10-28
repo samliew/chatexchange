@@ -1,6 +1,6 @@
 {
   "name": "chatexchange",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A node.js wrapper for the stackexchange chat system.",
   "main": "dist/index.js",
   "scripts": {
