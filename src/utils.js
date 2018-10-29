@@ -1,7 +1,27 @@
 import ChatExchangeError from './Exceptions/ChatExchangeError';
 
+/**
+ * @module Utils
+ */
+
+/**
+ * Helper function to resolve promise after ms.
+ *
+ * @function
+ * @param {number} ms Number of milliseconds to delay
+ * @returns {Promise<void>} A promise that resovles after ms milliseconds
+ */
 export const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
+/**
+ * Helper function to provide promises from getters/setters.
+ * Used to lazily initialize values when the getter returns undefined.
+ *
+ * @function
+ * @param {Function} getter A function to return the value
+ * @param {Function} updater A function that sets a value, that can be subsequently retrieved from the getter function
+ * @returns {Promise<void>} A promise that resovles after ms milliseconds
+ */
 export const lazy = async (getter, updater) => {
     let result = getter();
     if (typeof result !== 'undefined') {
@@ -21,8 +41,9 @@ export const lazy = async (getter, updater) => {
 
 /**
  * Helper function to convert an array, to key/value pairs.
- * ie. ['foo', 'bar', 'meow', 'rawr'] => {foo: 'bar', meow: 'rawr'}
+ * ie. <code>['foo', 'bar', 'meow', 'rawr']</code> => <code>{foo: 'bar', meow: 'rawr'}</code>
  *
+ * @function
  * @param {Array<string|number>} array The array to convert
  * @returns {Object} The object that was converted
  */
@@ -45,6 +66,15 @@ const suffixes = {
 };
 /* eslint-enable id-length */
 
+/**
+ * Helper function to parse time strings (Mainly on the profile pages) into seconds.<br />
+ * For example: <code>2m ago</code> => <code>120</code>
+ *
+ * @function
+ * @param {string} text The string of text to parse. ie <code>5s ago</code>
+ * @throws {ChatExchangeError} If the string doesn't match the format suffix (s/m/h/d/y).
+ * @returns {number} The number 
+ */
 export const parseAgoString = text => {
     if (text === 'n/a') {
         return -1;
