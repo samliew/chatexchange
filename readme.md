@@ -16,7 +16,7 @@ $ npm i chatexchange
 
 ## Word of Caution
 
-This API is still in development, and thus should be considered unstable. Be warned: API calls between version may change drastically.
+This API is still in development, and thus should be considered unstable. Be warned: API calls between versions may change drastically.
 
 ## Example
 
