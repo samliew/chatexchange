@@ -49,13 +49,12 @@ describe('Room', () => {
 
         const room = new Room(null, 5);
 
-        expect(() => 
-            room.sendMessage(`
+        expect(room.sendMessage(`
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean aliquet auctor sem, luctus sodales orci egestas id. 
                 Nullam sit amet mi turpis. Etiam nec nibh id dolor semper imperdiet ut vitae odio. Vestibulum sagittis est sed augue euismod finibus. 
                 Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer in dui non lectus pellentesque porta 
                 sit amet vitae est. In blandit felis non sapien consectetur egestas. Proin ac dignissim lectus. In hac massa nunc.`)
-        ).toThrowError(InvalidArgumentError);
+        ).rejects.toThrowError(InvalidArgumentError);
     });
 
     it('Should throw an error for text is empty', async () => {
@@ -63,14 +62,10 @@ describe('Room', () => {
 
         const room = new Room(null, 5);
 
-        expect(() => 
-            room.sendMessage('')
-        ).toThrowError(InvalidArgumentError);
+        expect(room.sendMessage('')).rejects.toThrowError(InvalidArgumentError);
 
         
-        expect(() => 
-            room.sendMessage()
-        ).toThrowError(InvalidArgumentError);
+        expect(room.sendMessage()).rejects.toThrowError(InvalidArgumentError);
     });
 
     it('Should attempt to watch the room, and attach websockets', async () => {

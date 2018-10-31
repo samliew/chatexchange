@@ -1,19 +1,20 @@
 {
-  "presets": [
-    "@babel/flow",
-    [
-      "@babel/env",
-      {
-        "targets": {
-          "esmodules": true
+    "presets": [
+      "@babel/flow",
+      [
+        "@babel/env",
+        {
+          "targets": {
+            "esmodules": true
+          }
         }
+      ]
+    ],
+    "env": {
+      "debug": {
+        "sourceMaps": "inline",
+        "retainLines": true
       }
-    ]
-  ],
-  "env": {
-    "debug": {
-      "sourceMaps": "inline",
-      "retainLines": true
     }
   }
-}
+  

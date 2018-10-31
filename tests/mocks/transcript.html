@@ -1,0 +1,2951 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>SOBotics Workshop - 2018-10-30</title>
+    <link rel="shortcut icon" href="https://cdn.sstatic.net/Sites/stackoverflow/img/favicon.ico?v=da"><link rel="apple-touch-icon" href="https://cdn.sstatic.net/Sites/stackoverflow/img/apple-touch-icon.png?v=da"><link rel="search" type="application/opensearchdescription+xml" title="Chat for chat.stackoverflow.com" href="/opensearch.xml">    
+    <link rel="canonical" href="/transcript/167908/2018/10/30/11-23" />
+                        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    
+    <script type="text/javascript" src="//cdn-chat.sstatic.net/chat/Js/master-chat.js?v=10a334a797b1"></script>
+    <link rel="stylesheet" href="//cdn-chat.sstatic.net/chat/css/chat.stackoverflow.com.css?v=e9d3d4205777">  
+    
+<script type="text/javascript">
+    function IMAGE(f) { return ("//cdn-chat.sstatic.net/chat/img/" + f); }
+</script>
+    <script type="text/javascript">
+        $(function() {
+            initTranscript(false,
+                4875631, false,
+                true, 167908,
+                true);
+            popupDismisser();
+        });
+    </script>
+    
+</head>
+    
+<body id="transcript-body">
+    <div id="container">
+    <div id="main">
+      <a href="/transcript/167908/2018/3/30" class="button noprint" title="2018-03-30">&laquo; first day (213 days earlier)</a>&nbsp;
+<a href="/transcript/167908/2018/10/29" class="button noprint" rel="prev" title="2018-10-29">&larr; previous day</a>&nbsp;
+<link rel="prev" title="2018-10-29" href="/transcript/167908/2018/10/29" />
+<div class="clear-both"></div>
+      
+      <br/>
+      <div id="transcript">
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+             <div class="timestamp">11:58 AM</div>
+
+        
+        
+            <div class="message" id="message-44424713">
+                <a name="44424713" href="/transcript/167908?m=44424713#44424713"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    howdy                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1915448">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/51afb9344f8a44e60916753d37186513?s=16&d=identicon&r=PG" alt="g00glen00b" />
+            </div>
+        
+        <div class="username"><a href="/users/1915448/g00glen00b" title="g00glen00b">g00glen00b</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424714">
+                <a name="44424714" href="/transcript/167908?m=44424714#44424714"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    hey                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44424717">
+                <a name="44424717" href="/transcript/167908?m=44424717#44424717"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    Do you have time to make a change to the <code>docker-compose.yml</code> file of Burnaki/Gemmy?                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424721">
+                <a name="44424721" href="/transcript/167908?m=44424721#44424721"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    I do... Rob has suggested:                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44424728">
+                <a name="44424728" href="/transcript/167908?m=44424728#44424728"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    Well, having a look at the code, it looks like it does actually respect the backoff field. So, I think having BURNINATION_SCHEDULER_REFRESH_QUESTIONS_EVERY=90, BURNINATION_SCHEDULER_REFRESH_PROGRESS_EVERY=90, STACKEXCHANGE_API_PAGE_SIZE=100, STACKEXCHANGE_API_MAX_PAGE=215 should work fine. That puts us at 6880 requests/day, pretty safely below 10k                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1915448">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/51afb9344f8a44e60916753d37186513?s=16&d=identicon&r=PG" alt="g00glen00b" />
+            </div>
+        
+        <div class="username"><a href="/users/1915448/g00glen00b" title="g00glen00b">g00glen00b</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424738">
+                <a name="44424738" href="/transcript/167908?m=44424738#44424738"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    yeah, that should work                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44424741">
+                <a name="44424741" href="/transcript/167908?m=44424741#44424741"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    you should be able to find those properties within the <code>environment</code> section of the <code>docker-compose.yml</code>                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424743">
+                <a name="44424743" href="/transcript/167908?m=44424743#44424743"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    already got &#39;em... just wanted to double check the changes made...                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44424777">
+                <a name="44424777" href="/transcript/167908?m=44424777#44424777"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    okay.... bringing her down then back up... two ticks                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-8300708">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/wroDk.png?s=16&g=1" alt="Gemmy" />
+            </div>
+        
+        <div class="username"><a href="/users/8300708/gemmy" title="Gemmy">Gemmy</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424793">
+                <a name="44424793" href="/transcript/167908?m=44424793#44424793"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    Hiya o/                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-563532">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/c2773fec98b1630ec087b575482dc08a?s=16&d=identicon&r=PG" alt="Rob" />
+            </div>
+        
+        <div class="username"><a href="/users/563532/rob" title="Rob">Rob</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+             <div class="timestamp">12:06 PM</div>
+
+        
+        
+            <div class="message" id="message-44424794">
+                <a name="44424794" href="/transcript/167908?m=44424794#44424794"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    Okay, let&#39;s give it a go..                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44424796">
+                <a name="44424796" href="/transcript/167908?m=44424796#44424796"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    @gemmy start tag [design] 182583 <a href="https://chat.stackoverflow.com/rooms/182583/burnination-progress-for-the-design-tag" rel="nofollow noopener noreferrer">chat.stackoverflow.com/rooms/182583/&hellip;</a>                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-8300708">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/wroDk.png?s=16&g=1" alt="Gemmy" />
+            </div>
+        
+        <div class="username"><a href="/users/8300708/gemmy" title="Gemmy">Gemmy</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424797">
+                <a name="44424797" href="/transcript/167908?m=44424797#44424797"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                 <a class="reply-info" href="/transcript/167908?m=44424796#44424796"> </a> 
+
+                <div class="content">
+                    @Rob Cannot start burnination of tag &#91;design&#93;: Cannot fetch questions with tag                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424808">
+                <a name="44424808" href="/transcript/167908?m=44424808#44424808"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    <pre class='partial'>LEASE.jar!/:4.3.8.RELEASE]
+	at fr.tunaki.stackoverflow.burnaki.service.BurninationService$$EnhancerBySpringCGLIB$$56162a72.start(&lt;generated&gt;) ~[classes!/:1.0.1]
+	at fr.tunaki.stackoverflow.burnaki.BurninationManager.start(BurninationManager.java:59) ~[classes!/:1.0.1]
+	at fr.tunaki.stackoverflow.burnaki.bot.command.StartTagCommand.execute(StartTagCommand.java:82) ~[classes!/:1.0.1]
+	at fr.tunaki.stackoverflow.burnaki.bot.Burnaki.handleMessage(Burnaki.java:102) [classes!/:1.0.1]
+	at fr.tunaki.stackoverflow.burnaki.bot.Burnaki.lambda$registerEventListeners$0(Burnaki.java:63) [classes!/:1.0.1]</pre>                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1915448">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/51afb9344f8a44e60916753d37186513?s=16&d=identicon&r=PG" alt="g00glen00b" />
+            </div>
+        
+        <div class="username"><a href="/users/1915448/g00glen00b" title="g00glen00b">g00glen00b</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424810">
+                <a name="44424810" href="/transcript/167908?m=44424810#44424810"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    I think it has to be without square brackets                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424816">
+                <a name="44424816" href="/transcript/167908?m=44424816#44424816"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    might have changed the wrong environment variable there                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1915448">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/51afb9344f8a44e60916753d37186513?s=16&d=identicon&r=PG" alt="g00glen00b" />
+            </div>
+        
+        <div class="username"><a href="/users/1915448/g00glen00b" title="g00glen00b">g00glen00b</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424817">
+                <a name="44424817" href="/transcript/167908?m=44424817#44424817"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    @gemmy start tag design 182583 <a href="https://meta.stackoverflow.com/questions/320690/should-we-burninate-the-design-tag" rel="nofollow noopener noreferrer" title="should we burninate the design tag">meta.stackoverflow.com/questions/320690/&hellip;</a>                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-8300708">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/wroDk.png?s=16&g=1" alt="Gemmy" />
+            </div>
+        
+        <div class="username"><a href="/users/8300708/gemmy" title="Gemmy">Gemmy</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+             <div class="timestamp">12:08 PM</div>
+
+        
+        
+            <div class="message" id="message-44424819">
+                <a name="44424819" href="/transcript/167908?m=44424819#44424819"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                 <a class="reply-info" href="/transcript/167908?m=44424817#44424817"> </a> 
+
+                <div class="content">
+                    @g00glen00b Cannot start burnination of tag &#91;design&#93;: Cannot fetch questions with tag                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-563532">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/c2773fec98b1630ec087b575482dc08a?s=16&d=identicon&r=PG" alt="Rob" />
+            </div>
+        
+        <div class="username"><a href="/users/563532/rob" title="Rob">Rob</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424820">
+                <a name="44424820" href="/transcript/167908?m=44424820#44424820"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    Nope, it got them, it&#39;s just that upping the page size broken the {ids} parameter                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1915448">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/51afb9344f8a44e60916753d37186513?s=16&d=identicon&r=PG" alt="g00glen00b" />
+            </div>
+        
+        <div class="username"><a href="/users/1915448/g00glen00b" title="g00glen00b">g00glen00b</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424823">
+                <a name="44424823" href="/transcript/167908?m=44424823#44424823"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    right, probably a URL maxlength issue                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44424826">
+                <a name="44424826" href="/transcript/167908?m=44424826#44424826"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    because they&#39;re being passed as <code>id1,id2,id3</code>                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-563532">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/c2773fec98b1630ec087b575482dc08a?s=16&d=identicon&r=PG" alt="Rob" />
+            </div>
+        
+        <div class="username"><a href="/users/563532/rob" title="Rob">Rob</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424829">
+                <a name="44424829" href="/transcript/167908?m=44424829#44424829"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    <a href="https://api.stackexchange.com/docs/posts-by-ids" rel="nofollow noopener noreferrer">api.stackexchange.com/docs/posts-by-ids</a> documentation states it supports up to 100 ids however                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424830">
+                <a name="44424830" href="/transcript/167908?m=44424830#44424830"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    what if I do 90 ?                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-563532">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/c2773fec98b1630ec087b575482dc08a?s=16&d=identicon&r=PG" alt="Rob" />
+            </div>
+        
+        <div class="username"><a href="/users/563532/rob" title="Rob">Rob</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424835">
+                <a name="44424835" href="/transcript/167908?m=44424835#44424835"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    Lemme test it                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1915448">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/51afb9344f8a44e60916753d37186513?s=16&d=identicon&r=PG" alt="g00glen00b" />
+            </div>
+        
+        <div class="username"><a href="/users/1915448/g00glen00b" title="g00glen00b">g00glen00b</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+             <div class="timestamp">12:10 PM</div>
+
+        
+        
+            <div class="message" id="message-44424837">
+                <a name="44424837" href="/transcript/167908?m=44424837#44424837"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    looks like it did pass 100 of them, so that&#39;s correct                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44424838">
+                <a name="44424838" href="/transcript/167908?m=44424838#44424838"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    then the documentation isn&#39;t I guess XD                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-8300708">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/wroDk.png?s=16&g=1" alt="Gemmy" />
+            </div>
+        
+        <div class="username"><a href="/users/8300708/gemmy" title="Gemmy">Gemmy</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424846">
+                <a name="44424846" href="/transcript/167908?m=44424846#44424846"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    Hiya o/                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-563532">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/c2773fec98b1630ec087b575482dc08a?s=16&d=identicon&r=PG" alt="Rob" />
+            </div>
+        
+        <div class="username"><a href="/users/563532/rob" title="Rob">Rob</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424863">
+                <a name="44424863" href="/transcript/167908?m=44424863#44424863"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    Heh. 100 ids work for other routes. The additional &#39;suggested-edits&#39; <i>just</i> pushes it over the length limit                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44424871">
+                <a name="44424871" href="/transcript/167908?m=44424871#44424871"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    99 ids work. So, we can try setting it to 95, for a bit of a buffer?                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424873">
+                <a name="44424873" href="/transcript/167908?m=44424873#44424873"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    I&#39;ve done 90 on her restart                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-563532">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/c2773fec98b1630ec087b575482dc08a?s=16&d=identicon&r=PG" alt="Rob" />
+            </div>
+        
+        <div class="username"><a href="/users/563532/rob" title="Rob">Rob</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424876">
+                <a name="44424876" href="/transcript/167908?m=44424876#44424876"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    Ah, ok, let&#39;s give it a whirld                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424877">
+                <a name="44424877" href="/transcript/167908?m=44424877#44424877"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    try that?                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-563532">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/c2773fec98b1630ec087b575482dc08a?s=16&d=identicon&r=PG" alt="Rob" />
+            </div>
+        
+        <div class="username"><a href="/users/563532/rob" title="Rob">Rob</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+             <div class="timestamp">12:13 PM</div>
+
+        
+        
+            <div class="message" id="message-44424878">
+                <a name="44424878" href="/transcript/167908?m=44424878#44424878"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    @gemmy start tag [design] 182583 <a href="https://chat.stackoverflow.com/rooms/182583/burnination-progress-for-the-design-tag" rel="nofollow noopener noreferrer">chat.stackoverflow.com/rooms/182583/&hellip;</a>                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1915448">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/51afb9344f8a44e60916753d37186513?s=16&d=identicon&r=PG" alt="g00glen00b" />
+            </div>
+        
+        <div class="username"><a href="/users/1915448/g00glen00b" title="g00glen00b">g00glen00b</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424887">
+                <a name="44424887" href="/transcript/167908?m=44424887#44424887"><span style="display:inline-block;" class="action-link edits"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    you adjusted the amount of pages to fetch as well?                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-8300708">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/wroDk.png?s=16&g=1" alt="Gemmy" />
+            </div>
+        
+        <div class="username"><a href="/users/8300708/gemmy" title="Gemmy">Gemmy</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424889">
+                <a name="44424889" href="/transcript/167908?m=44424889#44424889"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                 <a class="reply-info" href="/transcript/167908?m=44424878#44424878"> </a> 
+
+                <div class="content">
+                    @Rob Cannot start burnination of tag &#91;design&#93;: Too many pages for tag [design], stopped at page 216                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1915448">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/51afb9344f8a44e60916753d37186513?s=16&d=identicon&r=PG" alt="g00glen00b" />
+            </div>
+        
+        <div class="username"><a href="/users/1915448/g00glen00b" title="g00glen00b">g00glen00b</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424891">
+                <a name="44424891" href="/transcript/167908?m=44424891#44424891"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    was about to say, idk if 215 will still do the job                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424893">
+                <a name="44424893" href="/transcript/167908?m=44424893#44424893"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    Yeah it&#39;s:                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1915448">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/51afb9344f8a44e60916753d37186513?s=16&d=identicon&r=PG" alt="g00glen00b" />
+            </div>
+        
+        <div class="username"><a href="/users/1915448/g00glen00b" title="g00glen00b">g00glen00b</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424894">
+                <a name="44424894" href="/transcript/167908?m=44424894#44424894"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    I guess it doesn&#39;t                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+             <div class="timestamp">12:14 PM</div>
+
+        
+        
+            <div class="message" id="message-44424895">
+                <a name="44424895" href="/transcript/167908?m=44424895#44424895"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    <pre class='full'>      - STACKEXCHANGE_API_PAGE_SIZE=90
+      - STACKEXCHANGE_API_MAX_PAGE=215</pre>                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1915448">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/51afb9344f8a44e60916753d37186513?s=16&d=identicon&r=PG" alt="g00glen00b" />
+            </div>
+        
+        <div class="username"><a href="/users/1915448/g00glen00b" title="g00glen00b">g00glen00b</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424899">
+                <a name="44424899" href="/transcript/167908?m=44424899#44424899"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    I guess it has to be something more like 240-ish                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-563532">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/c2773fec98b1630ec087b575482dc08a?s=16&d=identicon&r=PG" alt="Rob" />
+            </div>
+        
+        <div class="username"><a href="/users/563532/rob" title="Rob">Rob</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424900">
+                <a name="44424900" href="/transcript/167908?m=44424900#44424900"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    Yep, but with 90 page size, the 215 is going to be a bit more. Hold on                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1915448">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/51afb9344f8a44e60916753d37186513?s=16&d=identicon&r=PG" alt="g00glen00b" />
+            </div>
+        
+        <div class="username"><a href="/users/1915448/g00glen00b" title="g00glen00b">g00glen00b</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424907">
+                <a name="44424907" href="/transcript/167908?m=44424907#44424907"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    (at least if I do 215 * 100/90 I get that number)                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-563532">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/c2773fec98b1630ec087b575482dc08a?s=16&d=identicon&r=PG" alt="Rob" />
+            </div>
+        
+        <div class="username"><a href="/users/563532/rob" title="Rob">Rob</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424927">
+                <a name="44424927" href="/transcript/167908?m=44424927#44424927"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    There are 220 pages exactly with a pagesize of 95. So if we push it to 230 maximum, we&#39;re then at 7360 req/day                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1915448">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/51afb9344f8a44e60916753d37186513?s=16&d=identicon&r=PG" alt="g00glen00b" />
+            </div>
+        
+        <div class="username"><a href="/users/1915448/g00glen00b" title="g00glen00b">g00glen00b</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424931">
+                <a name="44424931" href="/transcript/167908?m=44424931#44424931"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    o, 95 even better                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44424934">
+                <a name="44424934" href="/transcript/167908?m=44424934#44424934"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    let&#39;s do that                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+             <div class="timestamp">12:22 PM</div>
+
+        
+        
+            <div class="message" id="message-44424970">
+                <a name="44424970" href="/transcript/167908?m=44424970#44424970"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    so, if I change it to 95 and 220 ?                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-563532">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/c2773fec98b1630ec087b575482dc08a?s=16&d=identicon&r=PG" alt="Rob" />
+            </div>
+        
+        <div class="username"><a href="/users/563532/rob" title="Rob">Rob</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424984">
+                <a name="44424984" href="/transcript/167908?m=44424984#44424984"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    230 to be safe                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424987">
+                <a name="44424987" href="/transcript/167908?m=44424987#44424987"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    okay... what&#39;s her current quota now?                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-563532">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/c2773fec98b1630ec087b575482dc08a?s=16&d=identicon&r=PG" alt="Rob" />
+            </div>
+        
+        <div class="username"><a href="/users/563532/rob" title="Rob">Rob</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424989">
+                <a name="44424989" href="/transcript/167908?m=44424989#44424989"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    @Gemmy quota                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-8300708">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/wroDk.png?s=16&g=1" alt="Gemmy" />
+            </div>
+        
+        <div class="username"><a href="/users/8300708/gemmy" title="Gemmy">Gemmy</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44424990">
+                <a name="44424990" href="/transcript/167908?m=44424990#44424990"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                 <a class="reply-info" href="/transcript/167908?m=44424989#44424989"> </a> 
+
+                <div class="content">
+                    @Rob Remaining quota is: 8953                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44425003">
+                <a name="44425003" href="/transcript/167908?m=44425003#44425003"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    <div class='full'>Creating gemmy_burnaki_1    ... done <br> Creating gemmy_burnaki-db_1 ... done</div>                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-8300708">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/wroDk.png?s=16&g=1" alt="Gemmy" />
+            </div>
+        
+        <div class="username"><a href="/users/8300708/gemmy" title="Gemmy">Gemmy</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+             <div class="timestamp">12:24 PM</div>
+
+        
+        
+            <div class="message" id="message-44425005">
+                <a name="44425005" href="/transcript/167908?m=44425005#44425005"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    Hiya o/                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-563532">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/c2773fec98b1630ec087b575482dc08a?s=16&d=identicon&r=PG" alt="Rob" />
+            </div>
+        
+        <div class="username"><a href="/users/563532/rob" title="Rob">Rob</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44425007">
+                <a name="44425007" href="/transcript/167908?m=44425007#44425007"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    @gemmy start tag [design] 182583 <a href="https://chat.stackoverflow.com/rooms/182583/burnination-progress-for-the-design-tag" rel="nofollow noopener noreferrer">chat.stackoverflow.com/rooms/182583/&hellip;</a>                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44425011">
+                <a name="44425011" href="/transcript/167908?m=44425011#44425011"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    Last try before I need to head to bed :)                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-8300708">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/wroDk.png?s=16&g=1" alt="Gemmy" />
+            </div>
+        
+        <div class="username"><a href="/users/8300708/gemmy" title="Gemmy">Gemmy</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44425025">
+                <a name="44425025" href="/transcript/167908?m=44425025#44425025"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                 <a class="reply-info" href="/transcript/167908?m=44425007#44425007"> </a> 
+
+                <div class="content">
+                    @Rob Burnination of tag &#91;design&#93; correctly started! Have fun, 20894 questions to go!                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-563532">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/c2773fec98b1630ec087b575482dc08a?s=16&d=identicon&r=PG" alt="Rob" />
+            </div>
+        
+        <div class="username"><a href="/users/563532/rob" title="Rob">Rob</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44425027">
+                <a name="44425027" href="/transcript/167908?m=44425027#44425027"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    \o/                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1915448">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/51afb9344f8a44e60916753d37186513?s=16&d=identicon&r=PG" alt="g00glen00b" />
+            </div>
+        
+        <div class="username"><a href="/users/1915448/g00glen00b" title="g00glen00b">g00glen00b</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44425030">
+                <a name="44425030" href="/transcript/167908?m=44425030#44425030"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    @Gemmy quota                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-8300708">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/wroDk.png?s=16&g=1" alt="Gemmy" />
+            </div>
+        
+        <div class="username"><a href="/users/8300708/gemmy" title="Gemmy">Gemmy</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44425032">
+                <a name="44425032" href="/transcript/167908?m=44425032#44425032"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                 <a class="reply-info" href="/transcript/167908?m=44425030#44425030"> </a> 
+
+                <div class="content">
+                    @g00glen00b Remaining quota is: 8513                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+             <div class="timestamp">12:27 PM</div>
+
+        
+        
+            <div class="message" id="message-44425037">
+                <a name="44425037" href="/transcript/167908?m=44425037#44425037"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    <div class='partial'>2018-10-30 12:34:26.287  INFO 7 --- [pool-5-thread-1] f.t.s.b.service.BurninationService       : Starting the burnination of tag [design] <br> 2018-10-30 12:35:28.565  INFO 7 --- [pool-5-thread-1] f.t.s.burnaki.BurninationManager         : Scheduling background burnination tasks for tag [design], refreshing questions every 90 minutes and progress every 90 minutes <br> 2018-10-30 12:35:28.566  INFO 7 --- [pool-5-thread-1] org.sobotics.chatexchange.chat.Room      : Task added - sending message &#39;:44425007 Burnination of tag \[design\] correctly started! Have fun, 20894 questions to go!&#39; to room 167908.</div>                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1915448">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/51afb9344f8a44e60916753d37186513?s=16&d=identicon&r=PG" alt="g00glen00b" />
+            </div>
+        
+        <div class="username"><a href="/users/1915448/g00glen00b" title="g00glen00b">g00glen00b</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44425039">
+                <a name="44425039" href="/transcript/167908?m=44425039#44425039"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    looks like it works indeed                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44425045">
+                <a name="44425045" href="/transcript/167908?m=44425045#44425045"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    thanks                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-563532">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/c2773fec98b1630ec087b575482dc08a?s=16&d=identicon&r=PG" alt="Rob" />
+            </div>
+        
+        <div class="username"><a href="/users/563532/rob" title="Rob">Rob</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44425051">
+                <a name="44425051" href="/transcript/167908?m=44425051#44425051"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    Awesome                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44425052">
+                <a name="44425052" href="/transcript/167908?m=44425052#44425052"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    Thanks to you both for helping out :)                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1915448">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/51afb9344f8a44e60916753d37186513?s=16&d=identicon&r=PG" alt="g00glen00b" />
+            </div>
+        
+        <div class="username"><a href="/users/1915448/g00glen00b" title="g00glen00b">g00glen00b</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44425056">
+                <a name="44425056" href="/transcript/167908?m=44425056#44425056"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    I guess I&#39;ll try to monitor the quota once in a while to make sure there are no issues                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44425058">
+                <a name="44425058" href="/transcript/167908?m=44425058#44425058"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    I might move her to yet another server soon... she doesn&#39;t need to run on a 16 core/64gb ram system                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-563532">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/c2773fec98b1630ec087b575482dc08a?s=16&d=identicon&r=PG" alt="Rob" />
+            </div>
+        
+        <div class="username"><a href="/users/563532/rob" title="Rob">Rob</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44425063">
+                <a name="44425063" href="/transcript/167908?m=44425063#44425063"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    That&#39;s a beefy workstation                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-397817">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/4vu4t.jpg?s=16&g=1" alt="Stephen Kennedy" />
+            </div>
+        
+        <div class="username"><a href="/users/397817/stephen-kennedy" title="Stephen Kennedy">Stephen Kennedy</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+             <div class="timestamp">12:28 PM</div>
+
+        
+        
+            <div class="message" id="message-44425065">
+                <a name="44425065" href="/transcript/167908?m=44425065#44425065"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    nothing wrong with some modest over-provisioning                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44425071">
+                <a name="44425071" href="/transcript/167908?m=44425071#44425071"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    thinking, if everyone gave a dollar or something, we could easily get a DO droplet and run her from there...                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1915448">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/51afb9344f8a44e60916753d37186513?s=16&d=identicon&r=PG" alt="g00glen00b" />
+            </div>
+        
+        <div class="username"><a href="/users/1915448/g00glen00b" title="g00glen00b">g00glen00b</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44425081">
+                <a name="44425081" href="/transcript/167908?m=44425081#44425081"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    probably                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44425082">
+                <a name="44425082" href="/transcript/167908?m=44425082#44425082"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    good night Rob!                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44425083">
+                <a name="44425083" href="/transcript/167908?m=44425083#44425083"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                 <a class="reply-info" href="/transcript/167908?m=44425063#44425063"> </a> 
+
+                <div class="content">
+                    @Rob data analytics is what I do... so the server is mostly swamped with storm/kafka and other stuff like that :)                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-397817">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/4vu4t.jpg?s=16&g=1" alt="Stephen Kennedy" />
+            </div>
+        
+        <div class="username"><a href="/users/397817/stephen-kennedy" title="Stephen Kennedy">Stephen Kennedy</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44425088">
+                <a name="44425088" href="/transcript/167908?m=44425088#44425088"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    I&#39;m going to have that <i>I need a dollar</i> song in my head all day now                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-563532">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/c2773fec98b1630ec087b575482dc08a?s=16&d=identicon&r=PG" alt="Rob" />
+            </div>
+        
+        <div class="username"><a href="/users/563532/rob" title="Rob">Rob</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44425114">
+                <a name="44425114" href="/transcript/167908?m=44425114#44425114"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                 <a class="reply-info" href="/transcript/167908?m=44425083#44425083"> </a> 
+
+                <div class="content">
+                    @JonClements Well, I&#39;m super jealous :D. If you&#39;re wanting to move it off the server, I&#39;m hosting Higgs on a server that has plenty of room for Burnaki. I&#39;ve got no experience with docker at all, but happy to give people access to ssh in. Anyway, that&#39;s for another time                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+             <div class="timestamp">12:32 PM</div>
+
+        
+        
+            <div class="message" id="message-44425118">
+                <a name="44425118" href="/transcript/167908?m=44425118#44425118"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    @StephenKennedy yeah me too... joking aside though... if all of us interested in this stuff just put a dollar or two towards it a month, be it for charcoal or smokey or all the bots here... etc...                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44425125">
+                <a name="44425125" href="/transcript/167908?m=44425125#44425125"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                 <a class="reply-info" href="/transcript/167908?m=44425114#44425114"> </a> 
+
+                <div class="content">
+                    @Rob I can take a look... I&#39;ll send you my public SSH key?                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44425146">
+                <a name="44425146" href="/transcript/167908?m=44425146#44425146"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    someone&#39;s running a bot for X, someone&#39;s got one going for Y, we&#39;ve got metasmoke as well... etc... etc...                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1915448">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/51afb9344f8a44e60916753d37186513?s=16&d=identicon&r=PG" alt="g00glen00b" />
+            </div>
+        
+        <div class="username"><a href="/users/1915448/g00glen00b" title="g00glen00b">g00glen00b</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44425151">
+                <a name="44425151" href="/transcript/167908?m=44425151#44425151"><span style="display:inline-block;" class="action-link edits"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    so, one issue to go now; who is going to fix SE API docs to mention that <code>&#47;suggested-edits</code> does not accept 100 <code>{ids}</code>? :D                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44425167">
+                <a name="44425167" href="/transcript/167908?m=44425167#44425167"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    Think it does... but the request size happens to be too large to respond to                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1915448">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/51afb9344f8a44e60916753d37186513?s=16&d=identicon&r=PG" alt="g00glen00b" />
+            </div>
+        
+        <div class="username"><a href="/users/1915448/g00glen00b" title="g00glen00b">g00glen00b</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44425175">
+                <a name="44425175" href="/transcript/167908?m=44425175#44425175"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    so it accepts 100 IDs, just not the long IDs with the amount of digits we have now?                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44425178">
+                <a name="44425178" href="/transcript/167908?m=44425178#44425178"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    that&#39;s my guess                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44425190">
+                <a name="44425190" href="/transcript/167908?m=44425190#44425190"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    browsers break at certain limits of get requests after all                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1915448">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://www.gravatar.com/avatar/51afb9344f8a44e60916753d37186513?s=16&d=identicon&r=PG" alt="g00glen00b" />
+            </div>
+        
+        <div class="username"><a href="/users/1915448/g00glen00b" title="g00glen00b">g00glen00b</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44425197">
+                <a name="44425197" href="/transcript/167908?m=44425197#44425197"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    true that. Might be an important thing to remember in the future if we ever hit 9 digit IDs                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+             <div class="timestamp">12:42 PM</div>
+
+        
+        
+            <div class="message" id="message-44425204">
+                <a name="44425204" href="/transcript/167908?m=44425204#44425204"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    Well, doing a <code>is:q deleted:</code> search gives me <code>5,806,734 results</code>                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-9220325">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/b0CWt.png?s=16&g=1" alt="CheckYerFlags" />
+            </div>
+        
+        <div class="username"><a href="/users/9220325/checkyerflags" title="CheckYerFlags">CheckYerFlags</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+             <div class="timestamp">1:23 PM</div>
+
+        
+        
+            <div class="message" id="message-44425678">
+                <a name="44425678" href="/transcript/167908?m=44425678#44425678"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    [ <a href="https://git.io/fxa52" rel="nofollow noopener noreferrer">ChatCradle</a> ] Keeping the room fresh...                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+ <div class="system-message-container"><div class="system-message-spacer">&nbsp;</div><div class="system-message">
+                        6 hours later&hellip;
+                        </div><div class="clear-both"></div></div>
+                
+
+<div class="monologue user-4875631 mine">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/zRk5K.jpg?s=16&g=1" alt="FrankerZ" />
+            </div>
+        
+        <div class="username"><a href="/users/4875631/frankerz" title="FrankerZ">FrankerZ</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+             <div class="timestamp">7:42 PM</div>
+
+        
+        
+            <div class="message" id="message-44430444">
+                <a name="44430444" href="/transcript/167908?m=44430444#44430444"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    test                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44430466">
+                <a name="44430466" href="/transcript/167908?m=44430466#44430466"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    <span class="mention">@FrankerZ</span> fitz wittzy wotzy?                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-4875631 mine">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/zRk5K.jpg?s=16&g=1" alt="FrankerZ" />
+            </div>
+        
+        <div class="username"><a href="/users/4875631/frankerz" title="FrankerZ">FrankerZ</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44430469">
+                <a name="44430469" href="/transcript/167908?m=44430469#44430469"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    I have no clue what you just said, but I like it                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44430496">
+                <a name="44430496" href="/transcript/167908?m=44430496#44430496"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    fuzzle wuzzy wozzy?                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-4875631 mine">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/zRk5K.jpg?s=16&g=1" alt="FrankerZ" />
+            </div>
+        
+        <div class="username"><a href="/users/4875631/frankerz" title="FrankerZ">FrankerZ</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44430501">
+                <a name="44430501" href="/transcript/167908?m=44430501#44430501"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    yes                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44430526">
+                <a name="44430526" href="/transcript/167908?m=44430526#44430526"><span style="display:inline-block;" class="action-link edits"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    always good to see another to agree to give to their soul to the greater good :p                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44430539">
+                <a name="44430539" href="/transcript/167908?m=44430539#44430539"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    bloomin&#39; typing tonight... must be the rabies kicking in...                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44430540">
+                <a name="44430540" href="/transcript/167908?m=44430540#44430540"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    <span class="mention">@FrankerZ</span> joking aside - how you been?                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-4875631 mine">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/zRk5K.jpg?s=16&g=1" alt="FrankerZ" />
+            </div>
+        
+        <div class="username"><a href="/users/4875631/frankerz" title="FrankerZ">FrankerZ</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+             <div class="timestamp">7:54 PM</div>
+
+        
+        
+            <div class="message" id="message-44430542">
+                <a name="44430542" href="/transcript/167908?m=44430542#44430542"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    Good. A bit addicted to SO again.                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44430554">
+                <a name="44430554" href="/transcript/167908?m=44430554#44430554"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    Been building out a lot of stuff with node.js, and working on a few bots here and there.                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44430556">
+                <a name="44430556" href="/transcript/167908?m=44430556#44430556"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    How have you been?                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44430562">
+                <a name="44430562" href="/transcript/167908?m=44430562#44430562"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    oh, SSDD as always                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44430568">
+                <a name="44430568" href="/transcript/167908?m=44430568#44430568"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    you should have a word with my evil twin if needs be regarding node...                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44430602">
+                <a name="44430602" href="/transcript/167908?m=44430602#44430602"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    Happy to see you again \o/                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-4875631 mine">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/zRk5K.jpg?s=16&g=1" alt="FrankerZ" />
+            </div>
+        
+        <div class="username"><a href="/users/4875631/frankerz" title="FrankerZ">FrankerZ</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+            <div class="message" id="message-44430670">
+                <a name="44430670" href="/transcript/167908?m=44430670#44430670"><span style="display:inline-block;" class="action-link edits"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    I just built out <a href="https://stackapps.com/questions/8079/node-js-chatexchange-an-api-for-chat">chatexchange</a> for interacting with chat. Now, I&#39;m in the process of trying to create an implementation for <a href="https://meta.stackoverflow.com/questions/375905/possible-bot-idea-should-1-off-bad-reviews-in-first-post-late-post-queue-be-rep">this</a>.                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44430680">
+                <a name="44430680" href="/transcript/167908?m=44430680#44430680"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    I&#39;m hoping that we can catch robo reviewers, and help try and clean up the queues a bit                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+            <div class="message" id="message-44430689">
+                <a name="44430689" href="/transcript/167908?m=44430689#44430689"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    It&#39;s hard though. I wish I could see what the diamond moderators deal with on a daily basis, so see if this is even an issue, something I should look into                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+
+
+<div class="monologue user-1252759">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/E1sVR.jpg?s=16&g=1" alt="Jon Clements" />
+            </div>
+        
+        <div class="username"><a href="/users/1252759/jon-clements" title="Jon Clements">Jon Clements</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+             <div class="timestamp">8:39 PM</div>
+
+        
+        
+            <div class="message" id="message-44430856">
+                <a name="44430856" href="/transcript/167908?m=44430856#44430856"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                
+
+                <div class="content">
+                    <i>I wish I could see what the diamond moderators deal with on a daily basis</i> - for now I&#39;m glad you don&#39;t - stay sane :)                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+ <div class="system-message-container"><div class="system-message-spacer">&nbsp;</div><div class="system-message">
+                        1 hour later&hellip;
+                        </div><div class="clear-both"></div></div>
+                
+
+<div class="monologue user-4875631 mine">
+    <div class="signature"><div class="tiny-signature">
+        
+            <div class="avatar avatar-16">
+                <img width="16" height="16" src="https://i.stack.imgur.com/zRk5K.jpg?s=16&g=1" alt="FrankerZ" />
+            </div>
+        
+        <div class="username"><a href="/users/4875631/frankerz" title="FrankerZ">FrankerZ</a></div>
+
+    </div></div>
+    <div class="messages">
+        
+             <div class="timestamp">10:02 PM</div>
+
+        
+        
+            <div class="message highlight" id="message-44431164">
+                <a name="44431164" href="/transcript/167908?m=44431164#44431164"><span style="display:inline-block;" class="action-link"><span class="img"> </span></span></a>
+
+                 <a class="reply-info" href="/transcript/167908?m=44430856#44430856"> </a> 
+
+                <div class="content">
+                    @JonClements Well, when you&#39;re working with JavaScript all day, it slowly destro҉ys your will to keep fighting. <code>I&#39;m starting to lose it</code>                      
+                </div>
+                <span class="flash">
+                    
+                </span>
+            </div>
+        
+    
+    </div>
+    <div class="clear-both" style="height:0">&nbsp;</div> 
+</div>
+</div>
+      
+      <br/>
+      <a href="/transcript/167908/2018/3/30" class="button noprint" title="2018-03-30">&laquo; first day (213 days earlier)</a>&nbsp;
+<a href="/transcript/167908/2018/10/29" class="button noprint" rel="prev" title="2018-10-29">&larr; previous day</a>&nbsp;
+<link rel="prev" title="2018-10-29" href="/transcript/167908/2018/10/29" />
+<div class="clear-both"></div>
+    <div id="sidebar">
+    <div id="sidebar-content">
+    <div id="info">
+        <form method="get" action="/search">
+            <input type="text" id="searchbox" name="q"/>
+            <input type="hidden" name="room" value="167908" />
+        </form>
+        
+
+        <div style="padding-top:3px;"><a href="/" class="button">all rooms</a></div>
+
+        <br clear=left />
+
+        <h2>Transcript for</h2>
+
+        
+        <a class="calendar-small-link" href="/transcript/167908/2018/10/29">
+            <div class="icon" title="2018-10-29"><div class="calendar-small"><span class="weekday-small">Oct</span>29</div></div>
+        </a>
+        <div class="icon" title="2018-10-30"><div class="calendar"><span class="weekday">Oct</span>30</div></div>
+        
+        <br clear=left />
+        
+        <div class="room-mini"><div class="room-mini-header"><h3><span style="display:inline-block" class="sprite sprite-sec-gallery" title="Gallery: anyone may enter, but only approved users can talk"></span><span title="Moderators have full access to this room">&#9830;</span>&nbsp;<span class="room-name"><a rel="noreferrer noopener" href="/rooms/167908/sobotics-workshop">SOBotics Workshop</a></span></h3><div title="A place to test new bots that will eventually graduate to the SOBotics main room. Github: https://sobotics.org/github | Redunda: https://sobotics.org/redunda | Channel: http://sobotics.org/channel " class="room-mini-description">A place to test new bots that will eventually graduate to the ...<a href="https://sobotics.org/github" rel="nofollow noopener noreferrer"></a><a href="https://sobotics.org/redunda" rel="nofollow noopener noreferrer"></a><a href="http://sobotics.org/channel" rel="nofollow noopener noreferrer"></a></div></div><div class="room-current-user-count" title="current users"><a rel="noopener noreferrer" href="/rooms/info/167908/sobotics-workshop">12</a></div><div class="room-message-count" title="messages in the last 2h"><a rel="noopener noreferrer" href="/transcript/167908">5</a></div><div class="mspark" style="height:25px;width:205px">
+<div class="mspbar" style="width:8px;height:0px;left:0px;"></div><div class="mspbar" style="width:8px;height:3px;left:24px;"></div><div class="mspbar" style="width:8px;height:1px;left:40px;"></div><div class="mspbar" style="width:8px;height:14px;left:56px;"></div><div class="mspbar" style="width:8px;height:9px;left:64px;"></div><div class="mspbar" style="width:8px;height:3px;left:72px;"></div><div class="mspbar" style="width:8px;height:2px;left:88px;"></div><div class="mspbar" style="width:8px;height:25px;left:96px;"></div><div class="mspbar" style="width:8px;height:4px;left:104px;"></div><div class="mspbar" style="width:8px;height:1px;left:112px;"></div><div class="mspbar" style="width:8px;height:2px;left:128px;"></div><div class="mspbar" style="width:8px;height:1px;left:144px;"></div><div class="mspbar" style="width:8px;height:6px;left:152px;"></div><div class="mspbar" style="width:8px;height:5px;left:160px;"></div><div class="mspbar" style="width:8px;height:3px;left:176px;"></div><div class="mspbar now" style="height:25px;left:176px;"></div></div>
+<div class="clear-both"></div></div>
+        <div><a rel="noopener noreferrer" class="tag" href="http://stackoverflow.com/tags/bots/info">bots</a> <a rel="noopener noreferrer" class="tag" href="http://stackoverflow.com/tags/testing/info">testing</a> <a rel="noopener noreferrer" class="tag" href="http://stackoverflow.com/tags/waffles/info">waffles</a></div>
+        <br class="clear-both" />
+        <div class="noprint">
+            <div id="transcript-links">
+                <a id="join-room" href="/rooms/167908/sobotics-workshop" class="button">join this room</a><br />
+                <a href="/rooms/info/167908/sobotics-workshop" class="button">about this room</a><br />
+                
+                    <a class="button" href="#" id="bookmark-button">bookmark a conversation</a><br />
+                
+            </div>
+            
+            <br />
+            <div class="mspark" style="height:300px;width:200px">
+<div class="msplab" style="top:0px;">00:00</div><div class="msplab" style="top:72px;">06:00</div><div class="mspbar" style="height:12px;width:13px;top:132px;"></div><div class="mspbar" style="height:12px;width:200px;top:144px;"></div><div class="msplab" style="top:144px;">12:00</div><div class="mspbar" style="height:12px;width:3px;top:156px;"></div><div class="msplab" style="top:216px;">18:00</div><div class="mspbar" style="height:12px;width:33px;top:228px;"></div><div class="mspbar" style="height:12px;width:13px;top:240px;"></div><div class="mspbar" style="height:12px;width:3px;top:264px;"></div></div>
+
+            <div class="msg-small">
+                all times are UTC
+            </div>
+            
+            <br />
+        </div>
+        <br /><br /><div id="transcript-logo"><a rel="noreferrer noopener" href="https://stackoverflow.com" title="Stack Overflow"><img style="max-width:150px" src="https://cdn.sstatic.net/Sites/stackoverflow/img/logo.png?v=da" alt="Stack Overflow"/></a>
+    </div>
+<br class="clear-both" /><br />
+<div id="copyright">
+    site design / logo &copy; 2018 Stack Exchange Inc; <a rel="noopener noreferrer" href="http://stackexchange.com/legal">legal</a>
+    <br /><br />
+    <a href="#" class="mobile-on">mobile</a>
+</div>
+
+    </div>
+    </div>    
+    </div> 
+    </div> 
+    
+    </div> <input id="fkey" name="fkey" type="hidden" value="Not Needed for Mock Purposes" />
+</body>
+</html>

@@ -4,14 +4,25 @@
   "description": "A node.js wrapper for the stackexchange chat system.",
   "main": "dist/index.js",
   "scripts": {
-    "docs": "rimraf docs && jsdoc -R readme.md -d docs/ src/",
-    "start": "babel-node src/index.js",
-    "build": "rimraf dist && babel src --out-dir dist",
+    "docs": "rimraf docs && typedoc --includeDeclarations --readme readme.md --out docs/ src/",
+    "start": "ts-node src/index.ts",
+    "build": "rimraf dist && tsc --declaration",
     "prepublish": "npm run build",
     "pretest": "npm run build",
-    "test": "jest --coverage --collectCoverageFrom=src/**/*.js --coverageReporters=lcov && eslint src/",
+    "test": "jest --coverage --collectCoverageFrom=src/**/*.ts --coverageReporters=lcov && tslint src/**/*.ts",
     "pretest-coveralls": "npm run build",
-    "test-coveralls": "jest --coverage --collectCoverageFrom=src/**/*.js --coverageReporters=text-lcov | coveralls && eslint src/"
+    "test-coveralls": "jest --coverage --collectCoverageFrom=src/ --coverageReporters=text-lcov | coveralls && tslint src/**/*.ts"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "\\.tsx?$": "ts-jest",
+      "^.+\\.jsx?$": "babel-jest"
+    }
   },
   "repository": {
     "type": "git",
@@ -36,12 +47,19 @@
     "@babel/node": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-flow": "^7.0.0",
+    "@types/cheerio": "^0.22.9",
+    "@types/jest": "^23.3.9",
+    "@types/request-promise-native": "^1.0.15",
+    "@types/ws": "^6.0.1",
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^23.6.0",
     "coveralls": "^3.0.2",
-    "eslint": "^5.7.0",
     "jest": "^23.6.0",
     "jsdoc": "^3.5.5",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "ts-jest": "^23.10.4",
+    "tslint": "^5.11.0",
+    "typedoc": "^0.13.0",
+    "typescript": "^3.1.4"
   }
 }

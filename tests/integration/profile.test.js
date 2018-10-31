@@ -28,7 +28,7 @@ describe('Profile', () => {
     it('Should scrape profile correctly.', async () => {
         expect.assertions(1);
 
-        const browser = new Browser('stackoverflow.com');
+        const browser = new Browser(null, 'stackoverflow.com');
         
         const profile = await browser.getProfile(5);
 
