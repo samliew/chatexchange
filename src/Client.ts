@@ -5,7 +5,11 @@ import Message from "./Message";
 import Room from "./Room";
 import User from "./User";
 
-const VALID_HOSTS = ["stackexchange.com", "meta.stackexchange.com", "stackoverflow.com"];
+enum Host {
+    StackExchange = "stackexchange.com",
+    MetaStackExchange = "meta.stackexchange.com",
+    StackOverflow = "stackoverflow.com",
+}
 
 /**
  * Represents the main chatexchange Client class.
@@ -31,13 +35,9 @@ class Client {
      * @throws {InvalidArgumentError} If the host is invalid
      * @constructor
      */
-    constructor(host) {
-        if (typeof host === "undefined" || host === "") {
-            throw new InvalidArgumentError("Host is required.");
-        }
-
-        if (!VALID_HOSTS.includes(host)) {
-            throw new InvalidArgumentError(`Invalid host. Must be one of: ${VALID_HOSTS.join(", ")}`);
+    constructor(host: Host) {
+        if (!Object.values(Host).includes(host)) {
+            throw new InvalidArgumentError(`Invalid host. Must be one of ${Object.values(Host).join(", ")}`);
         }
 
         this.host = host;
