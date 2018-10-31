@@ -11,7 +11,7 @@
     "pretest": "npm run build",
     "test": "jest --coverage --collectCoverageFrom=src/**/*.ts --coverageReporters=lcov && tslint src/**/*.ts",
     "pretest-coveralls": "npm run build",
-    "test-coveralls": "jest --coverage --collectCoverageFrom=src/ --coverageReporters=text-lcov | coveralls && tslint src/**/*.ts"
+    "test-coveralls": "jest --coverage --collectCoverageFrom=src/**/*.ts --coverageReporters=text-lcov | coveralls && tslint src/**/*.ts"
   },
   "jest": {
     "moduleFileExtensions": [
