@@ -34,6 +34,7 @@ describe('Profile', () => {
 
         expect(profile).toEqual({
             name: 'FrankerZ',
+            id: 5,
             isModerator: false,
             roomCount: 44,
             reputation: 15026,
