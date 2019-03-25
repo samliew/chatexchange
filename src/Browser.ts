@@ -20,6 +20,7 @@ const request = requestPromise.defaults({
 });
 
 interface IProfileData {
+    id: number;
     name: string;
     about: string;
     isModerator: boolean;
@@ -153,7 +154,7 @@ class Browser {
      * Joins a room with the provided ID
      *
      * @param {number} id The room ID to join
-     * @returns {Promise<void>} A promise that resolves with the user has successfully joined the room
+     * @returns {Promise<void>} A promise that resolves when the user has successfully joined the room
      * @memberof Browser
      */
     public async joinRoom(id: number): Promise<void> {
@@ -166,6 +167,19 @@ class Browser {
         this._rooms[id] = {
             eventtime: res.body.time,
         };
+    }
+
+    /**
+     * Leaves a room with the provided ID
+     *
+     * @param {number} id The room ID to leave
+     * @returns {Promise<void>} A promise that resolves when the user has successfully left the room
+     * @memberof Browser
+     */
+    public async leaveRoom(id: number): Promise<void> {
+        await this._postKeyed(`chats/leave/${id}`, {
+            quiet: true,
+        });
     }
 
     /**
@@ -199,6 +213,7 @@ class Browser {
     public async getProfile(userId: number): Promise<IProfileData> {
         const $ = await this._get$(`users/${userId}`);
 
+        const id = userId;
         const name = $("h1").text();
         const isModerator = $(".user-status").first()
             .text()
@@ -237,6 +252,7 @@ class Browser {
         }
 
         return {
+            id,
             about,
             isModerator,
             lastMessage,
