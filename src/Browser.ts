@@ -127,8 +127,8 @@ class Browser {
 
         let loginHost = this.host;
 
-        if (this.host === "meta.stackexchange.com") {
-            loginHost = "stackexchange.com";
+        if (this.host === "stackexchange.com") {
+            loginHost = "meta.stackexchange.com";
         }
 
         await this._post(`https://${loginHost}/users/login`, {
