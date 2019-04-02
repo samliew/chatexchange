@@ -118,18 +118,19 @@ class Browser {
      * @memberof Browser
      */
     public async login(email: string, password: string): Promise<string> {
-        const $ = await this._get$(`https://${this.host}/users/login`);
-
-        const fkey = $('input[name="fkey"]').val();
-
-        if (typeof fkey === "undefined") {
-            throw new InternalError("Unable to find fkey element on /users/login");
-        }
 
         let loginHost = this.host;
 
         if (this.host === "stackexchange.com") {
             loginHost = "meta.stackexchange.com";
+        }
+
+        const $ = await this._get$(`https://${loginHost}/users/login`);
+
+        const fkey = $('input[name="fkey"]').val();
+
+        if (typeof fkey === "undefined") {
+            throw new InternalError("Unable to find fkey element on /users/login");
         }
 
         await this._post(`https://${loginHost}/users/login`, {
