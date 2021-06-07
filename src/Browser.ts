@@ -247,23 +247,26 @@ class Browser {
 
     // Filter out only text (Ignore HTML entirely)
     const statsElements = $(".user-keycell,.user-valuecell")
-      .map((idx, el) =>
+      .map((_i, el) =>
         $(el)
-          .contents()
-          .filter((childIdx, child: any) => child.nodeType === 3)
           .text()
           .trim()
+          .replace(/\s{2,}[\w\s()]*/u, "")
       )
-      .toArray() as any;
+      .toArray();
 
-    const stats = arrayToKvp(statsElements);
-    const { about } = stats;
+    const {
+      about,
+      "last message": lmsg,
+      "last seen": lseen,
+      //@ts-expect-error
+    } = arrayToKvp(statsElements);
 
-    if (typeof stats["last message"] !== "undefined") {
-      lastMessage = parseAgoString(stats["last message"]);
+    if (typeof lmsg !== "undefined") {
+      lastMessage = parseAgoString(lmsg);
     }
-    if (typeof stats["last seen"] !== "undefined") {
-      lastSeen = parseAgoString(stats["last seen"]);
+    if (typeof lseen !== "undefined") {
+      lastSeen = parseAgoString(lseen);
     }
 
     return {
