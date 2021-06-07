@@ -38,7 +38,7 @@
     "cheerio": "^1.0.0-rc.2",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.5",
-    "tough-cookie": "^2.4.3",
+    "tough-cookie": "^4.0.0",
     "ws": "^6.1.0"
   },
   "devDependencies": {
