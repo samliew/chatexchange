@@ -1,5 +1,6 @@
 # ChatExchange
 
+[![test](https://github.com/samliew/chatexchange/actions/workflows/nodejs.yml/badge.svg?branch=typescript)](https://github.com/samliew/chatexchange/actions/workflows/nodejs.yml)
 [![Build Status](https://travis-ci.org/danbopes/chatexchange.svg?branch=master)](https://travis-ci.org/danbopes/chatexchange)
 [![Dependency Status](https://david-dm.org/danbopes/chatexchange.svg)](https://david-dm.org/danbopes/chatexchange)
 [![Coverage Status](https://coveralls.io/repos/github/danbopes/chatexchange/badge.svg?branch=master)](https://coveralls.io/github/danbopes/chatexchange?branch=master)
