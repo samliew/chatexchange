@@ -10,9 +10,11 @@
             true,
             "ban-keywords",
             "check-format",
-            "allow-leading-underscore"
+            "allow-leading-underscore",
+            "allow-pascal-case"
         ],
-        "trailing-comma": false
+        "trailing-comma": false,
+        "comment-format": false
     },
     "rulesDirectory": []
 }
