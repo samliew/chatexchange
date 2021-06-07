@@ -11,18 +11,22 @@ import ChatExchangeError from "./Exceptions/ChatExchangeError";
  * @param {number} ms Number of milliseconds to delay
  * @returns {Promise<void>} A promise that resovles after ms milliseconds
  */
-export const delay = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
+export const delay = (ms: number): Promise<void> =>
+    new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * Helper function to provide promises from getters/setters.
  * Used to lazily initialize values when the getter returns undefined.
  *
  * @function
- * @param {Function} getter A function to return the value
- * @param {Function} updater A function that sets a value, that can be subsequently retrieved from the getter function
+ * @param {() => any} getter A function to return the value
+ * @param {() => Promise<void>} updater A function that sets a value, that can be later retrieved from the getter
  * @returns {Promise<T>} A promise that returns the value that was set from the updater parameter
  */
-export async function lazy<T>(getter: () => T, updater: () => void): Promise<T> {
+export async function lazy<T>(
+    getter: () => T,
+    updater: () => Promise<void>
+): Promise<T> {
     let result = getter();
     if (typeof result !== "undefined") {
         return result;
@@ -47,7 +51,9 @@ export async function lazy<T>(getter: () => T, updater: () => void): Promise<T> 
  * @param {Array<string|number>} array The array to convert
  * @returns {Object} The object that was converted
  */
-export const arrayToKvp = (array: Array<string | number>): {[key: string]: string} =>
+export const arrayToKvp = (
+    array: Array<string | number>
+): { [key: string]: string } =>
     array.reduce((arr, val, idx, ori) => {
         if (idx % 2 === 1) {
             const key = ori[idx - 1];
@@ -55,7 +61,7 @@ export const arrayToKvp = (array: Array<string | number>): {[key: string]: strin
         }
 
         return arr;
-}, {});
+    }, {});
 
 // tslint:disable:object-literal-sort-keys
 const suffixes = {
