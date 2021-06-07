@@ -37,6 +37,16 @@ class Room extends EventEmitter {
     }
 
     /**
+     * Leave a chat room
+     *
+     * @returns {Promise<void>} A promise when the user succesfully leaves this room
+     * @memberof Room
+     */
+    public async leave(): Promise<void> {
+        await this._client._browser.leaveRoom(this.id);
+    }
+
+    /**
      * Connects to the chatroom websocket, and watches
      * for new events
      *
