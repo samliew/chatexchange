@@ -124,14 +124,6 @@ class Browser {
         if (this.host === "stackexchange.com") {
             loginHost = "meta.stackexchange.com";
         }
-        
-        const $ = await this._get$(`https://${loginHost}/users/login`);
-
-        const fkey = $('input[name="fkey"]').val();
-
-        if (typeof fkey === "undefined") {
-            throw new InternalError("Unable to find fkey element on /users/login");
-        }
 
         const $ = await this._get$(`https://${loginHost}/users/login`);
 

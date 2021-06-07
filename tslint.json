@@ -1,11 +1,18 @@
 {
+    "$schema": "https://json.schemastore.org/tslint.json",
     "defaultSeverity": "error",
     "extends": [
         "tslint:recommended"
     ],
     "jsRules": {},
     "rules": {
-        "variable-name": [true, "ban-keywords", "check-format", "allow-leading-underscore"]
+        "variable-name": [
+            true,
+            "ban-keywords",
+            "check-format",
+            "allow-leading-underscore"
+        ],
+        "trailing-comma": false
     },
     "rulesDirectory": []
 }
