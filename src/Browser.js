@@ -1,11 +1,11 @@
-import { default as requestPromise } from 'request-promise-native';
 import cheerio from 'cheerio';
-import WebSocket from 'ws';
+import { default as requestPromise } from 'request-promise-native';
 import { CookieJar } from 'tough-cookie';
+import WebSocket from 'ws';
 import ChatExchangeError from './Exceptions/ChatExchangeError';
 import InternalError from './Exceptions/InternalError';
 import LoginError from './Exceptions/LoginError';
-import { lazy, parseAgoString, arrayToKvp } from './utils';
+import { arrayToKvp, lazy, parseAgoString } from './utils';
 
 const request = requestPromise.defaults({
     gzip: true,
@@ -19,7 +19,7 @@ const request = requestPromise.defaults({
 
 /**
  * Used internally by {@link Client} to provide the low-level
- * interaction with SE servers. 
+ * interaction with SE servers.
  *
  * @class Browser
  * @property {boolean} loggedIn User logged in
@@ -36,7 +36,7 @@ class Browser {
         this._chatRoot = `https://chat.${this.host}/`;
         this._rooms = {};
     }
-    
+
     get chatFKey() {
         return lazy(() => this._chatFKey, () => this._updateChatFKeyAndUser());
     }
@@ -90,7 +90,7 @@ class Browser {
         if (this.host === 'stackexchange.com') {
             loginHost = 'meta.stackexchange.com';
         }
-        
+
         const $ = await this._get$(`https://${loginHost}/users/login`);
 
         const fkey = $('input[name="fkey"]').val();
@@ -161,7 +161,7 @@ class Browser {
      * Fetches a users profile
      *
      * @param {number} userId The user to fetch
-     * @returns {Promise<Object>} The profile object 
+     * @returns {Promise<Object>} The profile object
      * @memberof Browser
      */
     async getProfile(userId) {
@@ -186,21 +186,20 @@ class Browser {
         let lastMessage = -1;
 
         // Filter out only text (Ignore HTML entirely)
-        const statsElements = $('.user-keycell,.user-valuecell').map((idx, el) => $(el)
-            .contents()
-            .filter((childIdx, child) => child.nodeType === 3)
-            .text()
-            .trim())
+        const statsElements = $('.user-keycell,.user-valuecell')
+            .map((_i, el) => $(el)
+                .text()
+                .trim()
+                .replace(/\s{2,}[\w\s()]*/u, ''))
             .toArray();
 
-        const stats = arrayToKvp(statsElements);
-        const { about } = stats;
+        const { about, 'last seen': lseen, 'last message': lmsg } = arrayToKvp(statsElements);
 
-        if (typeof stats['last message'] !== 'undefined') {
-            lastMessage = parseAgoString(stats['last message']);
+        if (typeof lmsg !== 'undefined') {
+            lastMessage = parseAgoString(lmsg);
         }
-        if (typeof stats['last seen'] !== 'undefined') {
-            lastSeen = parseAgoString(stats['last seen']);
+        if (typeof lseen !== 'undefined') {
+            lastSeen = parseAgoString(lseen);
         }
 
         return {
