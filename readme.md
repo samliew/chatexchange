@@ -1,6 +1,6 @@
 # ChatExchange
 
-[![Build Status](https://travis-ci.com/samliew/chatexchange.svg?branch=master)](https://travis-ci.org/samliew/chatexchange)
+[![Build Status](https://travis-ci.com/samliew/chatexchange.svg?branch=master)](https://travis-ci.com/samliew/chatexchange)
 [![Dependency Status](https://david-dm.org/samliew/chatexchange.svg)](https://david-dm.org/samliew/chatexchange)
 [![Coverage Status](https://coveralls.io/repos/github/samliew/chatexchange/badge.svg?branch=master)](https://coveralls.io/github/samliew/chatexchange?branch=master)
 
