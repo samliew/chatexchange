@@ -20,13 +20,13 @@ import { lazy } from "./utils";
 class User {
     public id: number;
     private _client: Client;
-    private _name: string;
-    private _about: string;
-    private _isModerator: boolean;
-    private _messageCount: number;
-    private _roomCount: number;
-    private _lastSeen: number;
-    private _lastMessage: number;
+    private _name!: string;
+    private _about!: string;
+    private _isModerator!: boolean;
+    private _messageCount!: number;
+    private _roomCount!: number;
+    private _lastSeen!: number;
+    private _lastMessage!: number;
 
     constructor(client: Client, id: number) {
         this._client = client;
@@ -35,31 +35,52 @@ class User {
 
     /* The name of the user */
     get name(): Promise<string> {
-        return lazy<string>(() => this._name, () => this.scrapeProfile());
+        return lazy<string>(
+            () => this._name,
+            () => this.scrapeProfile()
+        );
     }
 
     get about(): Promise<string> {
-        return lazy<string>(() => this._about, () => this.scrapeProfile());
+        return lazy<string>(
+            () => this._about,
+            () => this.scrapeProfile()
+        );
     }
 
     get isModerator(): Promise<boolean> {
-        return lazy<boolean>(() => this._isModerator, () => this.scrapeProfile());
+        return lazy<boolean>(
+            () => this._isModerator,
+            () => this.scrapeProfile()
+        );
     }
 
     get messageCount(): Promise<number> {
-        return lazy(() => this._messageCount, () => this.scrapeProfile());
+        return lazy(
+            () => this._messageCount,
+            () => this.scrapeProfile()
+        );
     }
 
     get roomCount(): Promise<number> {
-        return lazy(() => this._roomCount, () => this.scrapeProfile());
+        return lazy(
+            () => this._roomCount,
+            () => this.scrapeProfile()
+        );
     }
 
     get lastSeen(): Promise<number> {
-        return lazy(() => this._lastSeen, () => this.scrapeProfile());
+        return lazy(
+            () => this._lastSeen,
+            () => this.scrapeProfile()
+        );
     }
 
     get lastMessage(): Promise<number> {
-        return lazy(() => this._lastMessage, () => this.scrapeProfile());
+        return lazy(
+            () => this._lastMessage,
+            () => this.scrapeProfile()
+        );
     }
 
     /**

@@ -2,9 +2,13 @@ import Client from "./Client";
 import Room from "./Room";
 import { lazy } from "./utils";
 
+//allows the use of string indexes without assertions
+interface Message {
+    [x: string]: unknown;
+}
+
 /**
  * Represents a message that was sent in a chatroom
- *
  * @class
  */
 class Message {
@@ -22,14 +26,17 @@ class Message {
     private _parentId?: number;
 
     /**
-     * Creates an instance of Message.
-     *
+     * @summary Creates an instance of Message.
      * @param {Client} client The client associated with this message
      * @param {number} id The ID of the message
      * @param {Object} attrs Extra attributes that should be assigned to this message
      * @constructor
      */
-    constructor(client: Client, id: number, attrs: {[key: string]: any} = {}) {
+    constructor(
+        client: Client,
+        id: number,
+        attrs: { [key: string]: any } = {}
+    ) {
         this._client = client;
         this.id = id;
         this._eventId = attrs.id;
@@ -45,27 +52,45 @@ class Message {
     }
 
     get room(): Promise<Room> {
-        return lazy<Room>(() => this._room, () => this._setRoom());
+        return lazy<Room>(
+            () => this._room!,
+            () => this._setRoom()
+        );
     }
 
     get roomId(): Promise<number> {
-        return lazy<number>(() => this._roomId, () => this._scrapeTranscript());
+        return lazy<number>(
+            () => this._roomId!,
+            () => this._scrapeTranscript()
+        );
     }
 
     get content(): Promise<string> {
-        return lazy<string>(() => this._content, () => this._scrapeTranscript());
+        return lazy<string>(
+            () => this._content!,
+            () => this._scrapeTranscript()
+        );
     }
 
     get userId(): Promise<number> {
-        return lazy<number>(() => this._userId, () => this._scrapeTranscript());
+        return lazy<number>(
+            () => this._userId!,
+            () => this._scrapeTranscript()
+        );
     }
 
     get targetUserId(): Promise<number> {
-        return lazy<number>(() => this._targetUserId, () => this._scrapeTranscript());
+        return lazy<number>(
+            () => this._targetUserId!,
+            () => this._scrapeTranscript()
+        );
     }
 
     get parentId(): Promise<number> {
-        return lazy<number>(() => this._parentId, () => this._scrapeTranscript());
+        return lazy<number>(
+            () => this._parentId!,
+            () => this._scrapeTranscript()
+        );
     }
 
     public async _setRoom() {

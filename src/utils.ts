@@ -49,7 +49,7 @@ export async function lazy<T>(
  *
  * @function
  * @param {Array<string|number>} array The array to convert
- * @returns {Object} The object that was converted
+ * @returns {object} The object that was converted
  */
 export const arrayToKvp = (
     array: Array<string | number>
@@ -61,10 +61,10 @@ export const arrayToKvp = (
         }
 
         return arr;
-    }, {});
+    }, {} as { [x: string]: any });
 
 // tslint:disable:object-literal-sort-keys
-const suffixes = {
+const suffixes: { [x: string]: number } = {
     s: 1,
     m: 60,
     h: 3600,
