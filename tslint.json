@@ -14,7 +14,8 @@
             "allow-pascal-case"
         ],
         "trailing-comma": false,
-        "comment-format": false
+        "comment-format": false,
+        "interface-name": false
     },
     "rulesDirectory": []
 }
