@@ -4,7 +4,7 @@
   "description": "A node.js wrapper for the stackexchange chat system.",
   "main": "dist/index.js",
   "scripts": {
-    "docs": "rimraf docs && typedoc --includeDeclarations --readme readme.md --out docs/ src/",
+    "docs": "rimraf docs && typedoc",
     "start": "ts-node src/index.ts",
     "build": "rimraf dist && tsc --declaration",
     "prepublish": "npm run build",
@@ -60,6 +60,6 @@
     "ts-jest": "^27.0.3",
     "tslint": "^5.11.0",
     "typedoc": "^0.20.36",
-    "typescript": "^4.3.0"
+    "typescript": "4.2.x"
   }
 }
