@@ -134,6 +134,7 @@ class Message {
     public async parent(): Promise<Message | undefined> {
         const parentId = await this.parentId;
 
+        //TODO: rethink - is 0 really the best option when no parent is present?
         if (parentId) {
             return new Message(this._client, parentId);
         }
