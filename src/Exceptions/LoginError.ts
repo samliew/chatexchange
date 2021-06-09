@@ -1,5 +1,5 @@
 import ChatExchangeError from "./ChatExchangeError";
 
-export default class LoginError extends ChatExchangeError {
+export class LoginError extends ChatExchangeError {}
 
-}
+export default LoginError;

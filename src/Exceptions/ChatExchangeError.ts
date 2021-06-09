@@ -1,3 +1,3 @@
-export default class ChatExchangeError extends Error {
+export class ChatExchangeError extends Error {}
 
-}
+export default ChatExchangeError;
