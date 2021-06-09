@@ -3,7 +3,7 @@ import { Cookie } from "request";
 import * as requestPromise from "request-promise-native";
 import { CookieJar } from "tough-cookie";
 import * as WebSocket from "ws";
-import Client from "./Client";
+import Client, { Host } from "./Client";
 import ChatExchangeError from "./Exceptions/ChatExchangeError";
 import InternalError from "./Exceptions/InternalError";
 import LoginError from "./Exceptions/LoginError";
@@ -63,7 +63,7 @@ class Browser {
     private _userId!: number;
     private _userName!: string;
 
-    constructor(client: Client, public host: string) {
+    constructor(client: Client, public host: Host) {
         this.loggedIn = false;
         this._client = client;
         this._cookieJar = request.jar();
