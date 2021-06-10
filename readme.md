@@ -1,9 +1,8 @@
 # ChatExchange
 
 [![Build](https://github.com/samliew/chatexchange/actions/workflows/nodejs.yml/badge.svg)](https://github.com/samliew/chatexchange/actions/workflows/nodejs.yml)
-[![Build Status](https://travis-ci.org/danbopes/chatexchange.svg?branch=master)](https://travis-ci.com/samliew/chatexchange)
-[![Dependency Status](https://david-dm.org/danbopes/chatexchange.svg)](https://david-dm.org/danbopes/chatexchange)
-[![Coverage Status](https://coveralls.io/repos/github/danbopes/chatexchange/badge.svg?branch=master)](https://coveralls.io/github/danbopes/chatexchange?branch=master)
+[![Build Status](https://travis-ci.org/samliew/chatexchange.svg?branch=master)](https://travis-ci.com/samliew/chatexchange)
+[![Coverage Status](https://coveralls.io/repos/github/samliew/chatexchange/badge.svg?branch=master)](https://coveralls.io/github/samliew/chatexchange?branch=master)
 
 A node.js API for talking to Stack Exchange chat (Largely based on [ChatExchange](https://github.com/Manishearth/ChatExchange) for python)
 
