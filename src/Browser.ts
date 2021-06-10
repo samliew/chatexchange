@@ -97,11 +97,13 @@ class Browser {
      * cookie jar string, which was retrieved from the {@Link Browser#login}
      * method.
      *
-     * @param {string} cookieJar A cookie jar string
+     * @param {string|CookieJar.Serialized} cookieJar A cookie jar string
      * @returns {Promise<void>} A promise that completes with the user logs in
      * @memberof Browser
      */
-    public async loginCookie(cookieJar: string): Promise<void> {
+    public async loginCookie(
+        cookieJar: string | CookieJar.Serialized
+    ): Promise<void> {
         this._cookieJar._jar = CookieJar.deserializeSync(cookieJar); // eslint-disable-line
 
         const $ = await this._get$(`https://${this.host}/`);
