@@ -1,7 +1,8 @@
 import * as cheerio from "cheerio";
-import { Cookie } from "tough-cookie";
+import { Cookie, CookieJar } from "tough-cookie";
 import Browser from "../../src/Browser";
 import Client, { Host } from "../../src/Client";
+import LoginError from "../../src/Exceptions/LoginError";
 import Message from "../../src/Message";
 
 describe("Browser", () => {
@@ -13,7 +14,7 @@ describe("Browser", () => {
                 )
             );
 
-            class MockInternals extends Browser {
+            class MockBrowser extends Browser {
                 _get$ = _get$mock;
                 _getCookie(str: string) {
                     return new Cookie();
@@ -26,13 +27,34 @@ describe("Browser", () => {
             const host: Host = "stackexchange.com";
             const replacement = "meta.stackexchange.com";
 
-            const mocked = new MockInternals(new Client(host), host);
+            const mocked = new MockBrowser(new Client(host), host);
 
             mocked.login("ex@ample.org", "a!z5R_+@/|g-[%");
 
             expect(_get$mock).toHaveBeenCalledWith(
                 `https://${replacement}/users/login`
             );
+        });
+
+        it("should throw on being unable to verify cookie", async () => {
+            const _get$mock = jest.fn(() => Promise.resolve(cheerio.load("")));
+
+            class MockBrowser extends Browser {
+                _get$ = _get$mock;
+            }
+
+            const host: Host = "stackoverflow.com";
+
+            const browser = new MockBrowser(new Client(host), host);
+
+            const jar = new CookieJar();
+            const cookie = Cookie.parse("name=test; SameSite=None; Secure")!;
+
+            await jar.setCookie(cookie, host);
+
+            const login = browser.loginCookie(jar.serializeSync());
+
+            await expect(login).rejects.toThrow(LoginError);
         });
     });
 
