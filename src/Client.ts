@@ -1,3 +1,4 @@
+import { validate } from "email-validator";
 import Browser from "./Browser";
 import ChatExchangeError from "./Exceptions/ChatExchangeError";
 import InvalidArgumentError from "./Exceptions/InvalidArgumentError";
@@ -109,13 +110,10 @@ class Client {
      * @memberof Client
      */
     public async login(email: string, password: string) {
-        if (typeof email === "undefined" || email === "") {
-            throw new InvalidArgumentError("Email is required.");
-        }
+        if (!email || !password)
+            throw new InvalidArgumentError("Email and password are required.");
 
-        if (typeof password === "undefined" || password === "") {
-            throw new InvalidArgumentError("Password is required");
-        }
+        if (!validate(email)) throw new InvalidArgumentError("Invalid email");
 
         const result = await this._browser.login(email, password);
 
