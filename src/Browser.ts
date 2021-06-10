@@ -20,7 +20,7 @@ const request = requestPromise.defaults({
     simple: false,
 });
 
-interface IProfileData {
+export interface IProfileData {
     id: number;
     name: string;
     about: string;
@@ -330,21 +330,16 @@ class Browser {
      * Sends a message to a room
      *
      * @param {number} roomId The room ID to send to
-     * @param {string} message The message to send
+     * @param {string} text The message to send
      * @returns {Promise<Message>} A promise that resolves the message that was sent
      * @memberof Browser
      */
-    public async sendMessage(
-        roomId: number,
-        message: string
-    ): Promise<Message> {
-        const res = await this._postKeyed(`chats/${roomId}/messages/new`, {
-            text: message,
+    public async sendMessage(roomId: number, text: string): Promise<Message> {
+        const { id } = await this._postKeyed(`chats/${roomId}/messages/new`, {
+            text,
         });
 
-        const msg = new Message(this._client, res.id, {
-            roomId,
-        });
+        const msg = new Message(this._client, id, { roomId, content: text });
 
         return msg;
     }
