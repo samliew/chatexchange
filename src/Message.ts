@@ -54,6 +54,7 @@ class Message {
     get room(): Promise<Room> {
         return lazy<Room>(
             () => this._room!,
+            /* istanbul ignore next */
             () => this._setRoom()
         );
     }
@@ -61,6 +62,7 @@ class Message {
     get roomId(): Promise<number> {
         return lazy<number>(
             () => this._roomId!,
+            /* istanbul ignore next */
             () => this._scrapeTranscript()
         );
     }
@@ -68,6 +70,7 @@ class Message {
     get content(): Promise<string> {
         return lazy<string>(
             () => this._content!,
+            /* istanbul ignore next */
             () => this._scrapeTranscript()
         );
     }
@@ -75,6 +78,7 @@ class Message {
     get userId(): Promise<number> {
         return lazy<number>(
             () => this._userId!,
+            /* istanbul ignore next */
             () => this._scrapeTranscript()
         );
     }
@@ -82,6 +86,7 @@ class Message {
     get targetUserId(): Promise<number> {
         return lazy<number>(
             () => this._targetUserId!,
+            /* istanbul ignore next */
             () => this._scrapeTranscript()
         );
     }
@@ -89,6 +94,7 @@ class Message {
     get parentId(): Promise<number> {
         return lazy<number>(
             () => this._parentId!,
+            /* istanbul ignore next */
             () => this._scrapeTranscript()
         );
     }
