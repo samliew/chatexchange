@@ -3,6 +3,20 @@ import { lazy } from "./utils";
 
 /* eslint-disable no-underscore-dangle */
 
+interface UserPrivates {
+    client: Client;
+    name?: string;
+    about?: string;
+    isModerator?: boolean;
+    messageCount?: number;
+    roomCount?: number;
+    lastSeen?: number;
+    lastMessage?: number;
+    reputation?: number;
+}
+
+const privates: WeakMap<User, UserPrivates> = new WeakMap();
+
 /**
  * Represents a user. Most properties are promises, to
  * lazily load them from the server if they're not present.
@@ -15,70 +29,66 @@ import { lazy } from "./utils";
  * @property {Promise<number>} roomCount All time number of rooms this user has been a part of
  * @property {Promise<number>} lastSeen The number of seconds since this user was last seen
  * @property {Promise<number>} lastMessage The number of seconds since this user posted a message in any chat
+ * @property {Promise<number>} reputation user's reputation
  * @class User
  */
 class User {
-    public id: number;
-    private _client: Client;
-    private _name!: string;
-    private _about!: string;
-    private _isModerator!: boolean;
-    private _messageCount!: number;
-    private _roomCount!: number;
-    private _lastSeen!: number;
-    private _lastMessage!: number;
-
-    constructor(client: Client, id: number) {
-        this._client = client;
-        this.id = id;
+    constructor(client: Client, public id: number) {
+        privates.set(this, { client });
     }
 
-    /* The name of the user */
-    get name(): Promise<string> {
-        return lazy<string>(
-            () => this._name,
-            () => this.scrapeProfile()
-        );
-    }
-
-    get about(): Promise<string> {
-        return lazy<string>(
-            () => this._about,
-            () => this.scrapeProfile()
-        );
-    }
-
-    get isModerator(): Promise<boolean> {
-        return lazy<boolean>(
-            () => this._isModerator,
-            () => this.scrapeProfile()
-        );
-    }
-
-    get messageCount(): Promise<number> {
+    get name() {
         return lazy(
-            () => this._messageCount,
+            () => privates.get(this)?.name,
             () => this.scrapeProfile()
         );
     }
 
-    get roomCount(): Promise<number> {
+    get about() {
         return lazy(
-            () => this._roomCount,
+            () => privates.get(this)?.about,
             () => this.scrapeProfile()
         );
     }
 
-    get lastSeen(): Promise<number> {
+    get isModerator() {
         return lazy(
-            () => this._lastSeen,
+            () => privates.get(this)?.isModerator,
             () => this.scrapeProfile()
         );
     }
 
-    get lastMessage(): Promise<number> {
+    get messageCount() {
         return lazy(
-            () => this._lastMessage,
+            () => privates.get(this)?.messageCount,
+            () => this.scrapeProfile()
+        );
+    }
+
+    get roomCount() {
+        return lazy(
+            () => privates.get(this)?.roomCount,
+            () => this.scrapeProfile()
+        );
+    }
+
+    get lastSeen() {
+        return lazy(
+            () => privates.get(this)?.lastSeen,
+            () => this.scrapeProfile()
+        );
+    }
+
+    get lastMessage() {
+        return lazy(
+            () => privates.get(this)?.lastMessage,
+            () => this.scrapeProfile()
+        );
+    }
+
+    get reputation() {
+        return lazy(
+            () => privates.get(this)?.reputation || 0,
             () => this.scrapeProfile()
         );
     }
@@ -91,15 +101,9 @@ class User {
      * @memberof User
      */
     public async scrapeProfile(): Promise<void> {
-        const data = await this._client._browser.getProfile(this.id);
-
-        this._name = data.name;
-        this._about = data.about;
-        this._isModerator = data.isModerator;
-        this._messageCount = data.messageCount;
-        this._roomCount = data.roomCount;
-        this._lastSeen = data.lastSeen;
-        this._lastMessage = data.lastMessage;
+        const user = privates.get(this)!;
+        const data = await user.client._browser.getProfile(this.id);
+        privates.set(this, Object.assign(user, data));
     }
 }
 

@@ -24,7 +24,7 @@ export const delay = (ms: number): Promise<void> =>
  * @returns {Promise<T>} A promise that returns the value that was set from the updater parameter
  */
 export async function lazy<T>(
-    getter: () => T,
+    getter: () => T | undefined,
     updater: () => Promise<void>
 ): Promise<T> {
     let result = getter();
