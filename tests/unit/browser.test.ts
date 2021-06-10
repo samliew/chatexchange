@@ -2,12 +2,15 @@ import * as cheerio from "cheerio";
 import { Cookie, CookieJar } from "tough-cookie";
 import Browser from "../../src/Browser";
 import Client, { Host } from "../../src/Client";
+import InternalError from "../../src/Exceptions/InternalError";
 import LoginError from "../../src/Exceptions/LoginError";
 import Message from "../../src/Message";
 
 describe("Browser", () => {
     describe("authentication", () => {
         it("should override 'stackexchange.com' host to 'meta.stackexchange.com'", async () => {
+            expect.assertions(1);
+
             const _get$mock = jest.fn(() =>
                 Promise.resolve(
                     cheerio.load("<input name='fkey' value='test'/>")
@@ -37,6 +40,8 @@ describe("Browser", () => {
         });
 
         it("should throw on being unable to verify cookie", async () => {
+            expect.assertions(1);
+
             const _get$mock = jest.fn(() => Promise.resolve(cheerio.load("")));
 
             class MockBrowser extends Browser {
@@ -55,6 +60,25 @@ describe("Browser", () => {
             const login = browser.loginCookie(jar.serializeSync());
 
             await expect(login).rejects.toThrow(LoginError);
+        });
+    });
+
+    describe("getters", () => {
+        it("should throw on missing fkey from transcript", async () => {
+            expect.assertions(1);
+
+            const host: Host = "stackoverflow.com";
+            const client = new Client(host);
+
+            const _get$mock = jest.fn(() => Promise.resolve(cheerio.load("")));
+
+            class MockBrowser extends Browser {
+                _get$ = _get$mock;
+            }
+
+            const browser = new MockBrowser(client, host);
+
+            await expect(browser.chatFKey).rejects.toThrow(InternalError);
         });
     });
 
