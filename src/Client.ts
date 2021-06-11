@@ -110,7 +110,7 @@ class Client {
      * @memberof Client
      */
     public async login(email: string, password: string) {
-        if (!email || !password) {
+        if (!password) {
             throw new InvalidArgumentError("Email and password are required.");
         }
 

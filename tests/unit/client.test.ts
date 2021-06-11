@@ -37,11 +37,19 @@ describe("Client", () => {
             expect(user.id).toEqual(5);
         });
 
-        test("Should throw if missing email/password", async () => {
+        test("Should throw if missing email", async () => {
             expect.assertions(1);
 
             await expect(
-                new Client("stackoverflow.com").login("", "")
+                new Client("stackoverflow.com").login("", "abc123")
+            ).rejects.toThrowError(InvalidArgumentError);
+        });
+
+        test("Should throw if missing password", async () => {
+            expect.assertions(1);
+
+            await expect(
+                new Client("stackoverflow.com").login("text@example.com", "")
             ).rejects.toThrowError(InvalidArgumentError);
         });
 
