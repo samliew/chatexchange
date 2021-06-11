@@ -8,7 +8,7 @@ describe('User', () => {
     });
 
     it('Should fetch data correctly', async () => {
-        expect.assertions(8);
+        expect.assertions(9);
         const getProfileMock = jest.fn(() => Promise.resolve({
             name: 'test',
             about: 'Just a test user',
@@ -17,6 +17,7 @@ describe('User', () => {
             roomCount: 51,
             lastSeen: 50,
             lastMessage: 120,
+            reputation: 2048
         }));
 
         const client = {
@@ -37,6 +38,7 @@ describe('User', () => {
         expect(await user.roomCount).toEqual(51);
         expect(await user.lastSeen).toEqual(50);
         expect(await user.lastMessage).toEqual(120);
+        expect(await user.reputation).toEqual(2048);
 
         expect(getProfileMock).toHaveBeenLastCalledWith(4);
     });
@@ -66,14 +68,14 @@ describe('User', () => {
             getProfileMock.mockClear();
 
             const user = new User(client, 4);
-    
+
             expect(await user[field]).toEqual(fieldValues[field]);
             expect(await user.name).toEqual('test');
             expect(await user.about).toEqual('Just a test user');
             expect(await user[field]).toEqual(fieldValues[field]);
-    
+
             expect(getProfileMock).toHaveBeenCalledTimes(1);
             expect(getProfileMock).toHaveBeenLastCalledWith(4);
         }
     });
-})
+});
