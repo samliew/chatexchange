@@ -115,16 +115,33 @@ describe("Browser", () => {
     });
 
     describe("messaging", () => {
+        beforeEach(() => jest.resetModules());
+
         it("should attempt to send a message", async () => {
             expect.assertions(4);
 
             const host: Host = "stackexchange.com";
+            const roomId = 29;
+            const text = "It's alive!";
+
+            class MockMessage extends Message {
+                async _scrapeTranscript() {
+                    Object.assign(this, {
+                        _content: text,
+                    });
+                }
+            }
+
+            jest.doMock("../../src/Message.ts", () => ({
+                __esModule: true,
+                default: MockMessage,
+            }));
+
+            const { default: Browser } = await import("../../src/Browser");
+
             const client = new Client(host);
 
             const _postKeyMock = jest.fn(() => Promise.resolve({ id: 123 }));
-
-            const roomId = 29;
-            const text = "It's alive!";
 
             class MockedBrowser extends Browser {
                 _postKeyed = _postKeyMock;

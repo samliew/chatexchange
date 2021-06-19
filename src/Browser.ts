@@ -341,9 +341,7 @@ class Browser {
             text,
         });
 
-        const msg = new Message(this._client, id, { roomId, content: text });
-
-        return msg;
+        return new Message(this._client, id, { roomId });
     }
 
     public async _updateChatFKeyAndUser() {
