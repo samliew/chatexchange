@@ -52,6 +52,7 @@ describe('User', () => {
             roomCount: 2,
             lastSeen: 50,
             lastMessage: 120,
+            reputation: 2048
         };
 
         const getProfileMock = jest.fn(() => Promise.resolve(fieldValues));
@@ -62,7 +63,7 @@ describe('User', () => {
             }
         };
 
-        const fields = ['name', 'about', 'isModerator', 'messageCount', 'roomCount', 'lastSeen', 'lastMessage'];
+        const fields = ['name', 'about', 'isModerator', 'messageCount', 'roomCount', 'lastSeen', 'lastMessage', 'reputation'];
 
         for (const field of fields) {
             getProfileMock.mockClear();

@@ -88,7 +88,7 @@ class User {
 
     get reputation() {
         return lazy(
-            () => privates.get(this)?.reputation || 0,
+            () => privates.get(this)?.reputation,
             () => this.scrapeProfile()
         );
     }
