@@ -16,7 +16,7 @@ interface Message {
  */
 class Message {
     /**
-     * The message ID. If this is a WebsocketEvent Message, if the message is 
+     * The message ID. If this is a WebsocketEvent Message, if the message is
      * not a message type, this will be undefined
      *
      * @type {(number | undefined)}
@@ -74,7 +74,7 @@ class Message {
     }
 
     /**
-     * The actual text content of the message. This will be raw HTML as 
+     * The actual text content of the message. This will be raw HTML as
      * parsed by the server
      *
      * @readonly
