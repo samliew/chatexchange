@@ -7,10 +7,12 @@ jest.mock('request-promise-native', function() {
         switch (options.uri) {
             case 'https://stackoverflow.com/users/login':
                 return {
+                    statusCode: 200,
                     body: fs.readFileSync('./tests/mocks/login.html').toString('utf-8'),
                 };
             case 'https://chat.stackoverflow.com/chats/join/favorite':
                 return {
+                    statusCode: 200,
                     body: fs.readFileSync('./tests/mocks/favorite.html').toString('utf-8'),
                 };
         }

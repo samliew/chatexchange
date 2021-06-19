@@ -7,6 +7,7 @@ jest.mock('request-promise-native', function() {
         switch (options.uri) {
             case 'https://stackoverflow.com/users/login':
                 return {
+                    statusCode: 200,
                     body: fs.readFileSync('./tests/mocks/login_nofkey.html').toString('utf-8'),
                 };
         }

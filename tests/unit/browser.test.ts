@@ -17,6 +17,7 @@ describe("Browser", () => {
                 )
             );
 
+            //@ts-ignore
             class MockBrowser extends Browser {
                 _get$ = _get$mock;
                 _getCookie(str: string) {
@@ -44,6 +45,7 @@ describe("Browser", () => {
 
             const _get$mock = jest.fn(() => Promise.resolve(cheerio.load("")));
 
+            //@ts-ignore
             class MockBrowser extends Browser {
                 _get$ = _get$mock;
             }
@@ -72,6 +74,7 @@ describe("Browser", () => {
 
             const _get$mock = jest.fn(() => Promise.resolve(cheerio.load("")));
 
+            //@ts-ignore
             class MockBrowser extends Browser {
                 _get$ = _get$mock;
             }
@@ -93,6 +96,7 @@ describe("Browser", () => {
                 Promise.resolve({ body: { time: Date.now() } })
             );
 
+            //@ts-ignore
             class MockedBrowser extends Browser {
                 _postKeyed = _postKeyMock;
             }
@@ -143,6 +147,7 @@ describe("Browser", () => {
 
             const _postKeyMock = jest.fn(() => Promise.resolve({ id: 123 }));
 
+            //@ts-ignore
             class MockedBrowser extends Browser {
                 _postKeyed = _postKeyMock;
                 getTranscript() {
@@ -170,5 +175,25 @@ describe("Browser", () => {
             expect(await msg.roomId).toEqual(roomId);
             expect(await msg.content).toEqual(text);
         });
+
+        it("should throw ChatExchangeError when server errors out", async () => {
+            expect.assertions(1);
+
+            const host: Host = "stackoverflow.com";
+            const client = new Client(host);
+
+            const _get$mock = jest.fn(() => Promise.resolve(cheerio.load("")));
+
+            //@ts-ignore
+            class MockBrowser extends Browser {
+                _get$ = _get$mock;
+            }
+
+            const browser = new MockBrowser(client, host);
+
+            await expect(browser.chatFKey).rejects.toThrow(InternalError);
+        });
     });
+
+    
 });

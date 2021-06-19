@@ -6,6 +6,12 @@ import Message from "../../src/Message";
 import User from "../../src/User";
 
 describe("Client", () => {
+    test("Should throw error if invalid host", () => {
+        expect.assertions(1);
+
+        //@ts-ignore
+        expect(() => new Client("example.com")).toThrowError(InvalidArgumentError);
+    })
     test("Should throw error if not logged in", async () => {
         expect.assertions(1);
 
@@ -121,8 +127,8 @@ describe("Client", () => {
         expect(user.id).toEqual(id);
     });
 
-    test("Should attempt to join a room", async () => {
-        expect.assertions(1);
+    test("Should attempt to join a room and fetch existing room", async () => {
+        expect.assertions(2);
 
         class BrowserMock extends Browser {
             joinRoom = jest.fn();
@@ -134,8 +140,12 @@ describe("Client", () => {
 
         client._browser = new BrowserMock(client, host);
 
-        await client.joinRoom(5);
+        var room = await client.joinRoom(5);
 
         expect(client._browser.joinRoom).toHaveBeenCalledWith(5);
+
+        var room2 = client.getRoom(5);
+
+        expect(room).toMatchObject(room2);
     });
 });

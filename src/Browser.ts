@@ -344,14 +344,14 @@ class Browser {
         return new Message(this._client, id, { roomId });
     }
 
-    public async _updateChatFKeyAndUser() {
+    private async _updateChatFKeyAndUser() {
         const $ = await this._get$("chats/join/favorite");
 
         this._loadFKey($);
         this._loadUser($);
     }
 
-    public _loadFKey($: cheerio.Root) {
+    private _loadFKey($: cheerio.Root) {
         this._chatFKey = $('input[name="fkey"]').val();
 
         if (typeof this._chatFKey === "undefined") {
@@ -359,7 +359,7 @@ class Browser {
         }
     }
 
-    public _loadUser($: cheerio.Root) {
+    private _loadUser($: cheerio.Root) {
         const userLink = $(".topbar-menu-links a");
 
         const [, , userId, userName] = userLink.attr("href")!.split("/");
@@ -369,7 +369,7 @@ class Browser {
     }
 
     // Request helpers
-    public async _request(
+    private async _request(
         method: string,
         uri: string,
         form:
@@ -403,23 +403,23 @@ class Browser {
         return res;
     }
 
-    public async _get$(uri: string, qs = {}) {
+    private async _get$(uri: string, qs = {}) {
         const res = await this._request("get", uri, {}, qs);
 
         return cheerio.load(res.body);
     }
 
-    public _post(uri: string, data = {}, qs = {}) {
+    private _post(uri: string, data = {}, qs = {}) {
         return this._request("post", uri, data, qs);
     }
 
-    public async _postKeyed(uri: string, data: any = {}, qs: any = {}) {
+    private async _postKeyed(uri: string, data: any = {}, qs: any = {}) {
         data.fkey = await this.chatFKey;
 
         return this._post(uri, data, qs);
     }
 
-    public _getCookie(key: string) {
+    private _getCookie(key: string) {
         const cookies = this._cookieJar.getCookies(`https://${this.host}`);
 
         return cookies.find((cookie: Cookie) => cookie.key === key);

@@ -12,9 +12,9 @@ export type Host =
     | "stackoverflow.com";
 
 export const AllowedHosts: Host[] = [
-    "stackoverflow.com",
     "stackexchange.com",
     "meta.stackexchange.com",
+    "stackoverflow.com",
 ];
 
 /**
@@ -60,7 +60,7 @@ class Client {
      * @throws {ChatExchangeError} If no user is currently logged in
      * @memberof Client
      */
-    public async getMe() {
+    public async getMe(): Promise<User> {
         if (!this._browser.loggedIn) {
             throw new ChatExchangeError("Cannot get user, not logged in.");
         }
@@ -68,13 +68,13 @@ class Client {
         return new User(this, await this._browser.userId);
     }
 
-    public getMessage(id: number) {
+    public getMessage(id: number): Message {
         // eslint-disable-line class-methods-use-this
         // Add caching in the future?
         return new Message(this, id);
     }
 
-    public getRoom(id: number) {
+    public getRoom(id: number): Room {
         let room = this._rooms.get(id);
         if (room) {
             return room;
@@ -87,7 +87,7 @@ class Client {
         return room;
     }
 
-    public getUser(id: number) {
+    public getUser(id: number): User {
         let user = this._users.get(id);
         if (user) {
             return user;
@@ -109,7 +109,7 @@ class Client {
      * @returns {Promise<string>} Request Cookie Jar (Optionally to save to `loginCookie`)
      * @memberof Client
      */
-    public async login(email: string, password: string) {
+    public async login(email: string, password: string): Promise<string> {
         if (!password) {
             throw new InvalidArgumentError("Email and password are required.");
         }
@@ -130,7 +130,7 @@ class Client {
      * @returns {Promise<void>} A promise representing when login is complete
      * @memberof Client
      */
-    public async loginCookie(cookieString: string) {
+    public async loginCookie(cookieString: string): Promise<void> {
         if (typeof cookieString !== "string" || cookieString === "") {
             throw new InvalidArgumentError("cookieString is required.");
         }
@@ -145,7 +145,7 @@ class Client {
      * @returns {Promise<Room>} The room object
      * @memberof Client
      */
-    public async joinRoom(id: number) {
+    public async joinRoom(id: number): Promise<Room> {
         const room = this.getRoom(id);
 
         await room.join();
