@@ -12,20 +12,23 @@ describe('Room', () => {
         expect(room.id).toEqual(5);
     });
 
-    it('Should attempt to join a room', async () => {
-        expect.assertions(1);
+    it('Should attempt to join/leave a room', async () => {
+        expect.assertions(2);
 
         var client = {
             _browser: {
-                joinRoom: jest.fn()
+                joinRoom: jest.fn(),
+                leaveRoom: jest.fn()
             }
         };
 
         const room = new Room(client, 5);
 
         await room.join();
+        await room.leave();
 
         expect(client._browser.joinRoom).toHaveBeenCalledWith(5);
+        expect(client._browser.leaveRoom).toHaveBeenCalledWith(5);
     });
 
     it('Should attempt to send a message', async () => {
