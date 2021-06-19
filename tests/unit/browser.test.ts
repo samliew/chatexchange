@@ -86,8 +86,8 @@ describe("Browser", () => {
     });
 
     describe("room interaction", () => {
-        it("should attempt to send a message event", async () => {
-            expect.assertions(1);
+        it("should attempt to join and leave room", async () => {
+            expect.assertions(2);
 
             const host: Host = "stackexchange.com";
             const client = new Client(host);
@@ -115,6 +115,16 @@ describe("Browser", () => {
                     since: 0,
                 }
             );
+
+            await browser.leaveRoom(roomId)
+
+            expect(_postKeyMock).toHaveBeenCalledWith(
+                `chats/leave/${roomId}`,
+                {
+                    quiet: true,
+                }
+            );
+
         });
     });
 
@@ -174,24 +184,6 @@ describe("Browser", () => {
             expect(msg).toBeInstanceOf(Message);
             expect(await msg.roomId).toEqual(roomId);
             expect(await msg.content).toEqual(text);
-        });
-
-        it("should throw ChatExchangeError when server errors out", async () => {
-            expect.assertions(1);
-
-            const host: Host = "stackoverflow.com";
-            const client = new Client(host);
-
-            const _get$mock = jest.fn(() => Promise.resolve(cheerio.load("")));
-
-            //@ts-ignore
-            class MockBrowser extends Browser {
-                _get$ = _get$mock;
-            }
-
-            const browser = new MockBrowser(client, host);
-
-            await expect(browser.chatFKey).rejects.toThrow(InternalError);
         });
     });
 
