@@ -1,21 +1,6 @@
+import { IProfileData } from "./Browser";
 import Client from "./Client";
 import { lazy } from "./utils";
-
-/* eslint-disable no-underscore-dangle */
-
-interface UserPrivates {
-    client: Client;
-    name?: string;
-    about?: string;
-    isModerator?: boolean;
-    messageCount?: number;
-    roomCount?: number;
-    lastSeen?: number;
-    lastMessage?: number;
-    reputation?: number;
-}
-
-const privates: WeakMap<User, UserPrivates> = new WeakMap();
 
 /**
  * Represents a user. Most properties are promises, to
@@ -33,62 +18,65 @@ const privates: WeakMap<User, UserPrivates> = new WeakMap();
  * @class User
  */
 class User {
+    #client: Client;
+    #profileData?: IProfileData;
+
     constructor(client: Client, public id: number) {
-        privates.set(this, { client });
+        this.#client = client
     }
 
-    get name() {
+    get name(): Promise<string> {
         return lazy(
-            () => privates.get(this)!.name,
+            () => this.#profileData?.name,
             () => this.scrapeProfile()
         );
     }
 
-    get about() {
+    get about(): Promise<string> {
         return lazy(
-            () => privates.get(this)!.about,
+            () => this.#profileData?.about,
             () => this.scrapeProfile()
         );
     }
 
-    get isModerator() {
+    get isModerator(): Promise<boolean> {
         return lazy(
-            () => privates.get(this)!.isModerator,
+            () => this.#profileData?.isModerator,
             () => this.scrapeProfile()
         );
     }
 
-    get messageCount() {
+    get messageCount(): Promise<number> {
         return lazy(
-            () => privates.get(this)!.messageCount,
+            () => this.#profileData?.messageCount,
             () => this.scrapeProfile()
         );
     }
 
-    get roomCount() {
+    get roomCount(): Promise<number> {
         return lazy(
-            () => privates.get(this)!.roomCount,
+            () => this.#profileData?.roomCount,
             () => this.scrapeProfile()
         );
     }
 
-    get lastSeen() {
+    get lastSeen(): Promise<number> {
         return lazy(
-            () => privates.get(this)!.lastSeen,
+            () => this.#profileData?.lastSeen,
             () => this.scrapeProfile()
         );
     }
 
-    get lastMessage() {
+    get lastMessage(): Promise<number> {
         return lazy(
-            () => privates.get(this)!.lastMessage,
+            () => this.#profileData?.lastMessage,
             () => this.scrapeProfile()
         );
     }
 
-    get reputation() {
+    get reputation(): Promise<number> {
         return lazy(
-            () => privates.get(this)!.reputation,
+            () => this.#profileData?.reputation,
             () => this.scrapeProfile()
         );
     }
@@ -101,9 +89,7 @@ class User {
      * @memberof User
      */
     public async scrapeProfile(): Promise<void> {
-        const user = privates.get(this)!;
-        const data = await user.client._browser.getProfile(this.id);
-        privates.set(this, Object.assign(user, data));
+        this.#profileData = await this.#client._browser.getProfile(this.id);
     }
 }
 
