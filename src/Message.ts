@@ -7,6 +7,19 @@ interface Message {
     [x: string]: unknown;
 }
 
+export interface MessageAttributes {
+    id: number;
+    event_type: string;
+    content: string;
+    user_id: number;
+    target_user_id: number;
+    roomId: number;
+    room: Room;
+    roomName: string;
+    user_name: string;
+    parent_id: number;
+}
+
 /**
  * Represents a message that was sent in a chatroom
  * @class
@@ -29,13 +42,13 @@ class Message {
      * @summary Creates an instance of Message.
      * @param {Client} client The client associated with this message
      * @param {number} id The ID of the message
-     * @param {Object} attrs Extra attributes that should be assigned to this message
+     * @param {Partial<MessageAttributes>} attrs Extra attributes that should be assigned to this message
      * @constructor
      */
     constructor(
         client: Client,
         id: number,
-        attrs: { [key: string]: any } = {}
+        attrs: Partial<MessageAttributes> = {}
     ) {
         this._client = client;
         this.id = id;
