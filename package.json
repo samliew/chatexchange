@@ -60,6 +60,6 @@
     "ts-jest": "^27.0.3",
     "tslint": "^5.11.0",
     "typedoc": "^0.21.0",
-    "typescript": "4.2.x"
+    "typescript": "4.3.x"
   }
 }
