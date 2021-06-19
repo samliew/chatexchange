@@ -1,5 +1,4 @@
 import Client from '../../src/Client';
-import Room from '../../src/Room';
 
 jest.mock('request-promise-native', function() {
     const fs = require('fs');

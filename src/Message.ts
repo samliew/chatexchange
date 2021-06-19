@@ -1,5 +1,8 @@
+import { ITranscriptData } from "./Browser";
 import Client from "./Client";
+import ChatExchangeError from "./Exceptions/ChatExchangeError";
 import Room from "./Room";
+import User from "./User";
 import { lazy } from "./utils";
 
 //allows the use of string indexes without assertions
@@ -7,123 +10,120 @@ interface Message {
     [x: string]: unknown;
 }
 
-export interface MessageAttributes {
-    id: number;
-    event_type: string;
-    content: string;
-    user_id: number;
-    target_user_id: number;
-    roomId: number;
-    room: Room;
-    roomName: string;
-    user_name: string;
-    parent_id: number;
-}
-
 /**
  * Represents a message that was sent in a chatroom
  * @class
  */
 class Message {
-    public id: number;
-    private _client: Client;
-    private _eventId?: number;
-    private _eventType?: string;
-    private _content?: string;
-    private _userId?: number;
-    private _targetUserId?: number;
-    private _roomId?: number;
-    private _room?: Room;
-    private _roomName?: string;
-    private _userName?: string;
-    private _parentId?: number;
+    /**
+     * The message ID. If this is a WebsocketEvent Message, if the message is 
+     * not a message type, this will be undefined
+     *
+     * @type {(number | undefined)}
+     * @memberof Message
+     */
+    public id: number | undefined;
+    #client: Client;
+    #room: Room | undefined;
+    #transcriptData?: Partial<ITranscriptData>;
 
     /**
      * @summary Creates an instance of Message.
      * @param {Client} client The client associated with this message
      * @param {number} id The ID of the message
-     * @param {Partial<MessageAttributes>} attrs Extra attributes that should be assigned to this message
+     * @param {Partial<ITranscriptData>} attrs Extra attributes that should be assigned to this message
      * @constructor
      */
     constructor(
         client: Client,
-        id: number,
-        attrs: Partial<MessageAttributes> = {}
+        id: number | undefined,
+        attrs: Partial<ITranscriptData> = {}
     ) {
-        this._client = client;
+        this.#client = client;
         this.id = id;
-        this._eventId = attrs.id;
-        this._eventType = attrs.event_type;
-        this._content = attrs.content;
-        this._userId = attrs.user_id;
-        this._targetUserId = attrs.target_user_id;
-        this._roomId = attrs.roomId;
-        this._room = attrs.room;
-        this._roomName = attrs.roomName;
-        this._userName = attrs.user_name;
-        this._parentId = attrs.parent_id;
+        this.#transcriptData = attrs;
     }
 
+    /**
+     * The room associated with this message
+     *
+     * @readonly
+     * @type {Promise<Room>}
+     * @memberof Message
+     */
     get room(): Promise<Room> {
         return lazy<Room>(
-            () => this._room!,
+            () => this.#room,
             /* istanbul ignore next */
             () => this._setRoom()
         );
     }
 
+    /**
+     * The room ID associated with this message
+     *
+     * @readonly
+     * @type {Promise<number>}
+     * @memberof Message
+     */
     get roomId(): Promise<number> {
         return lazy<number>(
-            () => this._roomId!,
-            /* istanbul ignore next */
+            () => this.#transcriptData?.roomId,
             () => this._scrapeTranscript()
         );
     }
 
+    /**
+     * The actual text content of the message. This will be raw HTML as 
+     * parsed by the server
+     *
+     * @readonly
+     * @type {Promise<string>}
+     * @memberof Message
+     */
     get content(): Promise<string> {
         return lazy<string>(
-            () => this._content!,
+            () => this.#transcriptData?.content,
             /* istanbul ignore next */
             () => this._scrapeTranscript()
         );
     }
 
-    get userId(): Promise<number> {
+    /**
+     * The user associated with this message
+     *
+     * @readonly
+     * @type {Promise<User>}
+     * @memberof Message
+     */
+    get user(): Promise<User> {
+        return lazy<User>(
+            () => this.#transcriptData?.user,
+            /* istanbul ignore next */
+            () => this._scrapeTranscript()
+        );
+    }
+
+    get parentMessageId(): Promise<number> {
         return lazy<number>(
-            () => this._userId!,
+            () => this.#transcriptData?.parentMessageId,
             /* istanbul ignore next */
             () => this._scrapeTranscript()
         );
     }
 
-    get targetUserId(): Promise<number> {
-        return lazy<number>(
-            () => this._targetUserId!,
-            /* istanbul ignore next */
-            () => this._scrapeTranscript()
-        );
-    }
-
-    get parentId(): Promise<number> {
-        return lazy<number>(
-            () => this._parentId!,
-            /* istanbul ignore next */
-            () => this._scrapeTranscript()
-        );
-    }
-
-    public async _setRoom() {
+    private async _setRoom() {
         const roomId = await this.roomId;
 
-        this._room = this._client.getRoom(roomId);
+        this.#room = this.#client.getRoom(roomId);
     }
 
-    public async _scrapeTranscript() {
-        const data = await this._client._browser.getTranscript(this.id);
-
-        for (const [key, value] of Object.entries(data)) {
-            this[`_${key}`] = value;
+    private async _scrapeTranscript(): Promise<void> {
+        if (!this.id) {
+            throw new ChatExchangeError("This is not a valid message.");
         }
+
+        this.#transcriptData = await this.#client._browser.getTranscript(this.id);
     }
 
     /**
@@ -136,6 +136,10 @@ class Message {
      * @memberof Message
      */
     public async reply(message: string): Promise<Message> {
+        if (!this.id) {
+            throw new ChatExchangeError("This is not a valid message that can be replied to.");
+        }
+
         const room = await this.room;
 
         const res = await room.sendMessage(`:${this.id} ${message}`);
@@ -151,11 +155,11 @@ class Message {
      * @memberof Message
      */
     public async parent(): Promise<Message | undefined> {
-        const parentId = await this.parentId;
+        const parentId = await this.parentMessageId;
 
         //TODO: rethink - is 0 really the best option when no parent is present?
         if (parentId) {
-            return new Message(this._client, parentId);
+            return new Message(this.#client, parentId);
         }
     }
 }

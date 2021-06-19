@@ -5,6 +5,7 @@ import Client, { Host } from "../../src/Client";
 import InternalError from "../../src/Exceptions/InternalError";
 import LoginError from "../../src/Exceptions/LoginError";
 import Message from "../../src/Message";
+import User from "../../src/User";
 
 describe("Browser", () => {
     describe("authentication", () => {
@@ -17,7 +18,7 @@ describe("Browser", () => {
                 )
             );
 
-            //@ts-ignore
+            //@ts-expect-error
             class MockBrowser extends Browser {
                 _get$ = _get$mock;
                 _getCookie(str: string) {
@@ -31,9 +32,13 @@ describe("Browser", () => {
             const host: Host = "stackexchange.com";
             const replacement = "meta.stackexchange.com";
 
-            const mocked = new MockBrowser(new Client(host), host);
+            const client = new Client(host);
+            //@ts-expect-error
+            client._browser = null;
 
-            mocked.login("ex@ample.org", "a!z5R_+@/|g-[%");
+            const browser = new MockBrowser(client);
+
+            browser.login("ex@ample.org", "a!z5R_+@/|g-[%");
 
             expect(_get$mock).toHaveBeenCalledWith(
                 `https://${replacement}/users/login`
@@ -45,14 +50,19 @@ describe("Browser", () => {
 
             const _get$mock = jest.fn(() => Promise.resolve(cheerio.load("")));
 
-            //@ts-ignore
+            //@ts-expect-error
             class MockBrowser extends Browser {
                 _get$ = _get$mock;
             }
 
             const host: Host = "stackoverflow.com";
 
-            const browser = new MockBrowser(new Client(host), host);
+            const client = new Client(host);
+
+            //@ts-expect-error
+            client._browser = null;
+
+            const browser = new MockBrowser(client);
 
             const jar = new CookieJar();
             const cookie = Cookie.parse("name=test; SameSite=None; Secure")!;
@@ -72,14 +82,17 @@ describe("Browser", () => {
             const host: Host = "stackoverflow.com";
             const client = new Client(host);
 
+            //@ts-expect-error
+            client._browser = null;
+
             const _get$mock = jest.fn(() => Promise.resolve(cheerio.load("")));
 
-            //@ts-ignore
+            //@ts-expect-error
             class MockBrowser extends Browser {
                 _get$ = _get$mock;
             }
 
-            const browser = new MockBrowser(client, host);
+            const browser = new MockBrowser(client);
 
             await expect(browser.chatFKey).rejects.toThrow(InternalError);
         });
@@ -92,16 +105,19 @@ describe("Browser", () => {
             const host: Host = "stackexchange.com";
             const client = new Client(host);
 
+            //@ts-expect-error
+            client._browser = null;
+
             const _postKeyMock = jest.fn(() =>
                 Promise.resolve({ body: { time: Date.now() } })
             );
 
-            //@ts-ignore
+            //@ts-expect-error
             class MockedBrowser extends Browser {
                 _postKeyed = _postKeyMock;
             }
 
-            const browser = new MockedBrowser(client, host);
+            const browser = new MockedBrowser(client);
 
             const roomId = 29;
 
@@ -138,23 +154,6 @@ describe("Browser", () => {
             const roomId = 29;
             const text = "It's alive!";
 
-            class MockMessage extends Message {
-                async _scrapeTranscript() {
-                    Object.assign(this, {
-                        _content: text,
-                    });
-                }
-            }
-
-            jest.doMock("../../src/Message.ts", () => ({
-                __esModule: true,
-                default: MockMessage,
-            }));
-
-            const { default: Browser } = await import("../../src/Browser");
-
-            const client = new Client(host);
-
             const _postKeyMock = jest.fn(() => Promise.resolve({ id: 123 }));
 
             //@ts-ignore
@@ -165,6 +164,7 @@ describe("Browser", () => {
                         content: text,
                         edited: false,
                         id: 456,
+                        user: new User(client, 5),
                         parentMessageId: 789,
                         roomId,
                         roomName: "Test",
@@ -172,9 +172,11 @@ describe("Browser", () => {
                 }
             }
 
-            const browser = new MockedBrowser(client, host);
+            const client = new Client(host);
+            // @ts-ignore
+            client._browser = new MockedBrowser(client)
 
-            const msg = await browser.sendMessage(roomId, text);
+            const msg = await client._browser.sendMessage(roomId, text);
 
             expect(_postKeyMock).toHaveBeenCalledWith(
                 `chats/${roomId}/messages/new`,

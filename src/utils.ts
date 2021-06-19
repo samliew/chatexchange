@@ -52,7 +52,7 @@ export async function lazy<T>(
  * @returns {object} The object that was converted
  */
 export const arrayToKvp = (
-    array: Array<string | number>
+    array: (string | number)[]
 ): { [key: string]: string } =>
     array.reduce((arr, val, idx, ori) => {
         if (idx % 2 === 1) {

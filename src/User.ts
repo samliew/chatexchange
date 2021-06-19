@@ -6,25 +6,33 @@ import { lazy } from "./utils";
  * Represents a user. Most properties are promises, to
  * lazily load them from the server if they're not present.
  *
- * @property {number} id The id of the user
- * @property {Promise<string>} name The name of the user
- * @property {Promise<string>} about The about section of their chat profile
- * @property {Promise<boolean>} isModerator True if the user is a moderator, false otherwise
- * @property {Promise<number>} messageCount The number of all time messages this user has sent
- * @property {Promise<number>} roomCount All time number of rooms this user has been a part of
- * @property {Promise<number>} lastSeen The number of seconds since this user was last seen
- * @property {Promise<number>} lastMessage The number of seconds since this user posted a message in any chat
- * @property {Promise<number>} reputation user's reputation
  * @class User
  */
 class User {
-    #client: Client;
-    #profileData?: IProfileData;
+    /**
+     * The id of the user
+     *
+     * @type {number}
+     * @memberof User
+     */
+    public id: number;
 
-    constructor(client: Client, public id: number) {
-        this.#client = client
+    #client: Client;
+    #profileData?: Omit<Partial<IProfileData>, "id">;
+
+    constructor(client: Client, id: number, profileData?: Omit<Partial<IProfileData>, "id"> | undefined) {
+        this.#client = client;
+        this.id = id;
+        this.#profileData = profileData;
     }
 
+    /**
+     * The name of the user
+     *
+     * @readonly
+     * @type {Promise<string>}
+     * @memberof User
+     */
     get name(): Promise<string> {
         return lazy(
             () => this.#profileData?.name,
@@ -32,6 +40,13 @@ class User {
         );
     }
 
+    /**
+     * The about section of their chat profile
+     *
+     * @readonly
+     * @type {Promise<string>}
+     * @memberof User
+     */
     get about(): Promise<string> {
         return lazy(
             () => this.#profileData?.about,
@@ -39,6 +54,13 @@ class User {
         );
     }
 
+    /**
+     * True if the user is a moderator, false otherwise
+     *
+     * @readonly
+     * @type {Promise<boolean>}
+     * @memberof User
+     */
     get isModerator(): Promise<boolean> {
         return lazy(
             () => this.#profileData?.isModerator,
@@ -46,6 +68,13 @@ class User {
         );
     }
 
+    /**
+     * The number of all time messages this user has sent
+     *
+     * @readonly
+     * @type {Promise<number>}
+     * @memberof User
+     */
     get messageCount(): Promise<number> {
         return lazy(
             () => this.#profileData?.messageCount,
@@ -53,6 +82,13 @@ class User {
         );
     }
 
+    /**
+     * All time number of rooms this user has been a part of
+     *
+     * @readonly
+     * @type {Promise<number>}
+     * @memberof User
+     */
     get roomCount(): Promise<number> {
         return lazy(
             () => this.#profileData?.roomCount,
@@ -60,6 +96,13 @@ class User {
         );
     }
 
+    /**
+     * The number of seconds since this user was last seen
+     *
+     * @readonly
+     * @type {Promise<number>}
+     * @memberof User
+     */
     get lastSeen(): Promise<number> {
         return lazy(
             () => this.#profileData?.lastSeen,
@@ -67,6 +110,13 @@ class User {
         );
     }
 
+    /**
+     * The number of seconds since this user posted a message in any chat
+     *
+     * @readonly
+     * @type {Promise<number>}
+     * @memberof User
+     */
     get lastMessage(): Promise<number> {
         return lazy(
             () => this.#profileData?.lastMessage,
@@ -74,6 +124,13 @@ class User {
         );
     }
 
+    /**
+     * User's current reputation
+     *
+     * @readonly
+     * @type {Promise<number>}
+     * @memberof User
+     */
     get reputation(): Promise<number> {
         return lazy(
             () => this.#profileData?.reputation,
@@ -83,7 +140,8 @@ class User {
 
     /**
      * Used by most properties of this class to fetch their profile,
-     * and updates their associated values.
+     * and updates their associated values. This should not be needed
+     * to call directly. Simply await the properties
      *
      * @returns {Promise<void>}
      * @memberof User

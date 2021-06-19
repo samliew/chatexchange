@@ -1,5 +1,5 @@
 import { validate } from "email-validator";
-import Browser from "./Browser";
+import Browser, { IProfileData } from "./Browser";
 import ChatExchangeError from "./Exceptions/ChatExchangeError";
 import InvalidArgumentError from "./Exceptions/InvalidArgumentError";
 import Message from "./Message";
@@ -28,8 +28,11 @@ class Client {
      * @type {string}
      * @memberof Client
      */
-    public host: string;
+    public readonly host: string;
+
+    /* @internal */
     public _browser: Browser;
+
     private _rooms: Map<number, Room>;
     private _users: Map<number, User>;
 
@@ -48,7 +51,7 @@ class Client {
         }
 
         this.host = host;
-        this._browser = new Browser(this, host);
+        this._browser = new Browser(this);
         this._rooms = new Map<number, Room>();
         this._users = new Map<number, User>();
     }
@@ -87,13 +90,13 @@ class Client {
         return room;
     }
 
-    public getUser(id: number): User {
+    public getUser(id: number, existingData?: Omit<Partial<IProfileData>, "id"> | undefined): User {
         let user = this._users.get(id);
         if (user) {
             return user;
         }
 
-        user = new User(this, id);
+        user = new User(this, id, existingData);
 
         this._users.set(id, user);
 

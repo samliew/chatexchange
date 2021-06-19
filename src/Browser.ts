@@ -8,6 +8,7 @@ import ChatExchangeError from "./Exceptions/ChatExchangeError";
 import InternalError from "./Exceptions/InternalError";
 import LoginError from "./Exceptions/LoginError";
 import Message from "./Message";
+import User from "./User";
 import { arrayToKvp, lazy, parseAgoString } from "./utils";
 
 const request = requestPromise.defaults({
@@ -32,8 +33,9 @@ export interface IProfileData {
     lastMessage: number;
 }
 
-interface ITranscriptData {
+export interface ITranscriptData {
     id: number;
+    user: User;
     content: string;
     roomId: number;
     roomName: string;
@@ -63,11 +65,11 @@ class Browser {
     private _userId!: number;
     private _userName!: string;
 
-    constructor(client: Client, public host: Host) {
+    constructor(client: Client) {
         this.loggedIn = false;
         this._client = client;
         this._cookieJar = request.jar();
-        this._chatRoot = `https://chat.${this.host}/`;
+        this._chatRoot = `https://chat.${client.host}/`;
         this._rooms = {};
     }
 
@@ -106,7 +108,7 @@ class Browser {
     ): Promise<void> {
         this._cookieJar._jar = CookieJar.deserializeSync(cookieJar); // eslint-disable-line
 
-        const $ = await this._get$(`https://${this.host}/`);
+        const $ = await this._get$(`https://${this._client.host}/`);
 
         const res = $(".my-profile");
 
@@ -132,9 +134,9 @@ class Browser {
      * @memberof Browser
      */
     public async login(email: string, password: string): Promise<string> {
-        let loginHost = this.host;
+        let loginHost = this._client.host;
 
-        if (this.host === "stackexchange.com") {
+        if (this._client.host === "stackexchange.com") {
             loginHost = "meta.stackexchange.com";
         }
 
@@ -296,11 +298,18 @@ class Browser {
      * @returns {Promise<ITranscriptData>}
      * @memberof Browser
      */
-    public async getTranscript(msgId: number) {
+    public async getTranscript(msgId: number): Promise<ITranscriptData> {
         const $ = await this._get$(`transcript/message/${msgId}`);
 
         const $msg = $(".message.highlight");
         const $room = $(".room-name a");
+
+        const $userDiv = $msg.parent().prev(".signature").find(".username a");
+
+        const userId = parseInt($userDiv.attr("href")!.split("/")[2], 10);
+        const userName = $userDiv.text();
+
+        const user = this._client.getUser(userId, { name: userName });
 
         const roomName = $room.text();
         const roomId = parseInt($room.attr("href")!.split("/")[2], 10); // eslint-disable-line prefer-destructuring
@@ -310,7 +319,7 @@ class Browser {
 
         const replyInfo = $msg.find(".reply-info");
 
-        let parentMessageId = null;
+        let parentMessageId;
         if (replyInfo.length > 0) {
             parentMessageId = parseInt(
                 replyInfo.attr("href")!.split("#")[1],
@@ -325,6 +334,7 @@ class Browser {
             parentMessageId,
             roomId,
             roomName,
+            user,
         };
     }
 
@@ -420,7 +430,7 @@ class Browser {
     }
 
     private _getCookie(key: string) {
-        const cookies = this._cookieJar.getCookies(`https://${this.host}`);
+        const cookies = this._cookieJar.getCookies(`https://${this._client.host}`);
 
         return cookies.find((cookie: Cookie) => cookie.key === key);
     }

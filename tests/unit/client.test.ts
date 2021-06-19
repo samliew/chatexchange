@@ -35,7 +35,7 @@ describe("Client", () => {
                 }
             }
 
-            client._browser = new BrowserMock(client, host);
+            client._browser = new BrowserMock(client);
 
             const user = await client.getMe();
 
@@ -89,7 +89,7 @@ describe("Client", () => {
 
         const client = new Client(host);
 
-        client._browser = new BrowserMock(client, host);
+        client._browser = new BrowserMock(client);
 
         const cookieStr = "testing";
 
@@ -138,7 +138,7 @@ describe("Client", () => {
 
         const client = new Client(host);
 
-        client._browser = new BrowserMock(client, host);
+        client._browser = new BrowserMock(client);
 
         var room = await client.joinRoom(5);
 
