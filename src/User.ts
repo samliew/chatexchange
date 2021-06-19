@@ -39,56 +39,56 @@ class User {
 
     get name() {
         return lazy(
-            () => privates.get(this)?.name,
+            () => privates.get(this)!.name,
             () => this.scrapeProfile()
         );
     }
 
     get about() {
         return lazy(
-            () => privates.get(this)?.about,
+            () => privates.get(this)!.about,
             () => this.scrapeProfile()
         );
     }
 
     get isModerator() {
         return lazy(
-            () => privates.get(this)?.isModerator,
+            () => privates.get(this)!.isModerator,
             () => this.scrapeProfile()
         );
     }
 
     get messageCount() {
         return lazy(
-            () => privates.get(this)?.messageCount,
+            () => privates.get(this)!.messageCount,
             () => this.scrapeProfile()
         );
     }
 
     get roomCount() {
         return lazy(
-            () => privates.get(this)?.roomCount,
+            () => privates.get(this)!.roomCount,
             () => this.scrapeProfile()
         );
     }
 
     get lastSeen() {
         return lazy(
-            () => privates.get(this)?.lastSeen,
+            () => privates.get(this)!.lastSeen,
             () => this.scrapeProfile()
         );
     }
 
     get lastMessage() {
         return lazy(
-            () => privates.get(this)?.lastMessage,
+            () => privates.get(this)!.lastMessage,
             () => this.scrapeProfile()
         );
     }
 
     get reputation() {
         return lazy(
-            () => privates.get(this)?.reputation,
+            () => privates.get(this)!.reputation,
             () => this.scrapeProfile()
         );
     }
