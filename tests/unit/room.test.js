@@ -95,16 +95,17 @@ describe('Room', () => {
     });
 
     it('Should fire an event', async () => {
+        expect.assertions(11);
+
         const websocketMock = new EventEmitter();
 
         const client = {
             _browser: {
                 sendMessage: jest.fn(),
+                leaveRoom: jest.fn(),
                 watchRoom: jest.fn(() => websocketMock)
             }
         };
-
-        expect.assertions(5);
 
         const room = new Room(client, 5);
 
@@ -126,10 +127,26 @@ describe('Room', () => {
 
         websocketMock.emit('message', JSON.stringify(wrappedEvent));
         websocketMock.emit('message', '{}');
+        
+        expect(client._browser.watchRoom).toHaveBeenCalledTimes(1);
+        expect(client._browser.watchRoom).toHaveBeenCalledWith(5);
+
+        // Simulate server disconnect
         websocketMock.emit('close');
 
+        expect(client._browser.watchRoom).toHaveBeenCalledTimes(2);
         expect(client._browser.watchRoom).toHaveBeenCalledWith(5);
+
         expect(messageSpy).toHaveBeenCalledTimes(1);
+        expect(closeSpy).toHaveBeenCalledTimes(0);
+        expect(client._browser.leaveRoom).toHaveBeenCalledTimes(0);
+
+        await room.leave();
+
+        expect(client._browser.leaveRoom).toHaveBeenCalledWith(5);
+
+        websocketMock.emit('close');
+        
         expect(closeSpy).toHaveBeenCalledTimes(1);
 
         const msg = messageSpy.mock.calls[0][0];

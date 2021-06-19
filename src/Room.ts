@@ -19,6 +19,7 @@ class Room extends EventEmitter {
      */
     public id: number;
     #client: Client;
+    #isClosing: boolean = false;
 
     /**
      * Creates an instance of Room.
@@ -40,6 +41,7 @@ class Room extends EventEmitter {
      * @memberof Room
      */
     public async join(): Promise<void> {
+        this.#isClosing = false
         await this.#client._browser.joinRoom(this.id);
     }
 
@@ -50,6 +52,7 @@ class Room extends EventEmitter {
      * @memberof Room
      */
     public async leave(): Promise<void> {
+        this.#isClosing = true
         await this.#client._browser.leaveRoom(this.id);
     }
 
@@ -79,7 +82,12 @@ class Room extends EventEmitter {
         });
 
         ws.on("close", () => {
-            this.emit("close");
+            if (this.#isClosing) {
+                this.emit("close");
+            } else {
+                ws.removeAllListeners();
+                this.watch();
+            }
         });
     }
 
