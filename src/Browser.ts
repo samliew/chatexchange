@@ -2,7 +2,7 @@ import * as cheerio from "cheerio";
 import { Cookie } from "request";
 import * as requestPromise from "request-promise-native";
 import { CookieJar } from "tough-cookie";
-import * as WebSocket from "ws";
+import WebSocket from "ws";
 import Client from "./Client";
 import ChatExchangeError from "./Exceptions/ChatExchangeError";
 import InternalError from "./Exceptions/InternalError";
