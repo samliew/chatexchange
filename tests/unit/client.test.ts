@@ -132,22 +132,21 @@ describe("Client", () => {
     test("Should attempt to join a room and fetch existing room", async () => {
         expect.assertions(2);
 
+        const roomId = 5;
+        const host: Host = "stackoverflow.com";
+
         class BrowserMock extends Browser {
             joinRoom = jest.fn();
         }
-
-        const host: Host = "stackoverflow.com";
 
         const client = new Client(host);
 
         client._browser = new BrowserMock(client);
 
-        var room = await client.joinRoom(5);
+        const room = await client.joinRoom(roomId);
+        const room2 = client.getRoom(roomId);
 
-        expect(client._browser.joinRoom).toHaveBeenCalledWith(5);
-
-        var room2 = client.getRoom(5);
-
+        expect(client._browser.joinRoom).toHaveBeenCalledWith(roomId);
         expect(room).toMatchObject(room2);
     });
 
