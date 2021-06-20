@@ -33,7 +33,7 @@ describe("Browser", () => {
             const replacement = "meta.stackexchange.com";
 
             const client = new Client(host);
-            //@ts-expect-error
+            //@ts-ignore
             client._browser = null;
 
             const browser = new MockBrowser(client);
@@ -58,8 +58,7 @@ describe("Browser", () => {
             const host: Host = "stackoverflow.com";
 
             const client = new Client(host);
-
-            //@ts-expect-error
+            //@ts-ignore
             client._browser = null;
 
             const browser = new MockBrowser(client);
@@ -73,6 +72,35 @@ describe("Browser", () => {
 
             await expect(login).rejects.toThrow(LoginError);
         });
+
+        it("should set loggedIn property on cookie success", async () => {
+            expect.assertions(1);
+
+            const _get$mock = jest.fn(() =>
+                Promise.resolve(cheerio.load('<div class="my-profile"></div>'))
+            );
+
+            //@ts-expect-error
+            class MockBrowser extends Browser {
+                _get$ = _get$mock;
+            }
+
+            const host: Host = "stackoverflow.com";
+
+            const client = new Client(host);
+            //@ts-ignore
+            client._browser = null;
+
+            const browser = new MockBrowser(client);
+
+            const jar = new CookieJar();
+            const cookie = Cookie.parse("name=test; SameSite=None; Secure")!;
+
+            await jar.setCookie(cookie, host);
+            await browser.loginCookie(jar.serializeSync());
+
+            expect(browser.loggedIn).toEqual(true);
+        });
     });
 
     describe("getters", () => {
@@ -81,8 +109,7 @@ describe("Browser", () => {
 
             const host: Host = "stackoverflow.com";
             const client = new Client(host);
-
-            //@ts-expect-error
+            //@ts-ignore
             client._browser = null;
 
             const _get$mock = jest.fn(() => Promise.resolve(cheerio.load("")));
@@ -104,8 +131,7 @@ describe("Browser", () => {
 
             const host: Host = "stackexchange.com";
             const client = new Client(host);
-
-            //@ts-expect-error
+            //@ts-ignore
             client._browser = null;
 
             const _postKeyMock = jest.fn(() =>
@@ -132,15 +158,11 @@ describe("Browser", () => {
                 }
             );
 
-            await browser.leaveRoom(roomId)
+            await browser.leaveRoom(roomId);
 
-            expect(_postKeyMock).toHaveBeenCalledWith(
-                `chats/leave/${roomId}`,
-                {
-                    quiet: true,
-                }
-            );
-
+            expect(_postKeyMock).toHaveBeenCalledWith(`chats/leave/${roomId}`, {
+                quiet: true,
+            });
         });
     });
 
@@ -174,7 +196,7 @@ describe("Browser", () => {
 
             const client = new Client(host);
             // @ts-ignore
-            client._browser = new MockedBrowser(client)
+            client._browser = new MockedBrowser(client);
 
             const msg = await client._browser.sendMessage(roomId, text);
 
@@ -188,6 +210,4 @@ describe("Browser", () => {
             expect(await msg.content).toEqual(text);
         });
     });
-
-    
 });
