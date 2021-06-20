@@ -1,6 +1,6 @@
 import Client from '../../src/Client';
 
-jest.mock('request-promise-native', function() {
+jest.mock('request-promise-native', function () {
     const fs = require('fs');
     const fn = jest.fn(async (options) => {
         switch (options.uri) {
@@ -53,13 +53,15 @@ describe('Login', () => {
         expect.assertions(2);
         const client = new Client('stackoverflow.com');
 
+        const roomId = 5;
+
         await client.login('test@test.com', 'testpassword');
-        await client.joinRoom(5);
+        await client.joinRoom(roomId);
 
-        const room5 = client._rooms.get(5);
+        const room = client.getRoom(roomId);
 
-        expect(room5).not.toBeUndefined();
-        expect(room5.id).toEqual(5);
+        expect(room).not.toBeUndefined();
+        expect(room.id).toEqual(roomId);
     });
 
     // For testing branches (Promise being called for userId/UserName)

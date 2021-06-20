@@ -33,8 +33,8 @@ class Client {
     /* @internal */
     public _browser: Browser;
 
-    private _rooms: Map<number, Room>;
-    private _users: Map<number, User>;
+    #rooms = new Map<number, Room>();
+    #users = new Map<number, User>();
 
     /**
      * Creates an instance of Client.
@@ -52,8 +52,6 @@ class Client {
 
         this.host = host;
         this._browser = new Browser(this);
-        this._rooms = new Map<number, Room>();
-        this._users = new Map<number, User>();
     }
 
     /**
@@ -88,14 +86,14 @@ class Client {
     }
 
     public getRoom(id: number): Room {
-        let room = this._rooms.get(id);
+        let room = this.#rooms.get(id);
         if (room) {
             return room;
         }
 
         room = new Room(this, id);
 
-        this._rooms.set(id, room);
+        this.#rooms.set(id, room);
 
         return room;
     }
@@ -104,14 +102,14 @@ class Client {
         id: number,
         existingData?: Omit<Partial<IProfileData>, "id"> | undefined
     ): User {
-        let user = this._users.get(id);
+        let user = this.#users.get(id);
         if (user) {
             return user;
         }
 
         user = new User(this, id, existingData);
 
-        this._users.set(id, user);
+        this.#users.set(id, user);
 
         return user;
     }
