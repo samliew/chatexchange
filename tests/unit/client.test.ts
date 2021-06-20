@@ -10,8 +10,10 @@ describe("Client", () => {
         expect.assertions(1);
 
         //@ts-ignore
-        expect(() => new Client("example.com")).toThrowError(InvalidArgumentError);
-    })
+        expect(() => new Client("example.com")).toThrowError(
+            InvalidArgumentError
+        );
+    });
     test("Should throw error if not logged in", async () => {
         expect.assertions(1);
 
@@ -147,5 +149,24 @@ describe("Client", () => {
         var room2 = client.getRoom(5);
 
         expect(room).toMatchObject(room2);
+    });
+
+    test("Should correctly get root", () => {
+        expect.assertions(1);
+
+        const hosts: Host[] = [
+            "meta.stackexchange.com",
+            "stackexchange.com",
+            "stackoverflow.com",
+        ];
+
+        const clients = hosts.map((host) => new Client(host));
+        const roots = clients.map(({ root }) => root);
+
+        expect(roots).toEqual([
+            "https://chat.meta.stackexchange.com/",
+            "https://chat.stackexchange.com/",
+            "https://chat.stackoverflow.com/",
+        ]);
     });
 });

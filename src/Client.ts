@@ -25,10 +25,10 @@ class Client {
     /**
      * The host to connect to (stackexchange.com, meta.stackexchange.com, or stackoverflow.com)
      *
-     * @type {string}
+     * @type {Host}
      * @memberof Client
      */
-    public readonly host: string;
+    public readonly host: Host;
 
     /* @internal */
     public _browser: Browser;
@@ -54,6 +54,16 @@ class Client {
         this._browser = new Browser(this);
         this._rooms = new Map<number, Room>();
         this._users = new Map<number, User>();
+    }
+
+    /**
+     * Returns the chat host URL
+     * @type {string}
+     * @memberof Client
+     */
+    public get root() {
+        const { host } = this;
+        return `https://chat.${host}/`;
     }
 
     /**
@@ -90,7 +100,10 @@ class Client {
         return room;
     }
 
-    public getUser(id: number, existingData?: Omit<Partial<IProfileData>, "id"> | undefined): User {
+    public getUser(
+        id: number,
+        existingData?: Omit<Partial<IProfileData>, "id"> | undefined
+    ): User {
         let user = this._users.get(id);
         if (user) {
             return user;

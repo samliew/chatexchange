@@ -3,7 +3,7 @@ import { Cookie } from "request";
 import * as requestPromise from "request-promise-native";
 import { CookieJar } from "tough-cookie";
 import * as WebSocket from "ws";
-import Client, { Host } from "./Client";
+import Client from "./Client";
 import ChatExchangeError from "./Exceptions/ChatExchangeError";
 import InternalError from "./Exceptions/InternalError";
 import LoginError from "./Exceptions/LoginError";
@@ -60,7 +60,7 @@ class Browser {
     private _client: Client;
     private _cookieJar: any;
     private _chatRoot: string;
-    private _rooms: { [id: number]: any } = {};
+    private _rooms: { [id: number]: { eventtime: unknown } } = {};
     private _chatFKey!: string;
     private _userId!: number;
     private _userName!: string;
@@ -69,7 +69,7 @@ class Browser {
         this.loggedIn = false;
         this._client = client;
         this._cookieJar = request.jar();
-        this._chatRoot = `https://chat.${client.host}/`;
+        this._chatRoot = client.root;
         this._rooms = {};
     }
 
@@ -430,7 +430,9 @@ class Browser {
     }
 
     private _getCookie(key: string) {
-        const cookies = this._cookieJar.getCookies(`https://${this._client.host}`);
+        const cookies = this._cookieJar.getCookies(
+            `https://${this._client.host}`
+        );
 
         return cookies.find((cookie: Cookie) => cookie.key === key);
     }
