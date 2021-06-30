@@ -6,6 +6,10 @@
     ],
     "jsRules": {},
     "rules": {
+        "curly": [
+            true,
+            "ignore-same-line"
+        ],
         "variable-name": [
             true,
             "ban-keywords",

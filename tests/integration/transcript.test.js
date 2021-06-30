@@ -1,4 +1,6 @@
 import Browser from '../../src/Browser'
+import Client from '../../src/Client';
+import User from '../../src/User';
 
 jest.mock('request-promise-native', function() {
     const fs = require('fs');
@@ -26,9 +28,11 @@ jest.mock('request-promise-native', function() {
 
 describe('Transcript', () => {
     it('Should transcribe profile correctly.', async () => {
-        expect.assertions(1);
+        expect.assertions(2);
 
-        const browser = new Browser(null, 'stackoverflow.com');
+        const client = new Client('stackoverflow.com')
+
+        const browser = new Browser(client, 'stackoverflow.com');
         
         const transcript = await browser.getTranscript(5);
 
@@ -38,6 +42,9 @@ describe('Transcript', () => {
             roomId: 167908,
             roomName: 'SOBotics Workshop',
             edited: false,
+            user: new User(client, 4875631),
             parentMessageId: 44430856 });
+
+        expect(await transcript.user.name).toEqual('FrankerZ')
     })
 })

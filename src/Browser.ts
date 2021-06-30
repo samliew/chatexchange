@@ -2,12 +2,13 @@ import * as cheerio from "cheerio";
 import { Cookie } from "request";
 import * as requestPromise from "request-promise-native";
 import { CookieJar } from "tough-cookie";
-import * as WebSocket from "ws";
-import Client, { Host } from "./Client";
+import WebSocket from "ws";
+import Client from "./Client";
 import ChatExchangeError from "./Exceptions/ChatExchangeError";
 import InternalError from "./Exceptions/InternalError";
 import LoginError from "./Exceptions/LoginError";
 import Message from "./Message";
+import User from "./User";
 import { arrayToKvp, lazy, parseAgoString } from "./utils";
 
 const request = requestPromise.defaults({
@@ -20,7 +21,7 @@ const request = requestPromise.defaults({
     simple: false,
 });
 
-interface IProfileData {
+export interface IProfileData {
     id: number;
     name: string;
     about: string;
@@ -32,8 +33,9 @@ interface IProfileData {
     lastMessage: number;
 }
 
-interface ITranscriptData {
+export interface ITranscriptData {
     id: number;
+    user: User;
     content: string;
     roomId: number;
     roomName: string;
@@ -58,16 +60,16 @@ class Browser {
     private _client: Client;
     private _cookieJar: any;
     private _chatRoot: string;
-    private _rooms: { [id: number]: any } = {};
+    private _rooms: { [id: number]: { eventtime: unknown } } = {};
     private _chatFKey!: string;
     private _userId!: number;
     private _userName!: string;
 
-    constructor(client: Client, public host: Host) {
+    constructor(client: Client) {
         this.loggedIn = false;
         this._client = client;
         this._cookieJar = request.jar();
-        this._chatRoot = `https://chat.${this.host}/`;
+        this._chatRoot = client.root;
         this._rooms = {};
     }
 
@@ -97,14 +99,16 @@ class Browser {
      * cookie jar string, which was retrieved from the {@Link Browser#login}
      * method.
      *
-     * @param {string} cookieJar A cookie jar string
+     * @param {string|CookieJar.Serialized} cookieJar A cookie jar string
      * @returns {Promise<void>} A promise that completes with the user logs in
      * @memberof Browser
      */
-    public async loginCookie(cookieJar: string): Promise<void> {
+    public async loginCookie(
+        cookieJar: string | CookieJar.Serialized
+    ): Promise<void> {
         this._cookieJar._jar = CookieJar.deserializeSync(cookieJar); // eslint-disable-line
 
-        const $ = await this._get$(`https://${this.host}/`);
+        const $ = await this._get$(`https://${this._client.host}/`);
 
         const res = $(".my-profile");
 
@@ -130,9 +134,9 @@ class Browser {
      * @memberof Browser
      */
     public async login(email: string, password: string): Promise<string> {
-        let loginHost = this.host;
+        let loginHost = this._client.host;
 
-        if (this.host === "stackexchange.com") {
+        if (this._client.host === "stackexchange.com") {
             loginHost = "meta.stackexchange.com";
         }
 
@@ -294,11 +298,18 @@ class Browser {
      * @returns {Promise<ITranscriptData>}
      * @memberof Browser
      */
-    public async getTranscript(msgId: number) {
+    public async getTranscript(msgId: number): Promise<ITranscriptData> {
         const $ = await this._get$(`transcript/message/${msgId}`);
 
         const $msg = $(".message.highlight");
         const $room = $(".room-name a");
+
+        const $userDiv = $msg.parent().prev(".signature").find(".username a");
+
+        const userId = parseInt($userDiv.attr("href")!.split("/")[2], 10);
+        const userName = $userDiv.text();
+
+        const user = this._client.getUser(userId, { name: userName });
 
         const roomName = $room.text();
         const roomId = parseInt($room.attr("href")!.split("/")[2], 10); // eslint-disable-line prefer-destructuring
@@ -308,7 +319,7 @@ class Browser {
 
         const replyInfo = $msg.find(".reply-info");
 
-        let parentMessageId = null;
+        let parentMessageId;
         if (replyInfo.length > 0) {
             parentMessageId = parseInt(
                 replyInfo.attr("href")!.split("#")[1],
@@ -323,6 +334,7 @@ class Browser {
             parentMessageId,
             roomId,
             roomName,
+            user,
         };
     }
 
@@ -330,33 +342,26 @@ class Browser {
      * Sends a message to a room
      *
      * @param {number} roomId The room ID to send to
-     * @param {string} message The message to send
+     * @param {string} text The message to send
      * @returns {Promise<Message>} A promise that resolves the message that was sent
      * @memberof Browser
      */
-    public async sendMessage(
-        roomId: number,
-        message: string
-    ): Promise<Message> {
-        const res = await this._postKeyed(`chats/${roomId}/messages/new`, {
-            text: message,
+    public async sendMessage(roomId: number, text: string): Promise<Message> {
+        const { id } = await this._postKeyed(`chats/${roomId}/messages/new`, {
+            text,
         });
 
-        const msg = new Message(this._client, res.id, {
-            roomId,
-        });
-
-        return msg;
+        return new Message(this._client, id, { roomId });
     }
 
-    public async _updateChatFKeyAndUser() {
+    private async _updateChatFKeyAndUser() {
         const $ = await this._get$("chats/join/favorite");
 
         this._loadFKey($);
         this._loadUser($);
     }
 
-    public _loadFKey($: cheerio.Root) {
+    private _loadFKey($: cheerio.Root) {
         this._chatFKey = $('input[name="fkey"]').val();
 
         if (typeof this._chatFKey === "undefined") {
@@ -364,7 +369,7 @@ class Browser {
         }
     }
 
-    public _loadUser($: cheerio.Root) {
+    private _loadUser($: cheerio.Root) {
         const userLink = $(".topbar-menu-links a");
 
         const [, , userId, userName] = userLink.attr("href")!.split("/");
@@ -374,7 +379,7 @@ class Browser {
     }
 
     // Request helpers
-    public async _request(
+    private async _request(
         method: string,
         uri: string,
         form:
@@ -408,24 +413,26 @@ class Browser {
         return res;
     }
 
-    public async _get$(uri: string, qs = {}) {
+    private async _get$(uri: string, qs = {}) {
         const res = await this._request("get", uri, {}, qs);
 
         return cheerio.load(res.body);
     }
 
-    public _post(uri: string, data = {}, qs = {}) {
+    private _post(uri: string, data = {}, qs = {}) {
         return this._request("post", uri, data, qs);
     }
 
-    public async _postKeyed(uri: string, data: any = {}, qs: any = {}) {
+    private async _postKeyed(uri: string, data: any = {}, qs: any = {}) {
         data.fkey = await this.chatFKey;
 
         return this._post(uri, data, qs);
     }
 
-    public _getCookie(key: string) {
-        const cookies = this._cookieJar.getCookies(`https://${this.host}`);
+    private _getCookie(key: string) {
+        const cookies = this._cookieJar.getCookies(
+            `https://${this._client.host}`
+        );
 
         return cookies.find((cookie: Cookie) => cookie.key === key);
     }

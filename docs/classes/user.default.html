@@ -72,32 +72,6 @@
 						<p>Represents a user. Most properties are promises, to
 						lazily load them from the server if they&#39;re not present.</p>
 					</div>
-					<dl class="tsd-comment-tags">
-						<dt>property</dt>
-						<dd><p>{number} id The id of the user</p>
-						</dd>
-						<dt>property</dt>
-						<dd><p>{Promise<string>} name The name of the user</p>
-						</dd>
-						<dt>property</dt>
-						<dd><p>{Promise<string>} about The about section of their chat profile</p>
-						</dd>
-						<dt>property</dt>
-						<dd><p>{Promise<boolean>} isModerator True if the user is a moderator, false otherwise</p>
-						</dd>
-						<dt>property</dt>
-						<dd><p>{Promise<number>} messageCount The number of all time messages this user has sent</p>
-						</dd>
-						<dt>property</dt>
-						<dd><p>{Promise<number>} roomCount All time number of rooms this user has been a part of</p>
-						</dd>
-						<dt>property</dt>
-						<dd><p>{Promise<number>} lastSeen The number of seconds since this user was last seen</p>
-						</dd>
-						<dt>property</dt>
-						<dd><p>{Promise<number>} lastMessage The number of seconds since this user posted a message in any chat</p>
-						</dd>
-					</dl>
 				</div>
 			</section>
 			<section class="tsd-panel tsd-hierarchy">
@@ -121,14 +95,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="user.default.html#_about" class="tsd-kind-icon">_about</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="user.default.html#_client" class="tsd-kind-icon">_client</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="user.default.html#_ismoderator" class="tsd-kind-icon">_is<wbr>Moderator</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="user.default.html#_lastmessage" class="tsd-kind-icon">_last<wbr>Message</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="user.default.html#_lastseen" class="tsd-kind-icon">_last<wbr>Seen</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="user.default.html#_messagecount" class="tsd-kind-icon">_message<wbr>Count</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="user.default.html#_name" class="tsd-kind-icon">_name</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="user.default.html#_roomcount" class="tsd-kind-icon">_room<wbr>Count</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="user.default.html#_client" class="tsd-kind-icon">#client</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="user.default.html#_profiledata" class="tsd-kind-icon">#profile<wbr>Data</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="user.default.html#id" class="tsd-kind-icon">id</a></li>
 							</ul>
 						</section>
@@ -141,6 +109,7 @@
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="user.default.html#lastseen" class="tsd-kind-icon">last<wbr>Seen</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="user.default.html#messagecount" class="tsd-kind-icon">message<wbr>Count</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="user.default.html#name" class="tsd-kind-icon">name</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="user.default.html#reputation" class="tsd-kind-icon">reputation</a></li>
 								<li class="tsd-kind-get-signature tsd-parent-kind-class"><a href="user.default.html#roomcount" class="tsd-kind-icon">room<wbr>Count</a></li>
 							</ul>
 						</section>
@@ -159,13 +128,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new default<span class="tsd-signature-symbol">(</span>client<span class="tsd-signature-symbol">: </span><a href="client.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a>, id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="user.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></li>
+						<li class="tsd-signature tsd-kind-icon">new default<span class="tsd-signature-symbol">(</span>client<span class="tsd-signature-symbol">: </span><a href="client.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a>, id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, profileData<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/browser.iprofiledata.html" class="tsd-signature-type" data-tsd-kind="Interface">IProfileData</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;id&quot;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="user.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/ece583f/src/User.ts#L29">src/User.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/fa2c019/src/User.ts#L21">src/User.ts:21</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -176,6 +145,9 @@
 								<li>
 									<h5>id: <span class="tsd-signature-type">number</span></h5>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> profileData: <span class="tsd-signature-type">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/browser.iprofiledata.html" class="tsd-signature-type" data-tsd-kind="Interface">IProfileData</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;id&quot;</span><span class="tsd-signature-symbol">&gt;</span></h5>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="user.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></h4>
 						</li>
@@ -185,82 +157,22 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="_about" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _about</h3>
-					<div class="tsd-signature tsd-kind-icon">_about<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/ece583f/src/User.ts#L24">src/User.ts:24</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="_client" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _client</h3>
-					<div class="tsd-signature tsd-kind-icon">_client<span class="tsd-signature-symbol">:</span> <a href="client.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></div>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> #client</h3>
+					<div class="tsd-signature tsd-kind-icon">#client<span class="tsd-signature-symbol">:</span> <a href="client.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/ece583f/src/User.ts#L22">src/User.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/fa2c019/src/User.ts#L20">src/User.ts:20</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="_ismoderator" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _is<wbr>Moderator</h3>
-					<div class="tsd-signature tsd-kind-icon">_is<wbr>Moderator<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="_profiledata" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagOptional">Optional</span> #profile<wbr>Data</h3>
+					<div class="tsd-signature tsd-kind-icon">#profile<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Omit</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Partial</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/browser.iprofiledata.html" class="tsd-signature-type" data-tsd-kind="Interface">IProfileData</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">&quot;id&quot;</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/ece583f/src/User.ts#L25">src/User.ts:25</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="_lastmessage" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _last<wbr>Message</h3>
-					<div class="tsd-signature tsd-kind-icon">_last<wbr>Message<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/ece583f/src/User.ts#L29">src/User.ts:29</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="_lastseen" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _last<wbr>Seen</h3>
-					<div class="tsd-signature tsd-kind-icon">_last<wbr>Seen<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/ece583f/src/User.ts#L28">src/User.ts:28</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="_messagecount" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _message<wbr>Count</h3>
-					<div class="tsd-signature tsd-kind-icon">_message<wbr>Count<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/ece583f/src/User.ts#L26">src/User.ts:26</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="_name" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _name</h3>
-					<div class="tsd-signature tsd-kind-icon">_name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/ece583f/src/User.ts#L23">src/User.ts:23</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="_roomcount" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> _room<wbr>Count</h3>
-					<div class="tsd-signature tsd-kind-icon">_room<wbr>Count<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/ece583f/src/User.ts#L27">src/User.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/fa2c019/src/User.ts#L21">src/User.ts:21</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -270,9 +182,19 @@
 					<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/ece583f/src/User.ts#L21">src/User.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/fa2c019/src/User.ts#L18">src/User.ts:18</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The id of the user</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>memberof</dt>
+							<dd><p>User</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -287,9 +209,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/ece583f/src/User.ts#L44">src/User.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/fa2c019/src/User.ts#L50">src/User.ts:50</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The about section of their chat profile</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>readonly</dt>
+									<dd></dd>
+									<dt>memberof</dt>
+									<dd><p>User</p>
+									</dd>
+								</dl>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
@@ -304,9 +238,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/ece583f/src/User.ts#L51">src/User.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/fa2c019/src/User.ts#L64">src/User.ts:64</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>True if the user is a moderator, false otherwise</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>readonly</dt>
+									<dd></dd>
+									<dt>memberof</dt>
+									<dd><p>User</p>
+									</dd>
+								</dl>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
@@ -321,9 +267,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/ece583f/src/User.ts#L79">src/User.ts:79</a></li>
+									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/fa2c019/src/User.ts#L120">src/User.ts:120</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The number of seconds since this user posted a message in any chat</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>readonly</dt>
+									<dd></dd>
+									<dt>memberof</dt>
+									<dd><p>User</p>
+									</dd>
+								</dl>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
@@ -338,9 +296,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/ece583f/src/User.ts#L72">src/User.ts:72</a></li>
+									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/fa2c019/src/User.ts#L106">src/User.ts:106</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The number of seconds since this user was last seen</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>readonly</dt>
+									<dd></dd>
+									<dt>memberof</dt>
+									<dd><p>User</p>
+									</dd>
+								</dl>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
@@ -355,9 +325,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/ece583f/src/User.ts#L58">src/User.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/fa2c019/src/User.ts#L78">src/User.ts:78</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The number of all time messages this user has sent</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>readonly</dt>
+									<dd></dd>
+									<dt>memberof</dt>
+									<dd><p>User</p>
+									</dd>
+								</dl>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
@@ -372,10 +354,51 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/ece583f/src/User.ts#L37">src/User.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/fa2c019/src/User.ts#L36">src/User.ts:36</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The name of the user</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>readonly</dt>
+									<dd></dd>
+									<dt>memberof</dt>
+									<dd><p>User</p>
+									</dd>
+								</dl>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class">
+					<a name="reputation" class="tsd-anchor"></a>
+					<h3>reputation</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> reputation<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/fa2c019/src/User.ts#L134">src/User.ts:134</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>User&#39;s current reputation</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>readonly</dt>
+									<dd></dd>
+									<dt>memberof</dt>
+									<dd><p>User</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -389,9 +412,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/ece583f/src/User.ts#L65">src/User.ts:65</a></li>
+									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/fa2c019/src/User.ts#L92">src/User.ts:92</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>All time number of rooms this user has been a part of</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>readonly</dt>
+									<dd></dd>
+									<dt>memberof</dt>
+									<dd><p>User</p>
+									</dd>
+								</dl>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
@@ -409,13 +444,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/ece583f/src/User.ts#L93">src/User.ts:93</a></li>
+									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/fa2c019/src/User.ts#L149">src/User.ts:149</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Used by most properties of this class to fetch their profile,
-									and updates their associated values.</p>
+										and updates their associated values. This should not be needed
+									to call directly. Simply await the properties</p>
 								</div>
 								<dl class="tsd-comment-tags">
 									<dt>memberof</dt>
@@ -433,7 +469,7 @@
 			<nav class="tsd-navigation primary">
 				<ul>
 					<li class=" ">
-						<a href="../modules.html">Exports</a>
+						<a href="../modules.html">Modules</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/browser.html">Browser</a>
@@ -463,6 +499,9 @@
 						<a href="../modules/user.html">User</a>
 					</li>
 					<li class=" tsd-kind-module">
+						<a href="../modules/websocketevent.html">Websocket<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-module">
 						<a href="../modules/index.html">index</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -481,28 +520,10 @@
 								<a href="user.default.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="user.default.html#_about" class="tsd-kind-icon">_about</a>
+								<a href="user.default.html#_client" class="tsd-kind-icon">#client</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="user.default.html#_client" class="tsd-kind-icon">_client</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="user.default.html#_ismoderator" class="tsd-kind-icon">_is<wbr>Moderator</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="user.default.html#_lastmessage" class="tsd-kind-icon">_last<wbr>Message</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="user.default.html#_lastseen" class="tsd-kind-icon">_last<wbr>Seen</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="user.default.html#_messagecount" class="tsd-kind-icon">_message<wbr>Count</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="user.default.html#_name" class="tsd-kind-icon">_name</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="user.default.html#_roomcount" class="tsd-kind-icon">_room<wbr>Count</a>
+								<a href="user.default.html#_profiledata" class="tsd-kind-icon">#profile<wbr>Data</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="user.default.html#id" class="tsd-kind-icon">id</a>
@@ -524,6 +545,9 @@
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="user.default.html#name" class="tsd-kind-icon">name</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
+								<a href="user.default.html#reputation" class="tsd-kind-icon">reputation</a>
 							</li>
 							<li class=" tsd-kind-get-signature tsd-parent-kind-class">
 								<a href="user.default.html#roomcount" class="tsd-kind-icon">room<wbr>Count</a>
@@ -555,6 +579,9 @@
 				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
 				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>

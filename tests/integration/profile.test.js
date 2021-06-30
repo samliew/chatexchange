@@ -1,4 +1,5 @@
 import Browser from '../../src/Browser'
+import Client from '../../src/Client';
 
 jest.mock('request-promise-native', function() {
     const fs = require('fs');
@@ -28,7 +29,9 @@ describe('Profile', () => {
     it('Should scrape profile correctly.', async () => {
         expect.assertions(1);
 
-        const browser = new Browser(null, 'stackoverflow.com');
+        var client = new Client('stackoverflow.com')
+
+        const browser = new Browser(client);
         
         const profile = await browser.getProfile(5);
 

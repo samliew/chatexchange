@@ -2,17 +2,25 @@ import { EventEmitter } from "events";
 import Client from "./Client";
 import InvalidArgumentError from "./Exceptions/InvalidArgumentError";
 import Message from "./Message";
+import WebsocketEvent, { WebsocketEventAttributes } from "./WebsocketEvent";
 
 /* eslint-disable no-underscore-dangle */
 /**
  * Represents a chatroom
  *
- * @property {number} id The id of the room
  * @extends {EventEmitter}
  */
 class Room extends EventEmitter {
+    /**
+     * The id of the room
+     *
+     * @type {number}
+     * @memberof Room
+     */
     public id: number;
-    private _client: Client;
+    #client: Client;
+    #isClosing: boolean = false;
+
     /**
      * Creates an instance of Room.
      *
@@ -22,7 +30,7 @@ class Room extends EventEmitter {
      */
     constructor(client: Client, id: number) {
         super();
-        this._client = client;
+        this.#client = client;
         this.id = id;
     }
 
@@ -33,7 +41,8 @@ class Room extends EventEmitter {
      * @memberof Room
      */
     public async join(): Promise<void> {
-        await this._client._browser.joinRoom(this.id);
+        this.#isClosing = false
+        await this.#client._browser.joinRoom(this.id);
     }
 
     /**
@@ -43,7 +52,8 @@ class Room extends EventEmitter {
      * @memberof Room
      */
     public async leave(): Promise<void> {
-        await this._client._browser.leaveRoom(this.id);
+        this.#isClosing = true
+        await this.#client._browser.leaveRoom(this.id);
     }
 
     /**
@@ -54,7 +64,7 @@ class Room extends EventEmitter {
      * @memberof Room
      */
     public async watch(): Promise<void> {
-        const ws = await this._client._browser.watchRoom(this.id);
+        const ws = await this.#client._browser.watchRoom(this.id);
 
         ws.on("message", (rawMsg) => {
             const json = JSON.parse(rawMsg.toString());
@@ -63,19 +73,21 @@ class Room extends EventEmitter {
                 return;
             }
 
-            const events = json[`r${this.id}`].e;
+            const events: WebsocketEventAttributes[] = json[`r${this.id}`].e;
 
             for (const event of events) {
-                const msg = new Message(this._client, event.message_id, {
-                    room: this,
-                    roomId: this.id,
-                });
+                const msg = new WebsocketEvent(this.#client, event);
                 this.emit("message", msg);
             }
         });
 
         ws.on("close", () => {
-            this.emit("close");
+            if (this.#isClosing) {
+                this.emit("close");
+            } else {
+                ws.removeAllListeners();
+                this.watch();
+            }
         });
     }
 
@@ -98,7 +110,7 @@ class Room extends EventEmitter {
             throw new InvalidArgumentError("Unable to send message because it was empty.");
         }
 
-        const res = await this._client._browser.sendMessage(this.id, message);
+        const res = await this.#client._browser.sendMessage(this.id, message);
 
         return res;
     }
