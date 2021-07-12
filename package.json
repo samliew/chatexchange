@@ -48,7 +48,7 @@
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-flow": "^7.0.0",
     "@types/cheerio": "^0.22.29",
-    "@types/jest": "^23.3.9",
+    "@types/jest": "^26.0.24",
     "@types/request-promise-native": "^1.0.15",
     "@types/ws": "^7.4.5",
     "babel-core": "^7.0.0-bridge.0",
