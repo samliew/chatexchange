@@ -35,27 +35,41 @@ export interface WebsocketEventAttributes {
     message_id?: number;
 }
 
-class WebsocketEvent extends Message {
+export class WebsocketEvent extends Message {
     public eventType: number;
     public timeStamp: number;
     public userId: number;
     public userName: string;
     public targetUserId: number | undefined;
 
-    constructor(
-        client: Client,
-        websocketMsg: WebsocketEventAttributes
-    ) {
-        super(client, websocketMsg.message_id, {
-            content: websocketMsg.content,
-            roomId: websocketMsg.room_id,
-            roomName: websocketMsg.room_name
+    /**
+     * @param {Client} client main chatexchange Client class instance
+     * @param {WebsocketEventAttributes} websocketMsg message from the chat websocket
+     */
+    constructor(client: Client, websocketMsg: WebsocketEventAttributes) {
+        const {
+            message_id,
+            content,
+            room_id,
+            room_name,
+            event_type,
+            time_stamp,
+            target_user_id,
+            user_id,
+            user_name,
+        } = websocketMsg;
+
+        super(client, message_id, {
+            content,
+            roomId: room_id,
+            roomName: room_name,
         });
-        this.eventType = websocketMsg.event_type;
-        this.timeStamp = websocketMsg.time_stamp;
-        this.targetUserId = websocketMsg.target_user_id;
-        this.userId = websocketMsg.user_id;
-        this.userName = websocketMsg.user_name;
+
+        this.eventType = event_type;
+        this.timeStamp = time_stamp;
+        this.targetUserId = target_user_id;
+        this.userId = user_id;
+        this.userName = user_name;
     }
 }
 
