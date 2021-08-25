@@ -1,9 +1,26 @@
 import Client from "./Client";
 import Message from "./Message";
 
+/**
+ * @summary chat event type options
+ * @see https://meta.stackexchange.com/a/218443/786798
+ */
+export enum ChatEventType {
+    MESSAGE_POSTED = 1,
+    MESSAGE_EDITED = 2,
+    USER_JOINED = 3,
+    USER_LEFT = 4,
+    ROOM_RENAMED = 5,
+    STARS_CHANGED = 6,
+    USER_MENTIONED = 8,
+    MESSAGE_FLAGGED = 9,
+    MESSAGE_DELETED = 10,
+    FILE_ADDED = 11,
+}
+
 export interface WebsocketEventAttributes {
     // Best guess required items
-    id: number;
+    id: ChatEventType;
     event_type: number;
     time_stamp: number;
     room_id: number;
