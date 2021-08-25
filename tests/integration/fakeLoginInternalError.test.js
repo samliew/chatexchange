@@ -1,21 +1,17 @@
-import request from 'request-promise-native';
 import ChatExchangeError from '../../src/Exceptions/ChatExchangeError';
-import LoginError from '../../src/Exceptions/LoginError';
-import InternalError from '../../src/Exceptions/InternalError';
 import Client from '../../src/Client';
 
 jest.mock('request-promise-native', function() {
     const fs = require('fs');
-    
     const fn = jest.fn(async (options) => {
         switch (options.uri) {
             case 'https://stackoverflow.com/users/login':
                 return {
-                    statusCode: 200,
-                    body: fs.readFileSync('./tests/mocks/login.html').toString('utf-8'),
+                    statusCode: 500,
+                    body: 'Internal Server Error',
                 };
         }
-    
+
         throw new Error(`The url ${options.uri} should not have been called.`);
     });
 
@@ -27,13 +23,13 @@ jest.mock('request-promise-native', function() {
     return fn;
 });
 
-describe('Login Failures', () => {
-    test('Should fail with login error', async () => {
+describe('Login Failure', () => {
+
+    it('Should reject with ChatExchangeError when server returns invalid 500 response', async () => {
+        
         expect.assertions(1);
-
-
         const client = new Client('stackoverflow.com');
-    
-        await expect(client.login('test@test.com', 'P@ssw0rd')).rejects.toThrowError(LoginError);
+
+        await expect(client.login('test@test.com', 'P@ssw0rd')).rejects.toThrowError(ChatExchangeError);
     });
-});
+})
