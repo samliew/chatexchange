@@ -1,38 +1,29 @@
-import Browser from '../../src/Browser'
+import Browser from '../../src/Browser';
 import Client from '../../src/Client';
 
-jest.mock('request-promise-native', function() {
-    const fs = require('fs');
-    const fn = jest.fn(async (options) => {
-        switch (options.uri) {
+jest.mock('got', () => {
+    const fn = jest.fn(async (url) => {
+        const fs = await import("fs/promises");
+
+        switch (url) {
             case 'https://chat.stackoverflow.com/users/5':
                 return {
-                    body: fs.readFileSync('./tests/mocks/profile.html').toString('utf-8'),
+                    body: await fs.readFile('./tests/mocks/profile.html', { encoding: "utf-8" })
                 };
         }
-
-        throw new Error(`The url ${options.uri} should not have been called.`);
     });
 
-    fn.defaults = () => fn;
-    fn.jar = () => ({
-        getCookies: () => [{
-            key: 'acct',
-            value: 'sample-acct-cookie'
-        }]
-    });
-
-    return fn;
+    return Object.assign(fn, { extend: () => fn });
 });
 
 describe('Profile', () => {
     it('Should scrape profile correctly.', async () => {
         expect.assertions(1);
 
-        var client = new Client('stackoverflow.com')
+        const client = new Client('stackoverflow.com');
 
         const browser = new Browser(client);
-        
+
         const profile = await browser.getProfile(5);
 
         expect(profile).toEqual({
@@ -46,5 +37,5 @@ describe('Profile', () => {
             messageCount: 8671,
             about: 'You\'re awesome!'
         });
-    })
-})
+    });
+});
