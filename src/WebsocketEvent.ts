@@ -18,7 +18,10 @@ export enum ChatEventType {
     FILE_ADDED = 11,
 }
 
-export interface WebsocketEventAttributes {
+/**
+ * @summary chat websocket event
+ */
+export interface ChatEvent {
     // Best guess required items
     id: ChatEventType;
     event_type: number;
@@ -35,6 +38,16 @@ export interface WebsocketEventAttributes {
     message_id?: number;
 }
 
+/**
+ * @summary chat websocket event response (`/chats/<roomId>/events`)
+ */
+export interface ChatEventsResponse {
+    ms: number;
+    sync: number;
+    time: number;
+    events: ChatEvent[];
+}
+
 export class WebsocketEvent extends Message {
     public eventType: number;
     public timeStamp: number;
@@ -44,9 +57,9 @@ export class WebsocketEvent extends Message {
 
     /**
      * @param {Client} client main chatexchange Client class instance
-     * @param {WebsocketEventAttributes} websocketMsg message from the chat websocket
+     * @param {ChatEvent} websocketMsg message from the chat websocket
      */
-    constructor(client: Client, websocketMsg: WebsocketEventAttributes) {
+    constructor(client: Client, websocketMsg: ChatEvent) {
         const {
             message_id,
             content,

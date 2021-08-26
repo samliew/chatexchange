@@ -2,7 +2,7 @@ import { EventEmitter } from "events";
 import Client from "./Client";
 import InvalidArgumentError from "./Exceptions/InvalidArgumentError";
 import Message from "./Message";
-import WebsocketEvent, { WebsocketEventAttributes } from "./WebsocketEvent";
+import WebsocketEvent, { ChatEvent } from "./WebsocketEvent";
 
 /* eslint-disable no-underscore-dangle */
 /**
@@ -73,7 +73,7 @@ class Room extends EventEmitter {
                 return;
             }
 
-            const events: WebsocketEventAttributes[] = json[`r${this.id}`].e;
+            const events: ChatEvent[] = json[`r${this.id}`].e;
 
             for (const event of events) {
                 const msg = new WebsocketEvent(this.#client, event);
