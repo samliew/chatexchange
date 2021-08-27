@@ -8,6 +8,7 @@
     "start": "ts-node src/index.ts",
     "build": "rimraf dist && tsc --declaration",
     "prepublish": "npm run build",
+    "postinstall": "patch-package",
     "pretest": "npm run build",
     "test": "jest --coverage --collectCoverageFrom=src/**/*.ts --coverageReporters=lcov && tslint src/**/*.ts",
     "pretest-coveralls": "npm run build",
@@ -45,8 +46,7 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
     "email-validator": "^2.0.4",
-    "request": "^2.88.0",
-    "request-promise-native": "^1.0.5",
+    "got": "^11.8.2",
     "tough-cookie": "^4.0.0",
     "ws": "^7.5.0"
   },
@@ -65,6 +65,7 @@
     "coveralls": "^3.0.2",
     "jest": "^27.0.0",
     "jsdoc": "^3.5.5",
+    "patch-package": "^6.4.7",
     "rimraf": "^2.6.2",
     "ts-jest": "^27.0.3",
     "tslint": "^6.1.3",
