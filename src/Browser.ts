@@ -1,24 +1,21 @@
 import * as cheerio from "cheerio";
-import { Cookie } from "request";
-import * as requestPromise from "request-promise-native";
-import { CookieJar } from "tough-cookie";
+import got, { Method, OptionsOfJSONResponseBody, Response } from "got";
+import { Cookie, CookieJar } from "tough-cookie";
+import { URL } from "url";
 import WebSocket from "ws";
-import Client from "./Client";
+import Client, { Host } from "./Client";
 import ChatExchangeError from "./Exceptions/ChatExchangeError";
 import InternalError from "./Exceptions/InternalError";
 import LoginError from "./Exceptions/LoginError";
 import Message from "./Message";
 import User from "./User";
 import { arrayToKvp, lazy, parseAgoString } from "./utils";
+import { ChatEventsResponse } from "./WebsocketEvent";
 
-const request = requestPromise.defaults({
+got.extend({
     followRedirect: false,
-    gzip: true,
-    headers: {
-        "User-Agent": "Node.js/ChatExchange",
-    },
-    resolveWithFullResponse: true,
-    simple: false,
+    headers: { "User-Agent": "Node.js/ChatExchange" },
+    decompress: true,
 });
 
 export interface IProfileData {
@@ -43,54 +40,85 @@ export interface ITranscriptData {
     parentMessageId?: number;
 }
 
-type ReqOptions = { uri: string } & requestPromise.RequestPromiseOptions;
-
 /**
  * Used internally by {@link Client} to provide the low-level
  * interaction with SE servers.
  *
  * @class Browser
  * @property {boolean} loggedIn User logged in
- * @property {Promise<string>} chatFKey The chat key for use with ws-auth, and other authy endpoints
- * @property {Promise<number>} userId The user id of the logged in user
- * @property {Promise<string>} userName The user name of the logged in user
  */
-class Browser {
-    public loggedIn: boolean;
-    private _client: Client;
-    private _cookieJar: any;
-    private _chatRoot: string;
-    private _rooms: { [id: number]: { eventtime: unknown } } = {};
-    private _chatFKey!: string;
-    private _userId!: number;
-    private _userName!: string;
+export class Browser {
+    public loggedIn = false;
+
+    #client: Client;
+    #cookieJar: CookieJar;
+    #fkey?: string;
+    #userId?: number;
+    #userName?: string;
+
+    /**
+     * @private
+     * @summary internal <roomId, time> Map (needed for watchRoom)
+     */
+    #times: Map<number, number> = new Map();
 
     constructor(client: Client) {
-        this.loggedIn = false;
-        this._client = client;
-        this._cookieJar = request.jar();
-        this._chatRoot = client.root;
-        this._rooms = {};
+        this.#client = client;
+        this.#cookieJar = new CookieJar();
     }
 
-    get chatFKey(): Promise<string> {
+    /**
+     * @summary getter for login host domain name
+     * @returns {string}
+     * @memberof Browser#
+     */
+    public get loginHost(): Host {
+        const { host } = this.#client;
+        return host === "stackexchange.com" ? "meta.stackexchange.com" : host;
+    }
+
+    /**
+     * @summary proxy getter for the chat host URL
+     * @returns {string}
+     * @memberof Browser#
+     */
+    public get root() {
+        return this.#client.root;
+    }
+
+    /**
+     * @summary The chat key for use with ws-auth, and other authy endpoints
+     * @returns {Promise<string>}
+     * @memberof Browser#
+     */
+    public get chatFKey(): Promise<string> {
         return lazy<string>(
-            () => this._chatFKey,
-            () => this._updateChatFKeyAndUser()
+            () => this.#fkey,
+            () => this.#updateChatFKeyAndUser()
         );
     }
 
-    get userId(): Promise<number> {
+    /**
+     * @summary The user id of the logged in user
+     * @returns {Promise<number>}
+     * @memberof Browser#
+     */
+    public get userId(): Promise<number> {
         return lazy<number>(
-            () => this._userId,
-            () => this._updateChatFKeyAndUser()
+            () => this.#userId,
+            () => this.#updateChatFKeyAndUser()
         );
     }
 
-    get userName(): Promise<string> {
+    /**
+     * @summary The user name of the logged in user
+     * @returns {Promise<string>}
+     * @memberof Browser#
+     */
+    public get userName(): Promise<string> {
         return lazy<string>(
-            () => this._userName,
-            () => this._updateChatFKeyAndUser()
+            () => this.#userName,
+            () => this.#updateChatFKeyAndUser()
         );
     }
 
@@ -99,23 +127,23 @@ class Browser {
      * cookie jar string, which was retrieved from the {@Link Browser#login}
      * method.
      *
-     * @param {string|CookieJar.Serialized} cookieJar A cookie jar string
+     * @param {string|CookieJar.Serialized} cookie A cookie jar string
      * @returns {Promise<void>} A promise that completes with the user logs in
-     * @memberof Browser
+     * @memberof Browser#
      */
     public async loginCookie(
-        cookieJar: string | CookieJar.Serialized
+        cookie: string | CookieJar.Serialized
     ): Promise<void> {
-        this._cookieJar._jar = CookieJar.deserializeSync(cookieJar); // eslint-disable-line
+        this.#cookieJar = CookieJar.deserializeSync(cookie);
 
-        const $ = await this._get$(`https://${this._client.host}/`);
+        const $ = await this.#get$(`https://${this.#client.host}/`);
 
         const res = $(".my-profile");
 
         if (res.length === 0) {
             throw new LoginError(
-                "Login with acct string could not be verified, " +
-                    "try credential login instead."
+                "Login with acct string could not be verified, try credential login instead.",
+                { cookie }
             );
         }
 
@@ -131,16 +159,14 @@ class Browser {
      * @param {string} email Email
      * @param {string} password Password
      * @returns {Promise<string>} A cookie jar containing account pertitent details.
-     * @memberof Browser
+     * @memberof Browser#
      */
     public async login(email: string, password: string): Promise<string> {
-        let loginHost = this._client.host;
+        const { loginHost } = this;
 
-        if (this._client.host === "stackexchange.com") {
-            loginHost = "meta.stackexchange.com";
-        }
+        const loginUrl = `https://${loginHost}/users/login`;
 
-        const $ = await this._get$(`https://${loginHost}/users/login`);
+        const $ = await this.#get$(loginUrl);
 
         const fkey = $('input[name="fkey"]').val();
 
@@ -150,92 +176,91 @@ class Browser {
             );
         }
 
-        await this._post(
-            `https://${loginHost}/users/login`,
-            {
-                email,
-                fkey,
-                password,
-            },
-            {}
-        );
+        await this.#post(loginUrl, { email, fkey, password });
 
-        const acctCookie = this._getCookie("acct");
+        const acctCookie = await this.#getCookie("acct");
 
         if (typeof acctCookie === "undefined") {
             throw new LoginError(
-                "failed to get acct cookie from Stack Exchange OpenID, " +
-                    "check credentials provided for accuracy"
+                "failed to get acct cookie from Stack Exchange OpenID, check creds provided for accuracy",
+                { email, password }
             );
         }
 
         this.loggedIn = true;
 
-        return JSON.stringify(this._cookieJar._jar); // eslint-disable-line
+        return JSON.stringify(this.#cookieJar);
     }
 
     /**
-     * Joins a room with the provided ID
-     *
+     * @summary Joins a room with the provided ID
      * @param {number} id The room ID to join
-     * @returns {Promise<void>} A promise that resolves when the user has successfully joined the room
-     * @memberof Browser
+     * @returns {Promise<boolean>} A promise that resolves when the user has successfully joined the room
+     * @memberof Browser#
      */
-    public async joinRoom(id: number): Promise<void> {
-        const res = await this._postKeyed(`chats/${id}/events`, {
-            mode: "Messages",
-            msgCount: 100,
-            since: 0,
-        });
+    public async joinRoom(id: number): Promise<boolean> {
+        const { body, statusCode } = await this.#postKeyed<ChatEventsResponse>(
+            `chats/${id}/events`,
+            {
+                mode: "Messages",
+                msgCount: 100,
+                since: 0,
+            }
+        );
 
-        this._rooms[id] = {
-            eventtime: res.body.time,
-        };
+        const { time } = body;
+        this.#times.set(id, time);
+        return statusCode === 200;
     }
 
     /**
-     * Leaves a room with the provided ID
-     *
+     * @summary Leaves a room with the provided ID
      * @param {number} id The room ID to leave
-     * @returns {Promise<void>} A promise that resolves when the user has successfully left the room
-     * @memberof Browser
+     * @returns {Promise<boolean>} A promise that resolves when the user has successfully left the room
+     * @memberof Browser#
      */
-    public async leaveRoom(id: number): Promise<void> {
-        await this._postKeyed(`chats/leave/${id}`, {
-            quiet: true,
-        });
+    public async leaveRoom(id: number): Promise<boolean> {
+        const { statusCode } = await this.#postKeyed<ChatEventsResponse>(
+            `chats/leave/${id}`,
+            { quiet: true }
+        );
+
+        this.#times.delete(id);
+        return statusCode === 200;
     }
 
     /**
-     * Watch a room, and returns the websocket
-     *
-     * @param {number} id The room ID to join
+     * @summary Watch a room, and returns the websocket
+     * @param {number} roomid The room ID to join
      * @returns {Promise<WebSocket>} The websocket of this room
-     * @memberof Browser
+     * @memberof Browser#
      */
-    public async watchRoom(id: number): Promise<WebSocket> {
-        const wsAuthData = await this._postKeyed("ws-auth", {
-            roomid: id,
+    public async watchRoom(roomid: number): Promise<WebSocket> {
+        const { root } = this;
+
+        const { body } = await this.#postKeyed<{ url: string }>("ws-auth", {
+            roomid,
         });
 
-        const wsUrl = `${wsAuthData.body.url}?l=${this._rooms[id].eventtime}`;
+        const l = this.#times.get(roomid);
+        if (!l) {
+            throw new ChatExchangeError("missing time key");
+        }
 
-        const ws = new WebSocket(wsUrl, {
-            origin: this._chatRoot,
-        });
+        const address = new URL(body.url);
+        address.searchParams.append("l", l.toString());
 
-        return ws;
+        return new WebSocket(address, { origin: root });
     }
 
     /**
-     * Fetches a users profile
-     *
+     * @summary Fetches a users profile
      * @param {number} userId The user to fetch
      * @returns {Promise<IProfileData>} The profile object
-     * @memberof Browser
+     * @memberof Browser#
      */
     public async getProfile(userId: number): Promise<IProfileData> {
-        const $ = await this._get$(`users/${userId}`);
+        const $ = await this.#get$(`users/${userId}`);
 
         const id = userId;
         const name = $("h1").text();
@@ -296,10 +321,10 @@ class Browser {
      *
      * @param {number} msgId The message ID to scrape
      * @returns {Promise<ITranscriptData>}
-     * @memberof Browser
+     * @memberof Browser#
      */
     public async getTranscript(msgId: number): Promise<ITranscriptData> {
-        const $ = await this._get$(`transcript/message/${msgId}`);
+        const $ = await this.#get$(`transcript/message/${msgId}`);
 
         const $msg = $(".message.highlight");
         const $room = $(".room-name a");
@@ -309,7 +334,7 @@ class Browser {
         const userId = parseInt($userDiv.attr("href")!.split("/")[2], 10);
         const userName = $userDiv.text();
 
-        const user = this._client.getUser(userId, { name: userName });
+        const user = this.#client.getUser(userId, { name: userName });
 
         const roomName = $room.text();
         const roomId = parseInt($room.attr("href")!.split("/")[2], 10); // eslint-disable-line prefer-destructuring
@@ -339,70 +364,106 @@ class Browser {
     }
 
     /**
-     * Sends a message to a room
-     *
+     * @summary Sends a message to a room
      * @param {number} roomId The room ID to send to
      * @param {string} text The message to send
      * @returns {Promise<Message>} A promise that resolves the message that was sent
-     * @memberof Browser
+     * @memberof Browser#
      */
     public async sendMessage(roomId: number, text: string): Promise<Message> {
-        const { id } = await this._postKeyed(`chats/${roomId}/messages/new`, {
-            text,
-        });
+        const { body } = await this.#postKeyed<{ id: number }>(
+            `chats/${roomId}/messages/new`,
+            { text }
+        );
 
-        return new Message(this._client, id, { roomId });
+        return new Message(this.#client, body.id, { roomId });
     }
 
-    private async _updateChatFKeyAndUser() {
-        const $ = await this._get$("chats/join/favorite");
+    /**
+     * @private
+     *
+     * @summary refreshes user fkey
+     * @param {cheerio.Root} $ Cheerio root element
+     * @returns {string}
+     */
+    #loadFKey($: cheerio.Root): string {
+        const fkey = $('input[name="fkey"]').val();
 
-        this._loadFKey($);
-        this._loadUser($);
-    }
+        this.#fkey = fkey;
 
-    private _loadFKey($: cheerio.Root) {
-        this._chatFKey = $('input[name="fkey"]').val();
-
-        if (typeof this._chatFKey === "undefined") {
+        if (typeof fkey === "undefined") {
             throw new InternalError("Unable to find fkey.");
         }
+
+        return fkey;
     }
 
-    private _loadUser($: cheerio.Root) {
+    /**
+     * @private
+     *
+     * @summary refreshes user info
+     * @param {cheerio.Root} $ Cheerio root element
+     * @returns {number}
+     */
+    #loadUser($: cheerio.Root): number {
         const userLink = $(".topbar-menu-links a");
 
-        const [, , userId, userName] = userLink.attr("href")!.split("/");
+        const [, , userId, userName] = userLink.attr("href")?.split("/") || [];
+        const id = parseInt(userId, 10);
 
-        this._userId = parseInt(userId, 10);
-        this._userName = userName;
+        this.#userId = id;
+        this.#userName = userName;
+        return id;
     }
 
-    // Request helpers
-    private async _request(
-        method: string,
-        uri: string,
-        form:
-            | string
-            | {
-                  [key: string]: any;
-              },
-        qs: any
+    /**
+     * @private
+     *
+     * @summary refreshes user fkey and user info
+     * @returns {Promise<void>}
+     */
+    async #updateChatFKeyAndUser(): Promise<void> {
+        const $ = await this.#get$("chats/join/favorite");
+        this.#loadFKey($);
+        this.#loadUser($);
+    }
+
+    /**
+     * @private
+     *
+     * @summary helper for forcing absolute URLs
+     * @param {string} url URL to request
+     * @returns {string}
+     */
+    #forceAbsoluteURL(url: string) {
+        const parsed = new URL(url, this.root);
+        return parsed.toString();
+    }
+
+    /**
+     * @private
+     *
+     * @summary abstract request helper
+     * @param {Method} method request method (i.e. "GET")
+     * @param {string} url request URL
+     * @param {Record<string, unknown>} form form data
+     * @param {any} searchParams query string data
+     * @returns {Promise<Response<any>>}
+     */
+    async #request<T>(
+        method: Method,
+        url: string,
+        form: Record<string, unknown>,
+        searchParams: any
     ) {
-        const options: ReqOptions = {
+        const options: OptionsOfJSONResponseBody = {
             form,
-            jar: this._cookieJar,
-            json: true,
+            cookieJar: this.#cookieJar,
             method,
-            qs,
-            uri,
+            searchParams,
         };
 
-        if (!uri.startsWith("https://")) {
-            options.uri = `${this._chatRoot}${uri}`;
-        }
-
-        const res = await request(options);
+        const res = await got<T>(this.#forceAbsoluteURL(url), options);
 
         if (res.statusCode >= 400) {
             throw new ChatExchangeError(
@@ -413,25 +474,55 @@ class Browser {
         return res;
     }
 
-    private async _get$(uri: string, qs = {}) {
-        const res = await this._request("get", uri, {}, qs);
-
+    /**
+     * @private
+     *
+     * @summary cheeiro parsed data request helper
+     * @param {string} uri request URI
+     * @param {any} [qs] query string data
+     * @returns {Promise<import("cheerio").Root>}
+     */
+    async #get$(uri: string, qs = {}) {
+        const res = await this.#request<string>("get", uri, {}, qs);
         return cheerio.load(res.body);
     }
 
-    private _post(uri: string, data = {}, qs = {}) {
-        return this._request("post", uri, data, qs);
+    /**
+     * @private
+     *
+     * @summary POST request helper
+     * @param {string} uri request URI
+     * @param {object} [data] request data
+     * @param {any} [qs] query string data
+     * @returns {Promise<Response<any>>}
+     */
+    #post<T>(uri: string, data = {}, qs = {}) {
+        return this.#request<T>("post", uri, data, qs);
     }
 
-    private async _postKeyed(uri: string, data: any = {}, qs: any = {}) {
-        data.fkey = await this.chatFKey;
-
-        return this._post(uri, data, qs);
+    /**
+     * @private
+     *
+     * @summary POST request helper with fkey parameter set
+     * @param {string} uri request URI
+     * @param {object} [data] request data
+     * @param {any} [qs] query string data
+     * @returns {Promise<Response<any>>}
+     */
+    async #postKeyed<T>(uri: string, data: any = {}, qs: any = {}) {
+        return this.#post<T>(uri, { ...data, fkey: await this.chatFKey }, qs);
     }
 
-    private _getCookie(key: string) {
-        const cookies = this._cookieJar.getCookies(
-            `https://${this._client.host}`
+    /**
+     * @private
+     *
+     * @summary gets a cookie by key
+     * @param {string} key cookie key
+     * @returns {Promise<Cookie>}
+     */
+    async #getCookie(key: string) {
+        const cookies = await this.#cookieJar.getCookies(
+            `https://${this.#client.host}`
         );
 
         return cookies.find((cookie: Cookie) => cookie.key === key);
