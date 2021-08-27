@@ -1,6 +1,7 @@
 import { Cookie, CookieJar } from "tough-cookie";
 import { Browser } from "../../src/Browser";
 import Client, { Host } from "../../src/Client";
+import { ChatExchangeError } from "../../src/Exceptions/ChatExchangeError";
 import LoginError from "../../src/Exceptions/LoginError";
 import Message from "../../src/Message";
 import User from "../../src/User";
@@ -12,6 +13,10 @@ jest.mock("got", () => {
         const common = { statusCode: 200, body: "" };
 
         const resMap: Record<string, () => Promise<unknown>> = {
+            "https://chat\\..+\\.com/ws-auth": async () => ({
+                ...common,
+                body: "wss://chat.sockets.stackexchange.com/events/1/42",
+            }),
             "https://meta\\.stackexchange\\.com/users/login": async () => ({
                 ...common,
                 body: "<input name='fkey' value='test'/>",
@@ -167,6 +172,21 @@ describe("Browser", () => {
 
             const status = await browser.leaveAllRooms();
             expect(status).toEqual(true);
+        });
+    });
+
+    describe("watching", () => {
+        describe("watchRoom", () => {
+            it("should throw on missing time key", async () => {
+                expect.assertions(1);
+
+                const client = new Client("stackexchange.com");
+                const browser = new Browser(client);
+
+                const watch = browser.watchRoom(Infinity);
+
+                await expect(watch).rejects.toThrow(ChatExchangeError);
+            });
         });
     });
 
