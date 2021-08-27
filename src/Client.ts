@@ -55,13 +55,23 @@ class Client {
     }
 
     /**
-     * Returns the chat host URL
-     * @type {string}
-     * @memberof Client
+     * @summary Returns the chat host URL
+     * @returns {string}
+     * @memberof Client#
      */
     public get root() {
         const { host } = this;
         return `https://chat.${host}/`;
+    }
+
+    /**
+     * @summary gets user chat fkey
+     * @returns {Promise<string>}
+     * @memberof Client#
+     */
+    public get fkey(): Promise<string> {
+        const { _browser } = this;
+        return _browser.chatFKey;
     }
 
     /**
