@@ -216,7 +216,7 @@ export class Browser {
     /**
      * @summary Leaves a room with the provided ID
      * @param {number} id The room ID to leave
-     * @returns {Promise<boolean>} A promise that resolves when the user has successfully left the room
+     * @returns {Promise<boolean>} A promise that resolves when the user leaves the room
      * @memberof Browser#
      */
     public async leaveRoom(id: number): Promise<boolean> {
@@ -225,8 +225,25 @@ export class Browser {
             { quiet: true }
         );
 
-        this.#times.delete(id);
-        return statusCode === 200;
+        const isSuccess = statusCode === 200;
+        if (isSuccess) this.#times.delete(id);
+        return isSuccess;
+    }
+
+    /**
+     * @summary Leaves all rooms
+     * @returns {Promise<boolean>} A promise resolving when the user leaves all rooms
+     * @memberof Browser#
+     */
+    public async leaveAllRooms(): Promise<boolean> {
+        const { statusCode } = await this.#postKeyed<ChatEventsResponse>(
+            `chats/leave/all`,
+            { quiet: true }
+        );
+
+        const isSuccess = statusCode === 200;
+        if (isSuccess) this.#times.clear();
+        return isSuccess;
     }
 
     /**

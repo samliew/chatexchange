@@ -32,7 +32,8 @@ jest.mock("got", () => {
                     ...common,
                     body: { time: Date.now() },
                 }),
-            "https://chat\\..+\\.com/chats/leave/\\d+": async () => common,
+            "https://chat\\..+\\.com/chats/leave/(?:\\d+|all)": async () =>
+                common,
             "https://chat\\..+\\.com/chats/\\d+/messages/new": () =>
                 Promise.resolve({ ...common, body: { id: 1 } }),
         };
@@ -146,6 +147,16 @@ describe("Browser", () => {
 
             const leaveStatus = await browser.leaveRoom(roomId);
             expect(leaveStatus).toEqual(true);
+        });
+
+        it("should attempt to leave all rooms", async () => {
+            expect.assertions(1);
+
+            const client = new Client("stackoverflow.com");
+            const browser = new Browser(client);
+
+            const status = await browser.leaveAllRooms();
+            expect(status).toEqual(true);
         });
     });
 
