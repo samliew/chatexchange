@@ -123,6 +123,16 @@ describe("Browser", () => {
 
             await expect(browser.chatFKey).rejects.toThrow(InternalError);
         });
+
+        it("should correctly return user-related properties", async () => {
+            expect.assertions(2);
+
+            const client = new Client("stackoverflow.com");
+            const browser = new Browser(client);
+
+            await expect(browser.userId).resolves.toEqual(10162108);
+            await expect(browser.userName).resolves.toEqual("spotdetector");
+        });
     });
 
     describe("room interaction", () => {
