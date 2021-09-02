@@ -1,71 +1,82 @@
-import * as cheerio from "cheerio";
 import { Cookie, CookieJar } from "tough-cookie";
-import Browser from "../../src/Browser";
+import { Browser } from "../../src/Browser";
 import Client, { Host } from "../../src/Client";
-import InternalError from "../../src/Exceptions/InternalError";
+import { ChatExchangeError } from "../../src/Exceptions/ChatExchangeError";
 import LoginError from "../../src/Exceptions/LoginError";
 import Message from "../../src/Message";
 import User from "../../src/User";
+
+jest.mock("got", () => {
+    const fn = jest.fn(async (url: string) => {
+        const fs = await import("fs/promises");
+
+        const common = { statusCode: 200, body: "" };
+
+        const resMap: Record<string, () => Promise<unknown>> = {
+            "https://chat\\..+\\.com/ws-auth": async () => ({
+                ...common,
+                body: "wss://chat.sockets.stackexchange.com/events/1/42",
+            }),
+            "https://meta\\.stackexchange\\.com/users/login": async () => ({
+                ...common,
+                body: "<input name='fkey' value='test'/>",
+            }),
+            "https://chat\\..+\\.com/chats/join/favorite": async () => ({
+                ...common,
+                body: await fs.readFile("./tests/mocks/favorite.html", {
+                    encoding: "utf-8",
+                }),
+            }),
+            "https://stackoverflow\\.com/": async () => ({
+                ...common,
+                body: '<div class="my-profile"></div>',
+            }),
+            "https://stackexchange\\.com/": async () => common,
+            "https://chat\\..+\\.com/chats/\\d+/events": () =>
+                Promise.resolve({
+                    ...common,
+                    body: { time: Date.now() },
+                }),
+            "https://chat\\..+\\.com/chats/leave/(?:\\d+|all)": async () =>
+                common,
+            "https://chat\\..+\\.com/chats/\\d+/messages/new": () =>
+                Promise.resolve({ ...common, body: { id: 1 } }),
+        };
+
+        const [, handler] =
+            Object.entries(resMap).find(([k]) => new RegExp(k).test(url)) || [];
+
+        handler || console.log({ url });
+
+        return handler?.();
+    });
+
+    return Object.assign(fn, { extend: () => fn });
+});
 
 describe("Browser", () => {
     describe("authentication", () => {
         it("should override 'stackexchange.com' host to 'meta.stackexchange.com'", async () => {
             expect.assertions(1);
 
-            const _get$mock = jest.fn(() =>
-                Promise.resolve(
-                    cheerio.load("<input name='fkey' value='test'/>")
-                )
-            );
-
-            //@ts-expect-error
-            class MockBrowser extends Browser {
-                _get$ = _get$mock;
-                _getCookie(str: string) {
-                    return new Cookie();
-                }
-                _post() {
-                    return Promise.resolve();
-                }
-            }
-
             const host: Host = "stackexchange.com";
             const replacement = "meta.stackexchange.com";
 
             const client = new Client(host);
-            //@ts-ignore
-            client._browser = null;
+            const browser = new Browser(client);
 
-            const browser = new MockBrowser(client);
-
-            browser.login("ex@ample.org", "a!z5R_+@/|g-[%");
-
-            expect(_get$mock).toHaveBeenCalledWith(
-                `https://${replacement}/users/login`
-            );
+            expect(browser.loginHost).toEqual(replacement);
         });
 
         it("should throw on being unable to verify cookie", async () => {
             expect.assertions(1);
 
-            const _get$mock = jest.fn(() => Promise.resolve(cheerio.load("")));
-
-            //@ts-expect-error
-            class MockBrowser extends Browser {
-                _get$ = _get$mock;
-            }
-
-            const host: Host = "stackoverflow.com";
-
+            const host: Host = "stackexchange.com";
             const client = new Client(host);
-            //@ts-ignore
-            client._browser = null;
-
-            const browser = new MockBrowser(client);
+            const browser = new Browser(client);
 
             const jar = new CookieJar();
             const cookie = Cookie.parse("name=test; SameSite=None; Secure")!;
-
             await jar.setCookie(cookie, host);
 
             const login = browser.loginCookie(jar.serializeSync());
@@ -76,27 +87,14 @@ describe("Browser", () => {
         it("should set loggedIn property on cookie success", async () => {
             expect.assertions(1);
 
-            const _get$mock = jest.fn(() =>
-                Promise.resolve(cheerio.load('<div class="my-profile"></div>'))
-            );
-
-            //@ts-expect-error
-            class MockBrowser extends Browser {
-                _get$ = _get$mock;
-            }
-
             const host: Host = "stackoverflow.com";
-
             const client = new Client(host);
-            //@ts-ignore
-            client._browser = null;
-
-            const browser = new MockBrowser(client);
+            const browser = new Browser(client);
 
             const jar = new CookieJar();
             const cookie = Cookie.parse("name=test; SameSite=None; Secure")!;
-
             await jar.setCookie(cookie, host);
+
             await browser.loginCookie(jar.serializeSync());
 
             expect(browser.loggedIn).toEqual(true);
@@ -104,83 +102,102 @@ describe("Browser", () => {
     });
 
     describe("getters", () => {
+        beforeEach(() => jest.resetModules());
+
         it("should throw on missing fkey from transcript", async () => {
             expect.assertions(1);
 
+            jest.doMock("cheerio");
+
+            const cheerio = (await import(
+                "cheerio"
+            )) as any as jest.Mocked<cheerio.CheerioAPI>;
+
+            cheerio.load.mockReturnValue(
+                jest.requireActual("cheerio").load("")
+            );
+
+            const { Browser } = await import("../../src/Browser");
+            const { InternalError } = await import(
+                "../../src/Exceptions/InternalError"
+            );
+
             const host: Host = "stackoverflow.com";
             const client = new Client(host);
-            //@ts-ignore
-            client._browser = null;
-
-            const _get$mock = jest.fn(() => Promise.resolve(cheerio.load("")));
-
-            //@ts-expect-error
-            class MockBrowser extends Browser {
-                _get$ = _get$mock;
-            }
-
-            const browser = new MockBrowser(client);
+            const browser = new Browser(client);
 
             await expect(browser.chatFKey).rejects.toThrow(InternalError);
+        });
+
+        it("should correctly return user-related properties", async () => {
+            expect.assertions(2);
+
+            const client = new Client("stackoverflow.com");
+            const browser = new Browser(client);
+
+            await expect(browser.userId).resolves.toEqual(10162108);
+            await expect(browser.userName).resolves.toEqual("spotdetector");
         });
     });
 
     describe("room interaction", () => {
-        it("should attempt to join and leave room", async () => {
-            expect.assertions(2);
+        const roomId = 29;
+
+        it("should attempt to join the room", async () => {
+            expect.assertions(1);
 
             const host: Host = "stackexchange.com";
             const client = new Client(host);
-            //@ts-ignore
-            client._browser = null;
+            const browser = new Browser(client);
 
-            const _postKeyMock = jest.fn(() =>
-                Promise.resolve({ body: { time: Date.now() } })
-            );
+            const joinStatus = await browser.joinRoom(roomId);
+            expect(joinStatus).toEqual(true);
+        });
 
-            //@ts-expect-error
-            class MockedBrowser extends Browser {
-                _postKeyed = _postKeyMock;
-            }
+        it("should attempt to leave the room", async () => {
+            expect.assertions(1);
 
-            const browser = new MockedBrowser(client);
+            const client = new Client("meta.stackexchange.com");
+            const browser = new Browser(client);
 
-            const roomId = 29;
+            const leaveStatus = await browser.leaveRoom(roomId);
+            expect(leaveStatus).toEqual(true);
+        });
 
-            await browser.joinRoom(roomId);
+        it("should attempt to leave all rooms", async () => {
+            expect.assertions(1);
 
-            expect(_postKeyMock).toHaveBeenCalledWith(
-                `chats/${roomId}/events`,
-                {
-                    mode: "Messages",
-                    msgCount: 100,
-                    since: 0,
-                }
-            );
+            const client = new Client("stackoverflow.com");
+            const browser = new Browser(client);
 
-            await browser.leaveRoom(roomId);
+            const status = await browser.leaveAllRooms();
+            expect(status).toEqual(true);
+        });
+    });
 
-            expect(_postKeyMock).toHaveBeenCalledWith(`chats/leave/${roomId}`, {
-                quiet: true,
+    describe("watching", () => {
+        describe("watchRoom", () => {
+            it("should throw on missing time key", async () => {
+                expect.assertions(1);
+
+                const client = new Client("stackexchange.com");
+                const browser = new Browser(client);
+
+                const watch = browser.watchRoom(Infinity);
+
+                await expect(watch).rejects.toThrow(ChatExchangeError);
             });
         });
     });
 
     describe("messaging", () => {
-        beforeEach(() => jest.resetModules());
-
         it("should attempt to send a message", async () => {
-            expect.assertions(4);
+            expect.assertions(3);
 
-            const host: Host = "stackexchange.com";
             const roomId = 29;
             const text = "It's alive!";
 
-            const _postKeyMock = jest.fn(() => Promise.resolve({ id: 123 }));
-
-            //@ts-ignore
             class MockedBrowser extends Browser {
-                _postKeyed = _postKeyMock;
                 getTranscript() {
                     return Promise.resolve({
                         content: text,
@@ -194,16 +211,12 @@ describe("Browser", () => {
                 }
             }
 
+            const host: Host = "stackexchange.com";
             const client = new Client(host);
-            // @ts-ignore
-            client._browser = new MockedBrowser(client);
+            const browser = new MockedBrowser(client);
+            client._browser = browser;
 
-            const msg = await client._browser.sendMessage(roomId, text);
-
-            expect(_postKeyMock).toHaveBeenCalledWith(
-                `chats/${roomId}/messages/new`,
-                { text }
-            );
+            const msg = await browser.sendMessage(roomId, text);
 
             expect(msg).toBeInstanceOf(Message);
             expect(await msg.roomId).toEqual(roomId);

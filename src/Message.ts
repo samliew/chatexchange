@@ -15,32 +15,23 @@ interface Message {
  * @class
  */
 class Message {
-    /**
-     * The message ID. If this is a WebsocketEvent Message, if the message is
-     * not a message type, this will be undefined
-     *
-     * @type {(number | undefined)}
-     * @memberof Message
-     */
-    public id: number | undefined;
     #client: Client;
-    #room: Room | undefined;
+    #room?: Room;
     #transcriptData?: Partial<ITranscriptData>;
 
     /**
      * @summary Creates an instance of Message.
-     * @param {Client} client The client associated with this message
-     * @param {number} id The ID of the message
+     * @param {Client} client The client associated with this message (undefined if not a message type)
+     * @param {number|undefined} id The ID of the message
      * @param {Partial<ITranscriptData>} attrs Extra attributes that should be assigned to this message
      * @constructor
      */
     constructor(
         client: Client,
-        id: number | undefined,
+        public id: number | undefined,
         attrs: Partial<ITranscriptData> = {}
     ) {
         this.#client = client;
-        this.id = id;
         this.#transcriptData = attrs;
     }
 
@@ -123,7 +114,9 @@ class Message {
             throw new ChatExchangeError("This is not a valid message.");
         }
 
-        this.#transcriptData = await this.#client._browser.getTranscript(this.id);
+        this.#transcriptData = await this.#client._browser.getTranscript(
+            this.id
+        );
     }
 
     /**
@@ -137,7 +130,9 @@ class Message {
      */
     public async reply(message: string): Promise<Message> {
         if (!this.id) {
-            throw new ChatExchangeError("This is not a valid message that can be replied to.");
+            throw new ChatExchangeError(
+                "This is not a valid message that can be replied to."
+            );
         }
 
         const room = await this.room;

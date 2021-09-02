@@ -168,4 +168,21 @@ describe("Client", () => {
             "https://chat.stackoverflow.com/",
         ]);
     });
+
+    test("Should correctly get fkey", async () => {
+        expect.assertions(1);
+
+        const fkey = "42";
+
+        class BrowserMock extends Browser {
+            get chatFKey() {
+                return Promise.resolve(fkey);
+            }
+        }
+
+        const client = new Client("stackexchange.com");
+        client._browser = new BrowserMock(client);
+
+        await expect(client.fkey).resolves.toEqual(fkey);
+    });
 });

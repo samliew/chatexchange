@@ -9,20 +9,21 @@ import { lazy } from "./utils";
  * @class User
  */
 class User {
-    /**
-     * The id of the user
-     *
-     * @type {number}
-     * @memberof User
-     */
-    public id: number;
 
     #client: Client;
     #profileData?: Omit<Partial<IProfileData>, "id">;
 
-    constructor(client: Client, id: number, profileData?: Omit<Partial<IProfileData>, "id"> | undefined) {
+    /**
+     * @param {Client} client
+     * @param {number} id The id of the user
+     *
+     */
+    constructor(
+        client: Client,
+        public id: number,
+        profileData?: Omit<Partial<IProfileData>, "id">
+    ) {
         this.#client = client;
-        this.id = id;
         this.#profileData = profileData;
     }
 

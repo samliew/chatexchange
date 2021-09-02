@@ -22,14 +22,6 @@ export const AllowedHosts: Host[] = [
  * @class
  */
 class Client {
-    /**
-     * The host to connect to (stackexchange.com, meta.stackexchange.com, or stackoverflow.com)
-     *
-     * @type {Host}
-     * @memberof Client
-     */
-    public readonly host: Host;
-
     /* @internal */
     public _browser: Browser;
 
@@ -43,25 +35,34 @@ class Client {
      * @throws {InvalidArgumentError} If the host is invalid
      * @constructor
      */
-    constructor(host: Host) {
+    constructor(public readonly host: Host) {
         if (!AllowedHosts.includes(host)) {
             throw new InvalidArgumentError(
                 `Invalid host. Must be one of ${AllowedHosts.join(", ")}`
             );
         }
 
-        this.host = host;
         this._browser = new Browser(this);
     }
 
     /**
-     * Returns the chat host URL
-     * @type {string}
-     * @memberof Client
+     * @summary Returns the chat host URL
+     * @returns {string}
+     * @memberof Client#
      */
     public get root() {
         const { host } = this;
         return `https://chat.${host}/`;
+    }
+
+    /**
+     * @summary gets user chat fkey
+     * @returns {Promise<string>}
+     * @memberof Client#
+     */
+    public get fkey(): Promise<string> {
+        const { _browser } = this;
+        return _browser.chatFKey;
     }
 
     /**

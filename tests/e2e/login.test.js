@@ -1,11 +1,10 @@
-import request from 'request-promise-native';
 import Client from '../../src/Client';
 
 
 describe('Real Site Login', () => {
     if (!process.env.SE_EMAIL || !process.env.SE_PASSWORD) {
         console.log('Not running login test as no credentials supplied via environment (SE_EMAIL and SE_PASSWORD).');
-        test.skip('Should login with credentials', () => {});
+        test.skip('Should login with credentials', () => { });
         return;
     }
 
