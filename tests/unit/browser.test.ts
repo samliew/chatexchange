@@ -1,4 +1,5 @@
 import { Cookie, CookieJar } from "tough-cookie";
+import type { URL } from "url";
 import { Browser } from "../../src/Browser";
 import Client, { Host } from "../../src/Client";
 import { ChatExchangeError } from "../../src/Exceptions/ChatExchangeError";
@@ -15,7 +16,9 @@ jest.mock("got", () => {
         const resMap: Record<string, () => Promise<unknown>> = {
             "https://chat\\..+\\.com/ws-auth": async () => ({
                 ...common,
-                body: "wss://chat.sockets.stackexchange.com/events/1/42",
+                body: {
+                    url: "wss://chat.sockets.stackexchange.com/events/1/42",
+                },
             }),
             "https://meta\\.stackexchange\\.com/users/login": async () => ({
                 ...common,
@@ -177,6 +180,8 @@ describe("Browser", () => {
 
     describe("watching", () => {
         describe("watchRoom", () => {
+            beforeAll(() => jest.resetModules());
+
             it("should throw on missing time key", async () => {
                 expect.assertions(1);
 
@@ -186,6 +191,38 @@ describe("Browser", () => {
                 const watch = browser.watchRoom(Infinity);
 
                 await expect(watch).rejects.toThrow(ChatExchangeError);
+            });
+
+            it("should attempt to connect via WebSockets", async () => {
+                expect.assertions(5);
+
+                const mockWSconstructor = jest.fn();
+
+                jest.doMock("ws", () =>
+                    jest.fn().mockImplementation(mockWSconstructor)
+                );
+
+                jest.dontMock("cheerio");
+
+                const { Browser } = await import("../../src/Browser");
+
+                const client = new Client("stackoverflow.com");
+                const browser = new Browser(client);
+
+                const roomId = 29;
+
+                const status = await browser.joinRoom(roomId);
+                expect(status).toEqual(true);
+
+                await browser.watchRoom(roomId);
+
+                const [[wss, opts]]: [URL, object][] =
+                    mockWSconstructor.mock.calls;
+
+                expect(mockWSconstructor).toBeCalledTimes(1);
+                expect(wss.protocol).toEqual("wss:");
+                expect(wss.searchParams.has("l")).toBe(true);
+                expect(opts).toEqual({ origin: client.root });
             });
         });
     });
