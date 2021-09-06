@@ -12,7 +12,7 @@
     "pretest": "npm run build",
     "test": "bash ./scripts/test.sh",
     "pretest-coveralls": "npm run build",
-    "test-coveralls": "bash ./scripts/coverall.sh"
+    "test-coveralls": "bash ./scripts/coveralls.sh"
   },
   "repository": {
     "type": "git",
