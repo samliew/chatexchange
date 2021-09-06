@@ -8,7 +8,6 @@
     "start": "ts-node src/index.ts",
     "build": "rimraf dist && tsc --declaration",
     "prepublish": "npm run build",
-    "postinstall": "patch-package",
     "pretest": "npm run build",
     "test": "bash ./scripts/test.sh",
     "pretest-coveralls": "npm run build",
