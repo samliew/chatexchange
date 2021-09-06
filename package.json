@@ -10,28 +10,9 @@
     "prepublish": "npm run build",
     "postinstall": "patch-package",
     "pretest": "npm run build",
-    "test": "jest --coverage --collectCoverageFrom=src/**/*.ts --coverageReporters=lcov && tslint src/**/*.ts",
+    "test": "bash ./scripts/test.sh",
     "pretest-coveralls": "npm run build",
-    "test-coveralls": "jest --coverage --collectCoverageFrom=src/**/*.ts --coverageReporters=text-lcov | coveralls && tslint src/**/*.ts"
-  },
-  "jest": {
-    "coverageThreshold": {
-      "global": {
-        "branches": 60,
-        "functions": 85,
-        "lines": 85,
-        "statements": 85
-      }
-    },
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "transform": {
-      "\\.tsx?$": "ts-jest",
-      "^.+\\.jsx?$": "babel-jest"
-    }
+    "test-coveralls": "bash ./scripts/coverall.sh"
   },
   "repository": {
     "type": "git",
