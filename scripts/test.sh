@@ -1,9 +1,12 @@
 #!/bin/bash
 
+declare src="src/**/*.ts"
+declare config="jest.config.json"
+
 jest \
-    --config tests/jest.config.json \
-    --coverage \
-    --collectCoverageFrom=src/**/*.ts \
-    --coverageReporters=lcov \
+    --config="$config" \
+    --collectCoverage \
+    --collectCoverageFrom="$src" \
+    --coverageReporters="lcov" \
     --silent=false &&
-    tslint src/**/*.ts
+    tslint "$src"
