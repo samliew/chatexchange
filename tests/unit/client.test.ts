@@ -115,18 +115,43 @@ describe("Client", () => {
         expect(msg.id).toEqual(id);
     });
 
-    test("Should return a User on 'getUser'", async () => {
-        expect.assertions(2);
+    describe("Client user", () => {
+        test("Should return a User on 'getUser'", async () => {
+            expect.assertions(2);
 
-        const host: Host = "meta.stackexchange.com";
-        const client = new Client(host);
+            const host: Host = "meta.stackexchange.com";
+            const client = new Client(host);
 
-        const id = 5;
+            const id = 5;
 
-        const user = client.getUser(id);
+            const user = client.getUser(id);
 
-        expect(user).toBeInstanceOf(User);
-        expect(user.id).toEqual(id);
+            expect(user).toBeInstanceOf(User);
+            expect(user.id).toEqual(id);
+        });
+
+        beforeEach(() => jest.resetModules());
+
+        test('Should skip initialization on subsequent calls to "getUser"', async () => {
+            expect.assertions(1);
+
+            const mockUserConstructor = jest.fn();
+
+            jest.doMock("../../src/User", () =>
+                jest.fn().mockImplementation(mockUserConstructor)
+            );
+
+            const { default: Client } = await import("../../src/Client");
+            const client = new Client("stackexchange.com");
+
+            const userId = 42;
+            client.getUser(userId, { about: "I am the answer" });
+            client.getUser(userId);
+
+            expect(mockUserConstructor).toBeCalledTimes(1);
+
+            jest.unmock("../../src/User");
+        });
     });
 
     test("Should attempt to join a room and fetch existing room", async () => {

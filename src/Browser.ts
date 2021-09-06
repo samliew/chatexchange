@@ -474,11 +474,15 @@ export class Browser {
         searchParams: any
     ) {
         const options: OptionsOfJSONResponseBody = {
-            form,
             cookieJar: this.#cookieJar,
             method,
             searchParams,
         };
+
+        //ensures empty body is not added on GET requests
+        if (method.toUpperCase() !== "GET") {
+            options.form = form;
+        }
 
         const res = await got<T>(this.#forceAbsoluteURL(url), options);
 
