@@ -40,6 +40,8 @@ export interface ITranscriptData {
     parentMessageId?: number;
 }
 
+type ContentType = "json" | "text";
+
 /**
  * Used internally by {@link Client} to provide the low-level
  * interaction with SE servers.
@@ -176,7 +178,7 @@ export class Browser {
             );
         }
 
-        await this.#post(loginUrl, { email, fkey, password });
+        await this.#post(loginUrl, { email, fkey, password }, "text");
 
         const acctCookie = await this.#getCookie("acct");
 
@@ -471,20 +473,26 @@ export class Browser {
      * @param {Method} method request method (i.e. "GET")
      * @param {string} url request URL
      * @param {Record<string, unknown>} form form data
-     * @param {any} searchParams query string data
+     * @param {object} searchParams query string data
+     * @param {ContentType} [type] parse response as json?
      * @returns {Promise<Response<any>>}
      */
     async #request<T>(
         method: Method,
         url: string,
         form: Record<string, unknown>,
-        searchParams: any
+        searchParams: Record<string, string | number | boolean>,
+        type?: ContentType
     ) {
         const options: OptionsOfJSONResponseBody = {
             cookieJar: this.#cookieJar,
             method,
             searchParams,
         };
+
+        if (type === "json") {
+            options.responseType = "json";
+        }
 
         //ensures empty body is not added on GET requests
         if (method.toUpperCase() !== "GET") {
@@ -507,7 +515,7 @@ export class Browser {
      *
      * @summary cheeiro parsed data request helper
      * @param {string} uri request URI
-     * @param {any} [qs] query string data
+     * @param {object} [qs] query string data
      * @returns {Promise<import("cheerio").Root>}
      */
     async #get$(uri: string, qs = {}) {
@@ -520,12 +528,18 @@ export class Browser {
      *
      * @summary POST request helper
      * @param {string} uri request URI
-     * @param {object} [data] request data
-     * @param {any} [qs] query string data
+     * @param {object} data request data
+     * @param {ContentType} type response parse type
+     * @param {object} [qs] query string data
      * @returns {Promise<Response<any>>}
      */
-    #post<T>(uri: string, data = {}, qs = {}) {
-        return this.#request<T>("post", uri, data, qs);
+    #post<T>(
+        uri: string,
+        data: Record<string, unknown>,
+        type: ContentType,
+        qs = {}
+    ) {
+        return this.#request<T>("post", uri, data, qs, type);
     }
 
     /**
@@ -534,11 +548,16 @@ export class Browser {
      * @summary POST request helper with fkey parameter set
      * @param {string} uri request URI
      * @param {object} [data] request data
-     * @param {any} [qs] query string data
+     * @param {object} [qs] query string data
      * @returns {Promise<Response<any>>}
      */
-    async #postKeyed<T>(uri: string, data: any = {}, qs: any = {}) {
-        return this.#post<T>(uri, { ...data, fkey: await this.chatFKey }, qs);
+    async #postKeyed<T>(uri: string, data: object = {}, qs: object = {}) {
+        return this.#post<T>(
+            uri,
+            { ...data, fkey: await this.chatFKey },
+            "json",
+            qs
+        );
     }
 
     /**
