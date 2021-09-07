@@ -1,4 +1,5 @@
 {
+    "bail": true,
     "coverageThreshold": {
         "global": {
             "branches": 60,
