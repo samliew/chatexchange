@@ -7,6 +7,8 @@ import Message from "../../src/Message";
 import Room from "../../src/Room";
 
 describe("Room", () => {
+    beforeAll(() => jest.resetModules());
+
     it("Should create a room with id", () => {
         expect.assertions(1);
 
@@ -138,6 +140,14 @@ describe("Room", () => {
 
         const roomId = 5;
         const host: Host = "stackoverflow.com";
+
+        jest.doMock("ws", () => {
+            const ws = jest.requireActual("ws");
+            ws.prototype.close = () => void 0;
+            return ws;
+        });
+
+        const { default: WebSocket } = await import("ws");
 
         //@ts-ignore
         const websocketMock = new WebSocket(null);

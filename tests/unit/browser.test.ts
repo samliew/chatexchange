@@ -196,7 +196,9 @@ describe("Browser", () => {
             it("should attempt to connect via WebSockets", async () => {
                 expect.assertions(5);
 
-                const mockWSconstructor = jest.fn();
+                const mockWSconstructor = jest.fn((_u,_o) => ({
+                    once: (_e: string, cbk: Function) => cbk(),
+                }));
 
                 jest.doMock("ws", () =>
                     jest.fn().mockImplementation(mockWSconstructor)
