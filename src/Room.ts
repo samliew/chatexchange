@@ -1,4 +1,5 @@
 import { EventEmitter } from "events";
+import WebSocket from "ws";
 import Client from "./Client";
 import InvalidArgumentError from "./Exceptions/InvalidArgumentError";
 import Message from "./Message";
@@ -21,6 +22,8 @@ class Room extends EventEmitter {
     #client: Client;
     #isClosing: boolean = false;
 
+    #socket?: WebSocket;
+
     /**
      * Creates an instance of Room.
      *
@@ -37,39 +40,43 @@ class Room extends EventEmitter {
     /**
      * Join a chat room
      *
-     * @returns {Promise<void>} A promise when the user succesfully joins this room
+     * @returns {Promise<boolean>} A promise when the user succesfully joins this room
      * @memberof Room
      */
-    public async join(): Promise<void> {
-        this.#isClosing = false
-        await this.#client._browser.joinRoom(this.id);
+    public join(): Promise<boolean> {
+        this.#isClosing = false;
+        return this.#client._browser.joinRoom(this.id);
     }
 
     /**
      * Leave a chat room
      *
-     * @returns {Promise<void>} A promise when the user succesfully leaves this room
+     * @returns {Promise<boolean>} A promise when the user succesfully leaves this room
+     * @returns {boolean} Status of leaving the room
      * @memberof Room
      */
-    public async leave(): Promise<void> {
-        this.#isClosing = true
-        await this.#client._browser.leaveRoom(this.id);
+    public leave(): Promise<boolean> {
+        this.#isClosing = true;
+        this.#socket?.close();
+        return this.#client._browser.leaveRoom(this.id);
     }
 
     /**
      * Connects to the chatroom websocket, and watches
      * for new events
      *
-     * @returns {Promise<void>} A promise that completes when the webscocket connection is successfull.
+     * @returns {Promise<Room>} A promise that completes when the webscocket connection is successfull.
      * @memberof Room
      */
-    public async watch(): Promise<void> {
+    public async watch(): Promise<Room> {
         const ws = await this.#client._browser.watchRoom(this.id);
 
         ws.on("message", (rawMsg) => {
             const json = JSON.parse(rawMsg.toString());
-            if (typeof json[`r${this.id}`] === "undefined" ||
-                typeof json[`r${this.id}`].e === "undefined") {
+            if (
+                typeof json[`r${this.id}`] === "undefined" ||
+                typeof json[`r${this.id}`].e === "undefined"
+            ) {
                 return;
             }
 
@@ -89,6 +96,9 @@ class Room extends EventEmitter {
                 this.watch();
             }
         });
+
+        this.#socket = ws;
+        return this;
     }
 
     /**
@@ -104,10 +114,14 @@ class Room extends EventEmitter {
             throw new InvalidArgumentError("Message should be a string.");
         }
         if (message.length > 500) {
-            throw new InvalidArgumentError("Unable to send message because it was longer than 500 characters.");
+            throw new InvalidArgumentError(
+                "Unable to send message because it was longer than 500 characters."
+            );
         }
         if (message.length === 0) {
-            throw new InvalidArgumentError("Unable to send message because it was empty.");
+            throw new InvalidArgumentError(
+                "Unable to send message because it was empty."
+            );
         }
 
         const res = await this.#client._browser.sendMessage(this.id, message);
