@@ -267,7 +267,14 @@ export class Browser {
         const address = new URL(body.url);
         address.searchParams.append("l", l.toString());
 
-        return new WebSocket(address, { origin: root });
+        const ws = new WebSocket(address, { origin: root });
+
+        // simple instantiation of WebSocket does not guarantee its readiness
+        // only after the "open" event fires, a WebSocket is ready for data transfer
+        // awaiting a promise till this happens ensures the returned WS is ready
+        await new Promise((r) => ws.once("open", r));
+
+        return ws;
     }
 
     /**
