@@ -194,20 +194,58 @@ describe("Client", () => {
         ]);
     });
 
+    beforeEach(() => jest.resetModules());
+
     test("Should correctly get fkey", async () => {
         expect.assertions(1);
 
-        const fkey = "42";
+        const mockFkey = "42";
 
-        class BrowserMock extends Browser {
-            get chatFKey() {
-                return Promise.resolve(fkey);
-            }
-        }
+        jest.doMock("../../src/Browser", () => {
+            const real = jest.requireActual("../../src/Browser");
+            Object.defineProperty(real.default.prototype, "chatFKey", {
+                get: () => Promise.resolve(mockFkey),
+            });
+            return real;
+        });
+
+        const { default: Client } = await import("../../src/Client");
 
         const client = new Client("stackexchange.com");
-        client._browser = new BrowserMock(client);
 
-        await expect(client.fkey).resolves.toEqual(fkey);
+        await expect(client.fkey).resolves.toEqual(mockFkey);
+    });
+
+    test("Should correctly leave all rooms", async () => {
+        expect.assertions(2);
+
+        const mockGot = jest.fn();
+
+        jest.doMock("got", () => Object.assign(mockGot, { extend: mockGot }));
+
+        jest.doMock("../../src/Browser", () => {
+            const real = jest.requireActual("../../src/Browser");
+            real.default.joinRoom = () => Promise.resolve(true);
+            return real;
+        });
+
+        mockGot.mockReturnValue({
+            statusCode: 200,
+            body: "<input name='fkey' value='test'/>",
+        });
+
+        const { default: Client } = await import("../../src/Client");
+
+        const client = new Client("meta.stackexchange.com");
+
+        await client.joinRoom(42);
+
+        const status = await client.leaveAll();
+        expect(status).toBe(true);
+
+        const [_j1, _j2, _events, leave] = mockGot.mock.calls;
+
+        const [url] = leave;
+        expect(url).toMatch(/chats\/leave\/all/);
     });
 });
