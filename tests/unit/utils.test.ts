@@ -6,8 +6,7 @@ describe("Utilities", () => {
         test("Should throw and error when setter fails to set", async () => {
             expect.assertions(1);
 
-            const getter = jest.fn(() => ({}));
-
+            const getter = jest.fn(() => {});
             const setter = jest.fn(() => Promise.resolve());
 
             try {
