@@ -216,36 +216,69 @@ describe("Client", () => {
         await expect(client.fkey).resolves.toEqual(mockFkey);
     });
 
-    test("Should correctly leave all rooms", async () => {
-        expect.assertions(2);
+    describe("leaving rooms", () => {
+        test("Should correctly leave all rooms", async () => {
+            expect.assertions(2);
 
-        const mockGot = jest.fn();
+            const mockGot = jest.fn();
 
-        jest.doMock("got", () => Object.assign(mockGot, { extend: mockGot }));
+            jest.doMock("got", () =>
+                Object.assign(mockGot, { extend: mockGot })
+            );
 
-        jest.doMock("../../src/Browser", () => {
-            const real = jest.requireActual("../../src/Browser");
-            real.default.joinRoom = () => Promise.resolve(true);
-            return real;
+            jest.doMock("../../src/Browser", () => {
+                const real = jest.requireActual("../../src/Browser");
+                real.default.joinRoom = () => Promise.resolve(true);
+                return real;
+            });
+
+            mockGot.mockReturnValue({
+                statusCode: 200,
+                body: "<input name='fkey' value='test'/>",
+            });
+
+            const { default: Client } = await import("../../src/Client");
+
+            const client = new Client("meta.stackexchange.com");
+
+            await client.joinRoom(42);
+
+            const status = await client.leaveAll();
+            expect(status).toBe(true);
+
+            const [_j1, _j2, _events, leave] = mockGot.mock.calls;
+
+            const [url] = leave;
+            expect(url).toMatch(/chats\/leave\/all/);
         });
 
-        mockGot.mockReturnValue({
-            statusCode: 200,
-            body: "<input name='fkey' value='test'/>",
+        test("should return correct status on failing to leave rooms", async () => {
+            expect.assertions(1);
+
+            const mockGot = jest.fn();
+
+            jest.doMock("got", () =>
+                Object.assign(mockGot, { extend: mockGot })
+            );
+
+            mockGot.mockReturnValue({
+                statusCode: 200,
+                body: "<input name='fkey' value='test'/>",
+            });
+
+            const { default: Client } = await import("../../src/Client");
+
+            const client = new Client("meta.stackexchange.com");
+
+            await client.joinRoom(42);
+
+            mockGot.mockReturnValue({
+                statusCode: 301,
+                body: "sorry, we changed ship",
+            });
+
+            const status = await client.leaveAll();
+            expect(status).toBe(false);
         });
-
-        const { default: Client } = await import("../../src/Client");
-
-        const client = new Client("meta.stackexchange.com");
-
-        await client.joinRoom(42);
-
-        const status = await client.leaveAll();
-        expect(status).toBe(true);
-
-        const [_j1, _j2, _events, leave] = mockGot.mock.calls;
-
-        const [url] = leave;
-        expect(url).toMatch(/chats\/leave\/all/);
     });
 });
