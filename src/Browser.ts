@@ -418,7 +418,7 @@ export class Browser {
         this.#fkey = fkey;
 
         if (typeof fkey === "undefined") {
-            throw new InternalError("Unable to find fkey.");
+            throw new InternalError(`Unable to find fkey, got: ${$.html()}`);
         }
 
         return fkey;
