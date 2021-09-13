@@ -167,6 +167,16 @@ export class Client {
 
         return room;
     }
+
+    /**
+     * Leaves all rooms
+     *
+     * @returns {Promise<boolean>}
+     * @memberof Client
+     */
+    public leaveAll(): Promise<boolean> {
+        return this._browser.leaveAllRooms();
+    }
 }
 
 export default Client;
