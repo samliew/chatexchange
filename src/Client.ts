@@ -21,7 +21,7 @@ export const AllowedHosts: Host[] = [
  * Represents the main chatexchange Client class.
  * @class
  */
-class Client {
+export class Client {
     /* @internal */
     public _browser: Browser;
 
