@@ -170,12 +170,11 @@ export class Browser {
 
         const $ = await this.#get$(loginUrl);
 
-        const fkey = $('input[name="fkey"]').val();
+        const fkeyElem = $('input[name="fkey"]');
+        const fkey = fkeyElem.val();
 
         if (typeof fkey === "undefined") {
-            throw new InternalError(
-                "Unable to find fkey element on /users/login"
-            );
+            throw new InternalError(`fkey missing (login): ${fkeyElem.html()}`);
         }
 
         await this.#post(loginUrl, { email, fkey, password }, "text");
