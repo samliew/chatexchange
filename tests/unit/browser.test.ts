@@ -61,6 +61,8 @@ jest.mock("got", mockGot);
 
 describe("Browser", () => {
     describe("authentication", () => {
+        beforeEach(() => jest.resetModules());
+
         it("should override 'stackexchange.com' host to 'meta.stackexchange.com'", async () => {
             expect.assertions(1);
 
@@ -73,7 +75,31 @@ describe("Browser", () => {
             expect(browser.loginHost).toEqual(replacement);
         });
 
-        it("should throw on not being able to login", async () => {
+        it("should throw an InternalError on failure to get fkey", async () => {
+            const mockGot = jest.fn();
+            jest.doMock("got", () =>
+                Object.assign(mockGot, { extend: mockGot })
+            );
+
+            const { Browser } = await import("../../src/Browser");
+            const { InternalError } = await import(
+                "../../src/Exceptions/InternalError"
+            );
+
+            const client = new Client("stackexchange.com");
+            const browser = new Browser(client);
+
+            mockGot.mockReturnValueOnce({
+                statusCode: 200,
+                body: "",
+            });
+
+            await expect(
+                browser.login("bogus@email.com", "123")
+            ).rejects.toThrow(InternalError);
+        });
+
+        it("should throw a LoginError on not being able to login", async () => {
             const client = new Client("stackexchange.com");
             const browser = new Browser(client);
 
