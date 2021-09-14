@@ -73,6 +73,15 @@ describe("Browser", () => {
             expect(browser.loginHost).toEqual(replacement);
         });
 
+        it("should throw on not being able to login", async () => {
+            const client = new Client("stackexchange.com");
+            const browser = new Browser(client);
+
+            await expect(
+                browser.login("bogus@email.com", "123")
+            ).rejects.toThrow(LoginError);
+        });
+
         it("should throw on being unable to verify cookie", async () => {
             expect.assertions(1);
 
