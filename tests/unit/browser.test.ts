@@ -75,6 +75,25 @@ describe("Browser", () => {
             expect(browser.loginHost).toEqual(replacement);
         });
 
+        it("should return a cookie string on successful login", async () => {
+            const mockCookieGetter = jest.fn();
+            jest.doMock("tough-cookie", () => {
+                const cookie = jest.requireActual("tough-cookie");
+                cookie.CookieJar.prototype.getCookies = mockCookieGetter;
+                return cookie;
+            });
+
+            const { Browser } = await import("../../src/Browser");
+
+            const client = new Client("meta.stackexchange.com");
+            const browser = new Browser(client);
+
+            mockCookieGetter.mockReturnValueOnce([{ key: "acct" }]);
+
+            const cookie = await browser.login("bogus@email.com", "123");
+            expect(cookie).toBeTruthy();
+        });
+
         it("should throw an InternalError on failure to get fkey", async () => {
             const mockGot = jest.fn();
             jest.doMock("got", () =>
