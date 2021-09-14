@@ -295,12 +295,9 @@ export class Browser {
         const roomCount = parseInt($(".user-room-count-xxl").text(), 10);
         const messageCount = parseInt($(".user-message-count-xxl").text(), 10);
 
-        let reputation = 0; //TODO: rep can't be less than 1
-        const reputationElements = $(".reputation-score");
+        const repElems = $(".reputation-score");
 
-        if (reputationElements.length > 0) {
-            reputation = parseInt(reputationElements.attr("title") || "0", 10);
-        }
+        const reputation = parseInt(repElems.attr("title") || "1", 10) || 1;
 
         // Filter out only text (Ignore HTML entirely)
         const statsElements: string[] = $(".user-keycell,.user-valuecell")
