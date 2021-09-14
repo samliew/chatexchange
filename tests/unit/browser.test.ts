@@ -110,7 +110,7 @@ describe("Browser", () => {
         beforeEach(() => jest.resetModules());
 
         it("getProfile", async () => {
-            expect.assertions(3);
+            expect.assertions(4);
 
             const mockGot = jest.fn();
             jest.doMock("got", () => {
@@ -146,6 +146,16 @@ describe("Browser", () => {
             expect(reputation).toEqual(mockRep);
             expect(lastMessage).toEqual(0);
             expect(lastSeen).toEqual(-1);
+
+            const emptyResponse = "";
+
+            mockGot.mockReturnValueOnce({
+                statusCode: 200,
+                body: emptyResponse,
+            });
+
+            const empty = await browser.getProfile(-1);
+            expect(empty.reputation).toEqual(1);
         });
     });
 
