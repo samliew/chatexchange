@@ -302,32 +302,24 @@ export class Browser {
             reputation = parseInt(reputationElements.attr("title") || "0", 10);
         }
 
-        let lastSeen = -1;
-        let lastMessage = -1;
-
         // Filter out only text (Ignore HTML entirely)
-        const statsElements = $(".user-keycell,.user-valuecell")
+        const statsElements: string[] = $(".user-keycell,.user-valuecell")
             .map((_i, el) =>
                 $(el)
                     .text()
                     .trim()
                     .replace(/\s{2,}[\w\s()]*/u, "")
             )
-            .toArray();
+            .get();
 
         const {
             about,
             "last message": lmsg,
             "last seen": lseen,
-            //@ts-expect-error
         } = arrayToKvp(statsElements);
 
-        if (typeof lmsg !== "undefined") {
-            lastMessage = parseAgoString(lmsg);
-        }
-        if (typeof lseen !== "undefined") {
-            lastSeen = parseAgoString(lseen);
-        }
+        const lastMessage = lmsg !== void 0 ? parseAgoString(lmsg) : -1;
+        const lastSeen = lseen !== void 0 ? parseAgoString(lseen) : -1;
 
         return {
             about,
