@@ -16,5 +16,10 @@
     "transform": {
         "\\.tsx?$": "ts-jest",
         "^.+\\.jsx?$": "babel-jest"
+    },
+    "globals": {
+        "ts-jest": {
+            "tsconfig": "./tests/tsconfig.json"
+        }
     }
 }
