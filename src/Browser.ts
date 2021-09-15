@@ -5,8 +5,8 @@ import { URL } from "url";
 import WebSocket from "ws";
 import Client, { Host } from "./Client";
 import ChatExchangeError from "./Exceptions/ChatExchangeError";
-import InternalError from "./Exceptions/InternalError";
 import LoginError from "./Exceptions/LoginError";
+import ScrapingError from "./Exceptions/ScrapingError";
 import Message from "./Message";
 import User from "./User";
 import { arrayToKvp, lazy, parseAgoString } from "./utils";
@@ -170,11 +170,16 @@ export class Browser {
 
         const $ = await this.#get$(loginUrl);
 
-        const fkeyElem = $('input[name="fkey"]');
+        const fkeySelector = 'input[name="fkey"]';
+        const fkeyElem = $(fkeySelector);
         const fkey = fkeyElem.val();
 
         if (typeof fkey === "undefined") {
-            throw new InternalError(`fkey missing (login): ${fkeyElem.html()}`);
+            throw new ScrapingError(
+                "fkey missing (login)",
+                $.html(),
+                fkeySelector
+            );
         }
 
         await this.#post(loginUrl, { email, fkey, password }, "text");
@@ -407,12 +412,18 @@ export class Browser {
      * @returns {string}
      */
     #loadFKey($: cheerio.Root): string {
-        const fkey = $('input[name="fkey"]').val();
+        const fkeySelector = 'input[name="fkey"]';
+
+        const fkey = $(fkeySelector).val();
 
         this.#fkey = fkey;
 
         if (typeof fkey === "undefined") {
-            throw new InternalError(`Unable to find fkey, got: ${$.html()}`);
+            throw new ScrapingError(
+                "Unable to find fkey",
+                $.html(),
+                fkeySelector
+            );
         }
 
         return fkey;
