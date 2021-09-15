@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>InvalidArgumentError | chatexchange</title>
+	<title>ChatEventsResponse | chatexchange</title>
 	<meta name="description" content="Documentation for chatexchange">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -53,29 +53,33 @@
 					<a href="../modules.html">chatexchange</a>
 				</li>
 				<li>
-					<a href="../modules/exceptions_invalidargumenterror.html">Exceptions/InvalidArgumentError</a>
+					<a href="../modules/websocketevent.html">WebsocketEvent</a>
 				</li>
 				<li>
-					<a href="exceptions_invalidargumenterror.invalidargumenterror.html">InvalidArgumentError</a>
+					<a href="websocketevent.chateventsresponse.html">ChatEventsResponse</a>
 				</li>
 			</ul>
-			<h1>Class InvalidArgumentError</h1>
+			<h1>Interface ChatEventsResponse</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<dl class="tsd-comment-tags">
+						<dt>summary</dt>
+						<dd><p>chat websocket event response (<code>/chats/&lt;roomId&gt;/events</code>)</p>
+						</dd>
+					</dl>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="exceptions_chatexchangeerror.chatexchangeerror.html" class="tsd-signature-type" data-tsd-kind="Class">ChatExchangeError</a>
-						<ul class="tsd-hierarchy">
-							<li>
-								<span class="target">InvalidArgumentError</span>
-							</li>
-						</ul>
+						<span class="target">ChatEventsResponse</span>
 					</li>
 				</ul>
 			</section>
@@ -83,40 +87,59 @@
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
-						<section class="tsd-index-section tsd-is-inherited">
-							<h3>Constructors</h3>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><a href="exceptions_invalidargumenterror.invalidargumenterror.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="websocketevent.chateventsresponse.html#events" class="tsd-kind-icon">events</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="websocketevent.chateventsresponse.html#ms" class="tsd-kind-icon">ms</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="websocketevent.chateventsresponse.html#sync" class="tsd-kind-icon">sync</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="websocketevent.chateventsresponse.html#time" class="tsd-kind-icon">time</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
-				<h2>Constructors</h2>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited">
-					<a name="constructor" class="tsd-anchor"></a>
-					<h3>constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Invalid<wbr>Argument<wbr>Error<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="exceptions_invalidargumenterror.invalidargumenterror.html" class="tsd-signature-type" data-tsd-kind="Class">InvalidArgumentError</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="exceptions_chatexchangeerror.chatexchangeerror.html">ChatExchangeError</a>.<a href="exceptions_chatexchangeerror.chatexchangeerror.html#constructor">constructor</a></p>
-								<ul>
-									<li>Defined in node_modules/typescript/lib/lib.es5.d.ts:978</li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> message: <span class="tsd-signature-type">string</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="exceptions_invalidargumenterror.invalidargumenterror.html" class="tsd-signature-type" data-tsd-kind="Class">InvalidArgumentError</a></h4>
-						</li>
-					</ul>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="events" class="tsd-anchor"></a>
+					<h3>events</h3>
+					<div class="tsd-signature tsd-kind-icon">events<span class="tsd-signature-symbol">:</span> <a href="websocketevent.chatevent.html" class="tsd-signature-type" data-tsd-kind="Interface">ChatEvent</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/9823b3e/src/WebsocketEvent.ts#L48">src/WebsocketEvent.ts:48</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="ms" class="tsd-anchor"></a>
+					<h3>ms</h3>
+					<div class="tsd-signature tsd-kind-icon">ms<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/9823b3e/src/WebsocketEvent.ts#L45">src/WebsocketEvent.ts:45</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="sync" class="tsd-anchor"></a>
+					<h3>sync</h3>
+					<div class="tsd-signature tsd-kind-icon">sync<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/9823b3e/src/WebsocketEvent.ts#L46">src/WebsocketEvent.ts:46</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="time" class="tsd-anchor"></a>
+					<h3>time</h3>
+					<div class="tsd-signature tsd-kind-icon">time<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/9823b3e/src/WebsocketEvent.ts#L47">src/WebsocketEvent.ts:47</a></li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 		</div>
@@ -138,7 +161,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/exceptions_internalerror.html">Exceptions/<wbr>Internal<wbr>Error</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/exceptions_invalidargumenterror.html">Exceptions/<wbr>Invalid<wbr>Argument<wbr>Error</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -156,7 +179,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/user.html">User</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/websocketevent.html">Websocket<wbr>Event</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -170,15 +193,33 @@
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-reference tsd-parent-kind-module">
-						<a href="../modules/exceptions_invalidargumenterror.html#default" class="tsd-kind-icon">default</a>
+						<a href="../modules/websocketevent.html#default" class="tsd-kind-icon">default</a>
+					</li>
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="../enums/websocketevent.chateventtype.html" class="tsd-kind-icon">Chat<wbr>Event<wbr>Type</a>
+					</li>
+					<li class=" tsd-kind-class tsd-parent-kind-module">
+						<a href="../classes/websocketevent.websocketevent-1.html" class="tsd-kind-icon">Websocket<wbr>Event</a>
+					</li>
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
+						<a href="websocketevent.chatevent.html" class="tsd-kind-icon">Chat<wbr>Event</a>
 					</li>
 				</ul>
 				<ul class="current">
-					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="exceptions_invalidargumenterror.invalidargumenterror.html" class="tsd-kind-icon">Invalid<wbr>Argument<wbr>Error</a>
+					<li class="current tsd-kind-interface tsd-parent-kind-module">
+						<a href="websocketevent.chateventsresponse.html" class="tsd-kind-icon">Chat<wbr>Events<wbr>Response</a>
 						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited">
-								<a href="exceptions_invalidargumenterror.invalidargumenterror.html#constructor" class="tsd-kind-icon">constructor</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="websocketevent.chateventsresponse.html#events" class="tsd-kind-icon">events</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="websocketevent.chateventsresponse.html#ms" class="tsd-kind-icon">ms</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="websocketevent.chateventsresponse.html#sync" class="tsd-kind-icon">sync</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="websocketevent.chateventsresponse.html#time" class="tsd-kind-icon">time</a>
 							</li>
 						</ul>
 					</li>
@@ -200,16 +241,14 @@
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
 			</ul>
 			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+			</ul>
+			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
 			</ul>
 			<ul class="tsd-legend">
-				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-			</ul>
-			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
 			</ul>
 		</div>
 	</div>

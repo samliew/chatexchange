@@ -100,15 +100,21 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="room.default.html#_client" class="tsd-kind-icon">#client</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="room.default.html#_ignored" class="tsd-kind-icon">#ignored</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="room.default.html#_isclosing" class="tsd-kind-icon">#is<wbr>Closing</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="room.default.html#_socket" class="tsd-kind-icon">#socket</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="room.default.html#id" class="tsd-kind-icon">id</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="room.default.html#ignore" class="tsd-kind-icon">ignore</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="room.default.html#isignored" class="tsd-kind-icon">is<wbr>Ignored</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="room.default.html#join" class="tsd-kind-icon">join</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="room.default.html#leave" class="tsd-kind-icon">leave</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="room.default.html#sendmessage" class="tsd-kind-icon">send<wbr>Message</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="room.default.html#unignore" class="tsd-kind-icon">unignore</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="room.default.html#watch" class="tsd-kind-icon">watch</a></li>
 							</ul>
 						</section>
@@ -121,14 +127,14 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
-						<li class="tsd-signature tsd-kind-icon">new default<span class="tsd-signature-symbol">(</span>client<span class="tsd-signature-symbol">: </span><a href="client.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a>, id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="room.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></li>
+						<li class="tsd-signature tsd-kind-icon">new default<span class="tsd-signature-symbol">(</span>client<span class="tsd-signature-symbol">: </span><a href="client.client-1.html" class="tsd-signature-type" data-tsd-kind="Class">Client</a>, id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="room.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Overrides EventEmitter.constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/fa2c019/src/Room.ts#L21">src/Room.ts:21</a></li>
+									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/9823b3e/src/Room.ts#L19">src/Room.ts:19</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -144,7 +150,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>client: <a href="client.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></h5>
+									<h5>client: <a href="client.client-1.html" class="tsd-signature-type" data-tsd-kind="Class">Client</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>The Client instance</p>
 									</div>
@@ -166,10 +172,40 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="_client" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> #client</h3>
-					<div class="tsd-signature tsd-kind-icon">#client<span class="tsd-signature-symbol">:</span> <a href="client.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a></div>
+					<div class="tsd-signature tsd-kind-icon">#client<span class="tsd-signature-symbol">:</span> <a href="client.client-1.html" class="tsd-signature-type" data-tsd-kind="Class">Client</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/fa2c019/src/Room.ts#L21">src/Room.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/9823b3e/src/Room.ts#L15">src/Room.ts:15</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="_ignored" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> #ignored</h3>
+					<div class="tsd-signature tsd-kind-icon">#ignored<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Set</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/websocketevent.chateventtype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ChatEventType</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/9823b3e/src/Room.ts#L19">src/Room.ts:19</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="_isclosing" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> #is<wbr>Closing</h3>
+					<div class="tsd-signature tsd-kind-icon">#is<wbr>Closing<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/9823b3e/src/Room.ts#L16">src/Room.ts:16</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="_socket" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagOptional">Optional</span> #socket</h3>
+					<div class="tsd-signature tsd-kind-icon">#socket<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">WebSocket</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/9823b3e/src/Room.ts#L18">src/Room.ts:18</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -178,35 +214,94 @@
 					<h3>id</h3>
 					<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/fa2c019/src/Room.ts#L20">src/Room.ts:20</a></li>
-						</ul>
 					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>The id of the room</p>
-						</div>
-						<dl class="tsd-comment-tags">
-							<dt>memberof</dt>
-							<dd><p>Room</p>
-							</dd>
-						</dl>
-					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="join" class="tsd-anchor"></a>
-					<h3>join</h3>
+					<a name="ignore" class="tsd-anchor"></a>
+					<h3>ignore</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">join<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">ignore<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>eventType<span class="tsd-signature-symbol">: </span><a href="../enums/websocketevent.chateventtype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ChatEventType</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/fa2c019/src/Room.ts#L42">src/Room.ts:42</a></li>
+									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/9823b3e/src/Room.ts#L40">src/Room.ts:40</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Adds a chat event type to the list of ignored types</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>memberof</dt>
+									<dd><p>Room</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>eventType: <a href="../enums/websocketevent.chateventtype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ChatEventType</a><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>event type</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="isignored" class="tsd-anchor"></a>
+					<h3>is<wbr>Ignored</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Ignored<span class="tsd-signature-symbol">(</span>eventType<span class="tsd-signature-symbol">: </span><a href="../enums/websocketevent.chateventtype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ChatEventType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/9823b3e/src/Room.ts#L66">src/Room.ts:66</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Checks if an event type is ignored</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>memberof</dt>
+									<dd><p>Room</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>eventType: <a href="../enums/websocketevent.chateventtype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ChatEventType</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>event type</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="join" class="tsd-anchor"></a>
+					<h3>join</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">join<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/9823b3e/src/Room.ts#L76">src/Room.ts:76</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -219,7 +314,7 @@
 									</dd>
 								</dl>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>A promise when the user succesfully joins this room</p>
 						</li>
 					</ul>
@@ -228,13 +323,13 @@
 					<a name="leave" class="tsd-anchor"></a>
 					<h3>leave</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">leave<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">leave<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/fa2c019/src/Room.ts#L52">src/Room.ts:52</a></li>
+									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/9823b3e/src/Room.ts#L88">src/Room.ts:88</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -247,7 +342,7 @@
 									</dd>
 								</dl>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>A promise when the user succesfully leaves this room</p>
 						</li>
 					</ul>
@@ -262,7 +357,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/fa2c019/src/Room.ts#L94">src/Room.ts:94</a></li>
+									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/9823b3e/src/Room.ts#L145">src/Room.ts:145</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -293,16 +388,52 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="watch" class="tsd-anchor"></a>
-					<h3>watch</h3>
+					<a name="unignore" class="tsd-anchor"></a>
+					<h3>unignore</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">watch<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">unignore<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>eventType<span class="tsd-signature-symbol">: </span><a href="../enums/websocketevent.chateventtype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ChatEventType</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/fa2c019/src/Room.ts#L63">src/Room.ts:63</a></li>
+									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/9823b3e/src/Room.ts#L53">src/Room.ts:53</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Removes an event type from the list of ignored types</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>memberof</dt>
+									<dd><p>Room</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>eventType: <a href="../enums/websocketevent.chateventtype.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ChatEventType</a><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>event type</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="watch" class="tsd-anchor"></a>
+					<h3>watch</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">watch<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="room.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/9823b3e/src/Room.ts#L101">src/Room.ts:101</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -316,7 +447,7 @@
 									</dd>
 								</dl>
 							</div>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="room.default.html" class="tsd-signature-type" data-tsd-kind="Class">default</a><span class="tsd-signature-symbol">&gt;</span></h4>
 							<p>A promise that completes when the webscocket connection is successfull.</p>
 						</li>
 					</ul>
@@ -346,6 +477,9 @@
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/exceptions_loginerror.html">Exceptions/<wbr>Login<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/exceptions_scrapingerror.html">Exceptions/<wbr>Scraping<wbr>Error</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/message.html">Message</a>
@@ -380,8 +514,23 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="room.default.html#_client" class="tsd-kind-icon">#client</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="room.default.html#_ignored" class="tsd-kind-icon">#ignored</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="room.default.html#_isclosing" class="tsd-kind-icon">#is<wbr>Closing</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="room.default.html#_socket" class="tsd-kind-icon">#socket</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="room.default.html#id" class="tsd-kind-icon">id</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="room.default.html#ignore" class="tsd-kind-icon">ignore</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="room.default.html#isignored" class="tsd-kind-icon">is<wbr>Ignored</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="room.default.html#join" class="tsd-kind-icon">join</a>
@@ -391,6 +540,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="room.default.html#sendmessage" class="tsd-kind-icon">send<wbr>Message</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="room.default.html#unignore" class="tsd-kind-icon">unignore</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="room.default.html#watch" class="tsd-kind-icon">watch</a>
@@ -419,6 +571,9 @@
 				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
 				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
