@@ -12,13 +12,6 @@ import WebsocketEvent, { ChatEvent } from "./WebsocketEvent";
  * @extends {EventEmitter}
  */
 class Room extends EventEmitter {
-    /**
-     * The id of the room
-     *
-     * @type {number}
-     * @memberof Room
-     */
-    public id: number;
     #client: Client;
     #isClosing: boolean = false;
 
@@ -31,10 +24,9 @@ class Room extends EventEmitter {
      * @param {number} id The id of the room
      * @memberof Room
      */
-    constructor(client: Client, id: number) {
+    constructor(client: Client, public id: number) {
         super();
         this.#client = client;
-        this.id = id;
     }
 
     /**
