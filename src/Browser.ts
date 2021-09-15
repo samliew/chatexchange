@@ -262,7 +262,13 @@ export class Browser {
 
         const l = this.#times.get(roomid);
         if (!l) {
-            throw new ChatExchangeError("missing time key");
+            const entries = [...this.#times.entries()];
+            const report = entries
+                .map(([k, v]) => `${k} : ${v || "missing"}`)
+                .join("\n");
+            throw new ChatExchangeError(
+                `missing time key for room ${roomid}\n\nTime keys\n${report}`
+            );
         }
 
         const address = new URL(body.url);
@@ -489,13 +495,13 @@ export class Browser {
 
         const res = await got<T>(this.#forceAbsoluteURL(url), options);
 
-        if (res.statusCode >= 400) {
+        if (res?.statusCode >= 400) {
             throw new ChatExchangeError(
-                `Remote server threw ${res.statusCode} error.`
+                `Remote server threw ${res.statusCode} error\nURL: ${url}`
             );
         }
 
-        return res;
+        return res||{body: { url: "" }};
     }
 
     /**
