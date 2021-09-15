@@ -1,13 +1,115 @@
 import { readFile } from "fs/promises";
 import WebSocket from "ws";
+// import WebSocket from "ws";
 import Browser from "../../src/Browser";
 import Client, { Host } from "../../src/Client";
 import InvalidArgumentError from "../../src/Exceptions/InvalidArgumentError";
 import Message from "../../src/Message";
 import Room from "../../src/Room";
+import WebsocketEvent, { ChatEventType } from "../../src/WebsocketEvent";
 
 describe("Room", () => {
-    beforeAll(() => jest.resetModules());
+    describe.only("ignoring events", () => {
+        beforeEach(() => jest.resetModules());
+
+        test("should correctly ignore event types", () => {
+            expect.assertions(1);
+
+            const client = new Client("stackoverflow.com");
+            const roomId = 42;
+
+            const ignored = ChatEventType.FILE_ADDED;
+
+            const room = new Room(client, roomId);
+            room.ignore(ignored);
+
+            expect(room.isIgnored(ignored)).toBe(true);
+        });
+
+        test("should correctly unignore event types", () => {
+            expect.assertions(2);
+
+            const client = new Client("stackoverflow.com");
+            const roomId = 42;
+
+            const ignored = ChatEventType.FILE_ADDED;
+
+            const room = new Room(client, roomId);
+            room.ignore(ignored);
+
+            expect(room.isIgnored(ignored)).toBe(true);
+
+            room.unignore(ignored);
+
+            expect(room.isIgnored(ignored)).toBe(false);
+        });
+
+        jest.setTimeout(10000);
+
+        test("should not emit message events for ignored types", async () => {
+            const mockGot = jest.fn();
+
+            mockGot
+                .mockResolvedValueOnce({
+                    statusCode: 200,
+                    body: { time: Date.now() },
+                })
+                .mockResolvedValueOnce({
+                    statusCode: 200,
+                    body: {
+                        url: "wss://chat.sockets.stackexchange.com/events/1/42",
+                    },
+                });
+
+            jest.doMock("got", () =>
+                Object.assign(mockGot, { extend: jest.fn() })
+            );
+
+            const ignored = ChatEventType.USER_LEFT;
+            const notIgnored = ChatEventType.MESSAGE_POSTED;
+
+            const events = {
+                r42: {
+                    e: [{ event_type: ignored }, { event_type: notIgnored }],
+                },
+            };
+
+            const mockWatchRoom = jest.fn(() => ({
+                on: (m: string, cbk: Function) =>
+                    m === "close" || cbk(JSON.stringify(events)),
+            }));
+
+            jest.doMock("../../src/Browser", () => {
+                const { default: Browser } =
+                    jest.requireActual("../../src/Browser");
+                return class MockBrowser extends Browser {
+                    get chatFKey() {
+                        return "abs";
+                    }
+                    watchRoom() {
+                        return mockWatchRoom();
+                    }
+                };
+            });
+
+            const { default: Room } = await import("../../src/Room");
+            const { default: Client } = await import("../../src/Client");
+
+            const client = new Client("stackexchange.com");
+            const roomId = 42;
+
+            const room = new Room(client, roomId);
+            room.ignore(ignored);
+
+            const promise = new Promise((r) => room.on("message", r));
+
+            await room.join();
+            await room.watch();
+
+            const msg = (await promise) as WebsocketEvent;
+            expect(msg.eventType).toBe(notIgnored);
+        });
+    });
 
     it("Should create a room with id", () => {
         expect.assertions(1);
