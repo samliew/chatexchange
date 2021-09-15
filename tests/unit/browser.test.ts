@@ -94,15 +94,15 @@ describe("Browser", () => {
             expect(cookie).toBeTruthy();
         });
 
-        it("should throw an InternalError on failure to get fkey", async () => {
+        it("should throw a ScrapingError on failure to get fkey", async () => {
             const mockGot = jest.fn();
             jest.doMock("got", () =>
                 Object.assign(mockGot, { extend: mockGot })
             );
 
             const { Browser } = await import("../../src/Browser");
-            const { InternalError } = await import(
-                "../../src/Exceptions/InternalError"
+            const { ScrapingError } = await import(
+                "../../src/Exceptions/ScrapingError"
             );
 
             const client = new Client("stackexchange.com");
@@ -115,7 +115,7 @@ describe("Browser", () => {
 
             await expect(
                 browser.login("bogus@email.com", "123")
-            ).rejects.toThrow(InternalError);
+            ).rejects.toThrow(ScrapingError);
         });
 
         it("should throw a LoginError on not being able to login", async () => {
@@ -216,7 +216,7 @@ describe("Browser", () => {
     describe("getters", () => {
         beforeEach(() => jest.resetModules());
 
-        it("should throw on missing fkey from transcript", async () => {
+        it("should throw a ScrapingError on missing fkey from transcript", async () => {
             expect.assertions(1);
 
             const mockGot = jest.fn();
@@ -227,14 +227,14 @@ describe("Browser", () => {
             mockGot.mockReturnValue({ statusCode: 200, body: "" });
 
             const { Browser } = await import("../../src/Browser");
-            const { InternalError } = await import(
-                "../../src/Exceptions/InternalError"
+            const { ScrapingError } = await import(
+                "../../src/Exceptions/ScrapingError"
             );
 
             const client = new Client("stackoverflow.com");
             const browser = new Browser(client);
 
-            await expect(browser.chatFKey).rejects.toThrow(InternalError);
+            await expect(browser.chatFKey).rejects.toThrow(ScrapingError);
         });
 
         it("should correctly return user-related properties", async () => {
