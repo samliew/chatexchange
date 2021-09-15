@@ -170,36 +170,40 @@ describe("Room", () => {
                 "This is a test message"
             );
         });
-    });
 
-    it("Should throw an error for text > 500 chars", async () => {
-        expect.assertions(1);
+        it("Should throw an error for text > 500 chars", async () => {
+            expect.assertions(1);
 
-        const roomId = 5;
-        const client = new Client("stackoverflow.com");
-        const room = new Room(client, roomId);
+            const roomId = 5;
+            const client = new Client("stackoverflow.com");
+            const room = new Room(client, roomId);
 
-        expect(
-            room.sendMessage(`
+            expect(
+                room.sendMessage(`
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean aliquet auctor sem, luctus sodales orci egestas id.
                 Nullam sit amet mi turpis. Etiam nec nibh id dolor semper imperdiet ut vitae odio. Vestibulum sagittis est sed augue euismod finibus.
                 Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer in dui non lectus pellentesque porta
                 sit amet vitae est. In blandit felis non sapien consectetur egestas. Proin ac dignissim lectus. In hac massa nunc.`)
-        ).rejects.toThrowError(InvalidArgumentError);
-    });
+            ).rejects.toThrowError(InvalidArgumentError);
+        });
 
-    it("Should throw an error for text is empty", async () => {
-        expect.assertions(2);
+        it("Should throw an error for text is empty", async () => {
+            expect.assertions(2);
 
-        const roomId = 5;
+            const roomId = 5;
 
-        const client = new Client("stackoverflow.com");
-        const room = new Room(client, roomId);
+            const client = new Client("stackoverflow.com");
+            const room = new Room(client, roomId);
 
-        expect(room.sendMessage("")).rejects.toThrowError(InvalidArgumentError);
+            expect(room.sendMessage("")).rejects.toThrowError(
+                InvalidArgumentError
+            );
 
-        //@ts-expect-error
-        expect(room.sendMessage()).rejects.toThrowError(InvalidArgumentError);
+            //@ts-expect-error
+            expect(room.sendMessage()).rejects.toThrowError(
+                InvalidArgumentError
+            );
+        });
     });
 
     it("Should attempt to watch the room, and attach websockets", async () => {
