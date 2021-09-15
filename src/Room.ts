@@ -3,7 +3,7 @@ import WebSocket from "ws";
 import Client from "./Client";
 import InvalidArgumentError from "./Exceptions/InvalidArgumentError";
 import Message from "./Message";
-import WebsocketEvent, { ChatEvent } from "./WebsocketEvent";
+import WebsocketEvent, { ChatEvent, ChatEventType } from "./WebsocketEvent";
 
 /* eslint-disable no-underscore-dangle */
 /**
@@ -16,6 +16,7 @@ class Room extends EventEmitter {
     #isClosing: boolean = false;
 
     #socket?: WebSocket;
+    #ignored: Set<ChatEventType> = new Set();
 
     /**
      * Creates an instance of Room.
@@ -27,6 +28,43 @@ class Room extends EventEmitter {
     constructor(client: Client, public id: number) {
         super();
         this.#client = client;
+    }
+
+    /**
+     * Adds a chat event type to the list of ignored types
+     *
+     * @param {...ChatEventType} eventType event type
+     * @returns {void}
+     * @memberof Room
+     */
+    public ignore(...eventType: ChatEventType[]): void {
+        eventType.forEach((type) => {
+            this.#ignored.add(type);
+        });
+    }
+
+    /**
+     * Removes an event type from the list of ignored types
+     *
+     * @param {...ChatEventType} eventType event type
+     * @returns {void}
+     * @memberof Room
+     */
+    public unignore(...eventType: ChatEventType[]): void {
+        eventType.forEach((type) => {
+            this.#ignored.delete(type);
+        });
+    }
+
+    /**
+     * Checks if an event type is ignored
+     *
+     * @param {ChatEventType} eventType event type
+     * @returns {boolean}
+     * @memberof Room
+     */
+    public isIgnored(eventType: ChatEventType): boolean {
+        return this.#ignored.has(eventType);
     }
 
     /**
@@ -76,6 +114,9 @@ class Room extends EventEmitter {
 
             for (const event of events) {
                 const msg = new WebsocketEvent(this.#client, event);
+
+                if (this.isIgnored(msg.eventType)) continue;
+
                 this.emit("message", msg);
             }
         });
