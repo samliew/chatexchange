@@ -495,13 +495,13 @@ export class Browser {
 
         const res = await got<T>(this.#forceAbsoluteURL(url), options);
 
-        if (res?.statusCode >= 400) {
+        if (res.statusCode >= 400) {
             throw new ChatExchangeError(
                 `Remote server threw ${res.statusCode} error\nURL: ${url}`
             );
         }
 
-        return res||{body: { url: "" }};
+        return res;
     }
 
     /**
