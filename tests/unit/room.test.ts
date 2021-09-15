@@ -9,7 +9,7 @@ import Room from "../../src/Room";
 import WebsocketEvent, { ChatEventType } from "../../src/WebsocketEvent";
 
 describe("Room", () => {
-    describe.only("ignoring events", () => {
+    describe("ignoring events", () => {
         beforeEach(() => jest.resetModules());
 
         test("should correctly ignore event types", () => {
@@ -145,29 +145,31 @@ describe("Room", () => {
         expect(client._browser.leaveRoom).toHaveBeenCalledWith(roomId);
     });
 
-    it("Should attempt to send a message", async () => {
-        expect.assertions(1);
+    describe("sendMessage", () => {
+        it("Should attempt to send a message", async () => {
+            expect.assertions(1);
 
-        const roomId = 5;
-        const host: Host = "stackoverflow.com";
+            const roomId = 5;
+            const host: Host = "stackoverflow.com";
 
-        class MockBrowser extends Browser {
-            sendMessage = jest.fn();
-        }
+            class MockBrowser extends Browser {
+                sendMessage = jest.fn();
+            }
 
-        class MockClient extends Client {
-            _browser: Browser = new MockBrowser(this);
-        }
+            class MockClient extends Client {
+                _browser: Browser = new MockBrowser(this);
+            }
 
-        const client = new MockClient(host);
-        const room = new Room(client, roomId);
+            const client = new MockClient(host);
+            const room = new Room(client, roomId);
 
-        await room.sendMessage("This is a test message");
+            await room.sendMessage("This is a test message");
 
-        expect(client._browser.sendMessage).lastCalledWith(
-            roomId,
-            "This is a test message"
-        );
+            expect(client._browser.sendMessage).lastCalledWith(
+                roomId,
+                "This is a test message"
+            );
+        });
     });
 
     it("Should throw an error for text > 500 chars", async () => {
