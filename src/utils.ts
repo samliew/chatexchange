@@ -94,7 +94,7 @@ export const parseAgoString = <T extends { toString(): string }>(
     };
 
     const val = valMap[text];
-    if (val !== void 0) return val;
+    if (typeof val !== "undefined") return val;
 
     const [str] = text.split(" ");
 
