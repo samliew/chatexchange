@@ -7,7 +7,7 @@ import LoginError from "../../src/Exceptions/LoginError";
 import Message from "../../src/Message";
 import User from "../../src/User";
 
-jest.mock("got", () => {
+function mockGot() {
     const fn = jest.fn(async (url: string) => {
         const fs = await import("fs/promises");
 
@@ -55,10 +55,14 @@ jest.mock("got", () => {
     });
 
     return Object.assign(fn, { extend: () => fn });
-});
+}
+
+jest.mock("got", mockGot);
 
 describe("Browser", () => {
     describe("authentication", () => {
+        beforeEach(() => jest.resetModules());
+
         it("should override 'stackexchange.com' host to 'meta.stackexchange.com'", async () => {
             expect.assertions(1);
 
@@ -69,6 +73,58 @@ describe("Browser", () => {
             const browser = new Browser(client);
 
             expect(browser.loginHost).toEqual(replacement);
+        });
+
+        it("should return a cookie string on successful login", async () => {
+            const mockCookieGetter = jest.fn();
+            jest.doMock("tough-cookie", () => {
+                const cookie = jest.requireActual("tough-cookie");
+                cookie.CookieJar.prototype.getCookies = mockCookieGetter;
+                return cookie;
+            });
+
+            const { Browser } = await import("../../src/Browser");
+
+            const client = new Client("meta.stackexchange.com");
+            const browser = new Browser(client);
+
+            mockCookieGetter.mockReturnValueOnce([{ key: "acct" }]);
+
+            const cookie = await browser.login("bogus@email.com", "123");
+            expect(cookie).toBeTruthy();
+        });
+
+        it("should throw a ScrapingError on failure to get fkey", async () => {
+            const mockGot = jest.fn();
+            jest.doMock("got", () =>
+                Object.assign(mockGot, { extend: mockGot })
+            );
+
+            const { Browser } = await import("../../src/Browser");
+            const { ScrapingError } = await import(
+                "../../src/Exceptions/ScrapingError"
+            );
+
+            const client = new Client("stackexchange.com");
+            const browser = new Browser(client);
+
+            mockGot.mockReturnValueOnce({
+                statusCode: 200,
+                body: "",
+            });
+
+            await expect(
+                browser.login("bogus@email.com", "123")
+            ).rejects.toThrow(ScrapingError);
+        });
+
+        it("should throw a LoginError on not being able to login", async () => {
+            const client = new Client("stackexchange.com");
+            const browser = new Browser(client);
+
+            await expect(
+                browser.login("bogus@email.com", "123")
+            ).rejects.toThrow(LoginError);
         });
 
         it("should throw on being unable to verify cookie", async () => {
@@ -104,32 +160,81 @@ describe("Browser", () => {
         });
     });
 
+    describe("profile scraping", () => {
+        beforeEach(() => jest.resetModules());
+
+        it("getProfile", async () => {
+            expect.assertions(4);
+
+            const mockGot = jest.fn();
+            jest.doMock("got", () => {
+                return Object.assign(mockGot, { extend: mockGot });
+            });
+
+            const { default: Browser } = await import("../../src/Browser");
+
+            const client = new Client("meta.stackexchange.com");
+            const browser = new Browser(client);
+
+            const mockLseen = "n/a";
+            const mockLmsg = "just now";
+            const mockRep = 9001;
+            const mockProfile = `
+            <div class="reputation-score" title="${mockRep}">
+                <table>
+                    <td class="user-keycell">last message</td>
+                    <td class="user-valuecell">${mockLmsg}</td>
+                    <td class="user-keycell">last seen</td>
+                    <td class="user-valuecell">${mockLseen}</td>
+                </table>
+            </div>`;
+
+            mockGot.mockReturnValueOnce({
+                statusCode: 200,
+                body: mockProfile,
+            });
+
+            const { reputation, lastMessage, lastSeen } =
+                await browser.getProfile(-1);
+
+            expect(reputation).toEqual(mockRep);
+            expect(lastMessage).toEqual(0);
+            expect(lastSeen).toEqual(-1);
+
+            const emptyResponse = "";
+
+            mockGot.mockReturnValueOnce({
+                statusCode: 200,
+                body: emptyResponse,
+            });
+
+            const empty = await browser.getProfile(-1);
+            expect(empty.reputation).toEqual(1);
+        });
+    });
+
     describe("getters", () => {
         beforeEach(() => jest.resetModules());
 
-        it("should throw on missing fkey from transcript", async () => {
+        it("should throw a ScrapingError on missing fkey from transcript", async () => {
             expect.assertions(1);
 
-            jest.doMock("cheerio");
-
-            const cheerio = (await import(
-                "cheerio"
-            )) as any as jest.Mocked<cheerio.CheerioAPI>;
-
-            cheerio.load.mockReturnValue(
-                jest.requireActual("cheerio").load("")
+            const mockGot = jest.fn();
+            jest.doMock("got", () =>
+                Object.assign(mockGot, { extend: mockGot })
             );
+
+            mockGot.mockReturnValue({ statusCode: 200, body: "" });
 
             const { Browser } = await import("../../src/Browser");
-            const { InternalError } = await import(
-                "../../src/Exceptions/InternalError"
+            const { ScrapingError } = await import(
+                "../../src/Exceptions/ScrapingError"
             );
 
-            const host: Host = "stackoverflow.com";
-            const client = new Client(host);
+            const client = new Client("stackoverflow.com");
             const browser = new Browser(client);
 
-            await expect(browser.chatFKey).rejects.toThrow(InternalError);
+            await expect(browser.chatFKey).rejects.toThrow(ScrapingError);
         });
 
         it("should correctly return user-related properties", async () => {
@@ -180,7 +285,7 @@ describe("Browser", () => {
 
     describe("watching", () => {
         describe("watchRoom", () => {
-            beforeAll(() => jest.resetModules());
+            beforeEach(() => jest.resetModules());
 
             it("should throw on missing time key", async () => {
                 expect.assertions(1);
@@ -196,15 +301,13 @@ describe("Browser", () => {
             it("should attempt to connect via WebSockets", async () => {
                 expect.assertions(5);
 
-                const mockWSconstructor = jest.fn((_u,_o) => ({
+                jest.doMock("got", mockGot);
+
+                const mockWSconstructor = jest.fn((_u, _o) => ({
                     once: (_e: string, cbk: Function) => cbk(),
                 }));
 
-                jest.doMock("ws", () =>
-                    jest.fn().mockImplementation(mockWSconstructor)
-                );
-
-                jest.dontMock("cheerio");
+                jest.doMock("ws", () => mockWSconstructor);
 
                 const { Browser } = await import("../../src/Browser");
 

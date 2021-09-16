@@ -1,5 +1,5 @@
 import Client from "../../src/Client";
-import InternalError from "../../src/Exceptions/InternalError";
+import ScrapingError from "../../src/Exceptions/ScrapingError";
 
 jest.mock("got", () => {
     const fn = jest.fn(async (url) => {
@@ -20,12 +20,12 @@ jest.mock("got", () => {
 });
 
 describe("Login Failure", () => {
-    it("Should reject with InternalError when no fkey found", async () => {
+    it("Should reject with ScrapingError when no fkey found", async () => {
         expect.assertions(1);
         const client = new Client("stackoverflow.com");
 
         await expect(
             client.login("test@test.com", "P@ssw0rd")
-        ).rejects.toThrowError(InternalError);
+        ).rejects.toThrowError(ScrapingError);
     });
 });

@@ -1,13 +1,115 @@
 import { readFile } from "fs/promises";
 import WebSocket from "ws";
+// import WebSocket from "ws";
 import Browser from "../../src/Browser";
 import Client, { Host } from "../../src/Client";
 import InvalidArgumentError from "../../src/Exceptions/InvalidArgumentError";
 import Message from "../../src/Message";
 import Room from "../../src/Room";
+import WebsocketEvent, { ChatEventType } from "../../src/WebsocketEvent";
 
 describe("Room", () => {
-    beforeAll(() => jest.resetModules());
+    describe("ignoring events", () => {
+        beforeEach(() => jest.resetModules());
+
+        test("should correctly ignore event types", () => {
+            expect.assertions(1);
+
+            const client = new Client("stackoverflow.com");
+            const roomId = 42;
+
+            const ignored = ChatEventType.FILE_ADDED;
+
+            const room = new Room(client, roomId);
+            room.ignore(ignored);
+
+            expect(room.isIgnored(ignored)).toBe(true);
+        });
+
+        test("should correctly unignore event types", () => {
+            expect.assertions(2);
+
+            const client = new Client("stackoverflow.com");
+            const roomId = 42;
+
+            const ignored = ChatEventType.FILE_ADDED;
+
+            const room = new Room(client, roomId);
+            room.ignore(ignored);
+
+            expect(room.isIgnored(ignored)).toBe(true);
+
+            room.unignore(ignored);
+
+            expect(room.isIgnored(ignored)).toBe(false);
+        });
+
+        jest.setTimeout(10000);
+
+        test("should not emit message events for ignored types", async () => {
+            const mockGot = jest.fn();
+
+            mockGot
+                .mockResolvedValueOnce({
+                    statusCode: 200,
+                    body: { time: Date.now() },
+                })
+                .mockResolvedValueOnce({
+                    statusCode: 200,
+                    body: {
+                        url: "wss://chat.sockets.stackexchange.com/events/1/42",
+                    },
+                });
+
+            jest.doMock("got", () =>
+                Object.assign(mockGot, { extend: jest.fn() })
+            );
+
+            const ignored = ChatEventType.USER_LEFT;
+            const notIgnored = ChatEventType.MESSAGE_POSTED;
+
+            const events = {
+                r42: {
+                    e: [{ event_type: ignored }, { event_type: notIgnored }],
+                },
+            };
+
+            const mockWatchRoom = jest.fn(() => ({
+                on: (m: string, cbk: Function) =>
+                    m === "close" || cbk(JSON.stringify(events)),
+            }));
+
+            jest.doMock("../../src/Browser", () => {
+                const { default: Browser } =
+                    jest.requireActual("../../src/Browser");
+                return class MockBrowser extends Browser {
+                    get chatFKey() {
+                        return "abs";
+                    }
+                    watchRoom() {
+                        return mockWatchRoom();
+                    }
+                };
+            });
+
+            const { default: Room } = await import("../../src/Room");
+            const { default: Client } = await import("../../src/Client");
+
+            const client = new Client("stackexchange.com");
+            const roomId = 42;
+
+            const room = new Room(client, roomId);
+            room.ignore(ignored);
+
+            const promise = new Promise((r) => room.on("message", r));
+
+            await room.join();
+            await room.watch();
+
+            const msg = (await promise) as WebsocketEvent;
+            expect(msg.eventType).toBe(notIgnored);
+        });
+    });
 
     it("Should create a room with id", () => {
         expect.assertions(1);
@@ -43,59 +145,65 @@ describe("Room", () => {
         expect(client._browser.leaveRoom).toHaveBeenCalledWith(roomId);
     });
 
-    it("Should attempt to send a message", async () => {
-        expect.assertions(1);
+    describe("sendMessage", () => {
+        it("Should attempt to send a message", async () => {
+            expect.assertions(1);
 
-        const roomId = 5;
-        const host: Host = "stackoverflow.com";
+            const roomId = 5;
+            const host: Host = "stackoverflow.com";
 
-        class MockBrowser extends Browser {
-            sendMessage = jest.fn();
-        }
+            class MockBrowser extends Browser {
+                sendMessage = jest.fn();
+            }
 
-        class MockClient extends Client {
-            _browser: Browser = new MockBrowser(this);
-        }
+            class MockClient extends Client {
+                _browser: Browser = new MockBrowser(this);
+            }
 
-        const client = new MockClient(host);
-        const room = new Room(client, roomId);
+            const client = new MockClient(host);
+            const room = new Room(client, roomId);
 
-        await room.sendMessage("This is a test message");
+            await room.sendMessage("This is a test message");
 
-        expect(client._browser.sendMessage).lastCalledWith(
-            roomId,
-            "This is a test message"
-        );
-    });
+            expect(client._browser.sendMessage).lastCalledWith(
+                roomId,
+                "This is a test message"
+            );
+        });
 
-    it("Should throw an error for text > 500 chars", async () => {
-        expect.assertions(1);
+        it("Should throw an error for text > 500 chars", async () => {
+            expect.assertions(1);
 
-        const roomId = 5;
-        const client = new Client("stackoverflow.com");
-        const room = new Room(client, roomId);
+            const roomId = 5;
+            const client = new Client("stackoverflow.com");
+            const room = new Room(client, roomId);
 
-        expect(
-            room.sendMessage(`
+            expect(
+                room.sendMessage(`
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean aliquet auctor sem, luctus sodales orci egestas id.
                 Nullam sit amet mi turpis. Etiam nec nibh id dolor semper imperdiet ut vitae odio. Vestibulum sagittis est sed augue euismod finibus.
                 Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer in dui non lectus pellentesque porta
                 sit amet vitae est. In blandit felis non sapien consectetur egestas. Proin ac dignissim lectus. In hac massa nunc.`)
-        ).rejects.toThrowError(InvalidArgumentError);
-    });
+            ).rejects.toThrowError(InvalidArgumentError);
+        });
 
-    it("Should throw an error for text is empty", async () => {
-        expect.assertions(2);
+        it("Should throw an error for text is empty", async () => {
+            expect.assertions(2);
 
-        const roomId = 5;
+            const roomId = 5;
 
-        const client = new Client("stackoverflow.com");
-        const room = new Room(client, roomId);
+            const client = new Client("stackoverflow.com");
+            const room = new Room(client, roomId);
 
-        expect(room.sendMessage("")).rejects.toThrowError(InvalidArgumentError);
+            expect(room.sendMessage("")).rejects.toThrowError(
+                InvalidArgumentError
+            );
 
-        //@ts-expect-error
-        expect(room.sendMessage()).rejects.toThrowError(InvalidArgumentError);
+            //@ts-expect-error
+            expect(room.sendMessage()).rejects.toThrowError(
+                InvalidArgumentError
+            );
+        });
     });
 
     it("Should attempt to watch the room, and attach websockets", async () => {

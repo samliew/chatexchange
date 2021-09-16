@@ -48,20 +48,21 @@ export async function lazy<T>(
  * ie. <code>['foo', 'bar', 'meow', 'rawr']</code> => <code>{foo: 'bar', meow: 'rawr'}</code>
  *
  * @function
- * @param {Array<string|number>} array The array to convert
+ * @param {Array<{ toString(): string }>} array The array to convert
  * @returns {object} The object that was converted
  */
-export const arrayToKvp = (
-    array: (string | number)[]
-): { [key: string]: string } =>
-    array.reduce((arr, val, idx, ori) => {
-        if (idx % 2 === 1) {
-            const key = ori[idx - 1];
-            arr[key] = val;
-        }
+export const arrayToKvp = <T extends { toString(): string }>(array: T[]) => {
+    const kvp: Record<string, T> = {};
 
-        return arr;
-    }, {} as { [x: string]: any });
+    array.forEach((val, idx) => {
+        if (idx % 2 === 1) {
+            const key = array[idx - 1];
+            kvp[key.toString()] = val;
+        }
+    });
+
+    return kvp;
+};
 
 // tslint:disable:object-literal-sort-keys
 const suffixes: { [x: string]: number } = {
@@ -82,21 +83,25 @@ const suffixes: { [x: string]: number } = {
  * @throws {ChatExchangeError} If the string doesn't match the format suffix (s/m/h/d/y).
  * @returns {number} The number
  */
-export const parseAgoString = (text: string): number => {
-    if (text === "n/a") {
-        return -1;
-    }
+export const parseAgoString = <T extends { toString(): string }>(
+    value: T
+): number => {
+    const text = value.toString();
 
-    if (text === "just now") {
-        return 0;
-    }
+    const valMap: Record<string, number> = {
+        "n/a": -1,
+        "just now": 0,
+    };
+
+    const val = valMap[text];
+    if (val !== void 0) return val;
 
     const [str] = text.split(" ");
 
     const char = str.slice(-1);
 
-    if (typeof suffixes[char] === "undefined") {
-        throw new ChatExchangeError("Suffix Character Unrecognized");
+    if (suffixes[char] === void 0) {
+        throw new ChatExchangeError(`Suffix Character Unrecognized: ${char}`);
     }
 
     const time = parseInt(str.slice(0, -1), 10);

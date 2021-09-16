@@ -9,9 +9,9 @@
     "build": "rimraf dist && tsc --declaration",
     "prepublish": "npm run build",
     "pretest": "npm run build",
-    "test": "bash ./scripts/test.sh",
+    "test": "jest --config='jest.config.json' --collectCoverage --collectCoverageFrom='src/**/*.ts' --coverageReporters='lcov' --silent=false",
     "pretest-coveralls": "npm run build",
-    "test-coveralls": "bash ./scripts/coveralls.sh"
+    "test-coveralls": "jest --config='jest.config.json' --collectCoverage --collectCoverageFrom='src/**/*.ts' --coverageProvider='v8' --coverageReporters='text-lcov' | coveralls && tslint 'src/**/*.ts'"
   },
   "repository": {
     "type": "git",

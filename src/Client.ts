@@ -21,7 +21,7 @@ export const AllowedHosts: Host[] = [
  * Represents the main chatexchange Client class.
  * @class
  */
-class Client {
+export class Client {
     /* @internal */
     public _browser: Browser;
 
@@ -166,6 +166,16 @@ class Client {
         await room.join();
 
         return room;
+    }
+
+    /**
+     * Leaves all rooms
+     *
+     * @returns {Promise<boolean>}
+     * @memberof Client
+     */
+    public leaveAll(): Promise<boolean> {
+        return this._browser.leaveAllRooms();
     }
 }
 

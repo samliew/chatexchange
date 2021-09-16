@@ -70,6 +70,9 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
+						<span class="tsd-signature-type">LoginErrorInfo</span>
+					</li>
+					<li>
 						<a href="exceptions_chatexchangeerror.chatexchangeerror.html" class="tsd-signature-type" data-tsd-kind="Class">ChatExchangeError</a>
 						<ul class="tsd-hierarchy">
 							<li>
@@ -89,6 +92,14 @@
 								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><a href="exceptions_loginerror.loginerror.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
+						<section class="tsd-index-section tsd-is-inherited">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="exceptions_loginerror.loginerror.html#cookie" class="tsd-kind-icon">cookie</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="exceptions_loginerror.loginerror.html#email" class="tsd-kind-icon">email</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="exceptions_loginerror.loginerror.html#password" class="tsd-kind-icon">password</a></li>
+							</ul>
+						</section>
 					</div>
 				</section>
 			</section>
@@ -98,25 +109,64 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Login<wbr>Error<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="exceptions_loginerror.loginerror.html" class="tsd-signature-type" data-tsd-kind="Class">LoginError</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Login<wbr>Error<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, info<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">LoginErrorInfo</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="exceptions_loginerror.loginerror.html" class="tsd-signature-type" data-tsd-kind="Class">LoginError</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<p>Inherited from <a href="exceptions_chatexchangeerror.chatexchangeerror.html">ChatExchangeError</a>.<a href="exceptions_chatexchangeerror.chatexchangeerror.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in node_modules/typescript/lib/lib.es5.d.ts:978</li>
+									<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/9823b3e/src/Exceptions/LoginError.ts#L12">src/Exceptions/LoginError.ts:12</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5><span class="tsd-flag ts-flagOptional">Optional</span> message: <span class="tsd-signature-type">string</span></h5>
+									<h5>message: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>info: <span class="tsd-signature-type">LoginErrorInfo</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="exceptions_loginerror.loginerror.html" class="tsd-signature-type" data-tsd-kind="Class">LoginError</a></h4>
 						</li>
 					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="cookie" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> cookie</h3>
+					<div class="tsd-signature tsd-kind-icon">cookie<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Serialized</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from LoginErrorInfo.cookie</p>
+						<ul>
+							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/9823b3e/src/Exceptions/LoginError.ts#L7">src/Exceptions/LoginError.ts:7</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="email" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> email</h3>
+					<div class="tsd-signature tsd-kind-icon">email<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from LoginErrorInfo.email</p>
+						<ul>
+							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/9823b3e/src/Exceptions/LoginError.ts#L5">src/Exceptions/LoginError.ts:5</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a name="password" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> password</h3>
+					<div class="tsd-signature tsd-kind-icon">password<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from LoginErrorInfo.password</p>
+						<ul>
+							<li>Defined in <a href="https://github.com/samliew/chatexchange/blob/9823b3e/src/Exceptions/LoginError.ts#L6">src/Exceptions/LoginError.ts:6</a></li>
+						</ul>
+					</aside>
 				</section>
 			</section>
 		</div>
@@ -143,6 +193,9 @@
 					</li>
 					<li class="current tsd-kind-module">
 						<a href="../modules/exceptions_loginerror.html">Exceptions/<wbr>Login<wbr>Error</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/exceptions_scrapingerror.html">Exceptions/<wbr>Scraping<wbr>Error</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/message.html">Message</a>
@@ -177,6 +230,15 @@
 							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited">
 								<a href="exceptions_loginerror.loginerror.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="exceptions_loginerror.loginerror.html#cookie" class="tsd-kind-icon">cookie</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="exceptions_loginerror.loginerror.html#email" class="tsd-kind-icon">email</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+								<a href="exceptions_loginerror.loginerror.html#password" class="tsd-kind-icon">password</a>
+							</li>
 						</ul>
 					</li>
 				</ul>
@@ -197,13 +259,17 @@
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
 			</ul>
 			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
 			</ul>
 		</div>
 	</div>

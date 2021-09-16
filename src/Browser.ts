@@ -5,8 +5,8 @@ import { URL } from "url";
 import WebSocket from "ws";
 import Client, { Host } from "./Client";
 import ChatExchangeError from "./Exceptions/ChatExchangeError";
-import InternalError from "./Exceptions/InternalError";
 import LoginError from "./Exceptions/LoginError";
+import ScrapingError from "./Exceptions/ScrapingError";
 import Message from "./Message";
 import User from "./User";
 import { arrayToKvp, lazy, parseAgoString } from "./utils";
@@ -170,11 +170,15 @@ export class Browser {
 
         const $ = await this.#get$(loginUrl);
 
-        const fkey = $('input[name="fkey"]').val();
+        const fkeySelector = 'input[name="fkey"]';
+        const fkeyElem = $(fkeySelector);
+        const fkey = fkeyElem.val();
 
         if (typeof fkey === "undefined") {
-            throw new InternalError(
-                "Unable to find fkey element on /users/login"
+            throw new ScrapingError(
+                "fkey missing (login)",
+                $.html(),
+                fkeySelector
             );
         }
 
@@ -263,7 +267,13 @@ export class Browser {
 
         const l = this.#times.get(roomid);
         if (!l) {
-            throw new ChatExchangeError("missing time key");
+            const entries = [...this.#times.entries()];
+            const report = entries
+                .map(([k, v]) => `${k} : ${v || "missing"}`)
+                .join("\n");
+            throw new ChatExchangeError(
+                `missing time key for room ${roomid}\n\nTime keys\n${report}`
+            );
         }
 
         const address = new URL(body.url);
@@ -295,39 +305,28 @@ export class Browser {
         const roomCount = parseInt($(".user-room-count-xxl").text(), 10);
         const messageCount = parseInt($(".user-message-count-xxl").text(), 10);
 
-        let reputation = 0; //TODO: rep can't be less than 1
-        const reputationElements = $(".reputation-score");
+        const repElems = $(".reputation-score");
 
-        if (reputationElements.length > 0) {
-            reputation = parseInt(reputationElements.attr("title") || "0", 10);
-        }
-
-        let lastSeen = -1;
-        let lastMessage = -1;
+        const reputation = parseInt(repElems.attr("title") || "1", 10) || 1;
 
         // Filter out only text (Ignore HTML entirely)
-        const statsElements = $(".user-keycell,.user-valuecell")
+        const statsElements: string[] = $(".user-keycell,.user-valuecell")
             .map((_i, el) =>
                 $(el)
                     .text()
                     .trim()
                     .replace(/\s{2,}[\w\s()]*/u, "")
             )
-            .toArray();
+            .get();
 
         const {
             about,
             "last message": lmsg,
             "last seen": lseen,
-            //@ts-expect-error
         } = arrayToKvp(statsElements);
 
-        if (typeof lmsg !== "undefined") {
-            lastMessage = parseAgoString(lmsg);
-        }
-        if (typeof lseen !== "undefined") {
-            lastSeen = parseAgoString(lseen);
-        }
+        const lastMessage = lmsg !== void 0 ? parseAgoString(lmsg) : -1;
+        const lastSeen = lseen !== void 0 ? parseAgoString(lseen) : -1;
 
         return {
             about,
@@ -413,12 +412,18 @@ export class Browser {
      * @returns {string}
      */
     #loadFKey($: cheerio.Root): string {
-        const fkey = $('input[name="fkey"]').val();
+        const fkeySelector = 'input[name="fkey"]';
+
+        const fkey = $(fkeySelector).val();
 
         this.#fkey = fkey;
 
         if (typeof fkey === "undefined") {
-            throw new InternalError("Unable to find fkey.");
+            throw new ScrapingError(
+                "Unable to find fkey",
+                $.html(),
+                fkeySelector
+            );
         }
 
         return fkey;
@@ -503,7 +508,7 @@ export class Browser {
 
         if (res.statusCode >= 400) {
             throw new ChatExchangeError(
-                `Remote server threw ${res.statusCode} error.`
+                `Remote server threw ${res.statusCode} error\nURL: ${url}`
             );
         }
 
