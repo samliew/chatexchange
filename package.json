@@ -1,7 +1,8 @@
 {
   "name": "chatexchange",
   "version": "0.5.0",
-  "description": "A node.js wrapper for the stackexchange chat system.",
+  "description": "A node.js wrapper for talking to Stack Exchange chat",
+  "license": "GPL-3.0-or-later",
   "main": "dist/index.js",
   "scripts": {
     "docs": "rimraf docs && typedoc",
@@ -17,8 +18,20 @@
     "type": "git",
     "url": "git+https://github.com/samliew/chatexchange.git"
   },
-  "author": "Daniel Beaupre",
-  "license": "GPL-3.0-or-later",
+  "author": {
+    "name": "Daniel Beaupre",
+    "url": "https://github.com/danbopes"
+  },
+  "contributors": [
+    {
+      "name": "Oleg Valter",
+      "url": "https://github.com/Oaphi"
+    },
+    {
+      "name": "Samuel Liew",
+      "url": "https://github.com/samliew"
+    }
+  ],
   "bugs": {
     "url": "https://github.com/samliew/chatexchange/issues"
   },
