@@ -6,9 +6,79 @@ import Client, { Host } from "../../src/Client";
 import InvalidArgumentError from "../../src/Exceptions/InvalidArgumentError";
 import Message from "../../src/Message";
 import Room from "../../src/Room";
+import User from "../../src/User";
 import WebsocketEvent, { ChatEventType } from "../../src/WebsocketEvent";
 
 describe("Room", () => {
+    describe("blocking users", () => {
+        beforeEach(() => jest.resetModules());
+
+        test("should correctly block users", () => {
+            expect.assertions(2);
+            const client = new Client("stackoverflow.com");
+            const roomId = 42;
+            const room = new Room(client, roomId);
+
+            const user1 = new User(client, -1);
+            room.block(user1);
+
+            const user2 = new User(client, -2);
+            room.block(user2.id);
+
+            expect(room.isBlocked(user1)).toBe(true);
+            expect(room.isBlocked(user2)).toBe(true);
+        });
+
+        test("should unblock users after a timeout if one passed", async () => {
+            expect.assertions(2);
+
+            const client = new Client("stackoverflow.com");
+            const roomId = 42;
+            const room = new Room(client, roomId);
+
+            const user = new User(client, -1);
+
+            jest.useFakeTimers();
+
+            room.block(user, 5);
+
+            expect(room.isBlocked(user)).toBe(true);
+
+            jest.runAllTimers();
+
+            // https://github.com/facebook/jest/issues/2157
+            await Promise.resolve();
+
+            expect(room.isBlocked(user)).toBe(false);
+
+            jest.useRealTimers();
+        });
+
+        test("should correclty unblock users", () => {
+            expect.assertions(4);
+
+            const client = new Client("stackoverflow.com");
+            const roomId = 42;
+            const room = new Room(client, roomId);
+
+            const user1 = new User(client, -1);
+            room.block(user1);
+
+            const user2 = new User(client, -2);
+            room.block(user2);
+
+            // making sure the users are actually blocked
+            expect(room.isBlocked(user1)).toBe(true);
+            expect(room.isBlocked(user2)).toBe(true);
+
+            room.unblock(user1);
+            room.unblock(user2);
+
+            expect(room.isBlocked(user1)).toBe(false);
+            expect(room.isBlocked(user2)).toBe(false);
+        });
+    });
+
     describe("ignoring events", () => {
         beforeEach(() => jest.resetModules());
 
