@@ -1,12 +1,12 @@
 import { readFile } from "fs/promises";
 import WebSocket from "ws";
-// import WebSocket from "ws";
 import Browser from "../../src/Browser";
 import Client, { Host } from "../../src/Client";
 import InvalidArgumentError from "../../src/Exceptions/InvalidArgumentError";
 import Message from "../../src/Message";
 import Room from "../../src/Room";
 import User from "../../src/User";
+import type { ChatEvent } from "../../src/WebsocketEvent";
 import WebsocketEvent, { ChatEventType } from "../../src/WebsocketEvent";
 
 describe("Room", () => {
@@ -77,6 +77,64 @@ describe("Room", () => {
             expect(room.isBlocked(user1)).toBe(false);
             expect(room.isBlocked(user2)).toBe(false);
         });
+
+        test("should stop passing messages from blocked users", async () => {
+            const mockGot = jest.fn();
+
+            mockGot
+                .mockResolvedValueOnce({
+                    statusCode: 200,
+                    body: { time: Date.now() },
+                })
+                .mockResolvedValueOnce({
+                    statusCode: 200,
+                    body: {
+                        url: "wss://chat.sockets.stackexchange.com/events/1/42",
+                    },
+                });
+
+            jest.doMock("got", () =>
+                Object.assign(mockGot, { extend: jest.fn() })
+            );
+
+            const events = { r42: { e: [{ user_id: 24 }, { user_id: 42 }] } };
+
+            const mockWatchRoom = jest.fn(() => ({
+                on: (m: string, cbk: Function) =>
+                    m === "close" || cbk(JSON.stringify(events)),
+            }));
+
+            jest.doMock("../../src/Browser", () => {
+                const { default: Browser } =
+                    jest.requireActual("../../src/Browser");
+                return class MockBrowser extends Browser {
+                    get chatFKey() {
+                        return "abs";
+                    }
+                    watchRoom() {
+                        return mockWatchRoom();
+                    }
+                };
+            });
+
+            const { default: Room } = await import("../../src/Room");
+            const { default: Client } = await import("../../src/Client");
+
+            const client = new Client("stackexchange.com");
+            const roomId = 42;
+            const userId = 24;
+
+            const room = new Room(client, roomId);
+            room.block(userId);
+
+            const promise = new Promise((r) => room.on("message", r));
+
+            await room.join();
+            await room.watch();
+
+            const msg = (await promise) as WebsocketEvent;
+            expect(msg.userId).not.toBe(userId);
+        });
     });
 
     describe("ignoring events", () => {
@@ -140,7 +198,10 @@ describe("Room", () => {
 
             const events = {
                 r42: {
-                    e: [{ event_type: ignored }, { event_type: notIgnored }],
+                    e: [
+                        { event_type: ignored, user_id: 42 },
+                        { event_type: notIgnored, user_id: 24 },
+                    ],
                 },
             };
 
@@ -344,15 +405,11 @@ describe("Room", () => {
 
         const room = new Room(client, roomId);
 
-        const event = JSON.parse(
+        const event: ChatEvent = JSON.parse(
             await readFile("./tests/events/6.json", { encoding: "utf-8" })
         );
 
-        const wrappedEvent = {
-            r5: {
-                e: [event],
-            },
-        };
+        const wrappedEvent = { r5: { e: [event] } };
 
         const messageSpy = jest.fn();
         const closeSpy = jest.fn();
