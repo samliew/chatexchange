@@ -161,7 +161,12 @@ class Room extends EventEmitter {
             for (const event of events) {
                 const msg = new WebsocketEvent(this.#client, event);
 
-                if (this.isIgnored(msg.eventType)) continue;
+                const skipRules = [
+                    this.isIgnored(msg.eventType),
+                    msg.userId && this.isBlocked(msg.userId),
+                ];
+
+                if (skipRules.some(Boolean)) continue;
 
                 this.emit("message", msg);
             }
