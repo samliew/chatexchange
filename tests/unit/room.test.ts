@@ -54,7 +54,7 @@ describe("Room", () => {
             jest.useRealTimers();
         });
 
-        test("should correclty unblock users", () => {
+        test("should correctly unblock users", () => {
             expect.assertions(4);
 
             const client = new Client("stackoverflow.com");
