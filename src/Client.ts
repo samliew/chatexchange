@@ -86,6 +86,14 @@ export class Client {
         return new Message(this, id);
     }
 
+    public getRooms(): Map<number, Room> {
+        return this.#rooms;
+    }
+
+    public getRoomsAsArray(): Room[] {
+        return [...this.#rooms.values()];
+    }
+
     public getRoom(id: number): Room {
         let room = this.#rooms.get(id);
         if (room) {
@@ -169,7 +177,17 @@ export class Client {
     }
 
     /**
-     * Leaves all rooms
+     * Leaves a room
+     *
+     * @returns {Promise<boolean>}
+     * @memberof Client
+     */
+    public leaveRoom(id: number): Promise<boolean> {
+        return this._browser.leaveRoom(id);
+    }
+
+    /**
+     * Leaves all rooms (on same chat server)
      *
      * @returns {Promise<boolean>}
      * @memberof Client
