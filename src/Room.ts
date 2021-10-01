@@ -3,6 +3,8 @@ import WebSocket from "ws";
 import Client from "./Client";
 import InvalidArgumentError from "./Exceptions/InvalidArgumentError";
 import Message from "./Message";
+import User from "./User";
+import { delay } from "./utils";
 import WebsocketEvent, { ChatEvent, ChatEventType } from "./WebsocketEvent";
 
 /* eslint-disable no-underscore-dangle */
@@ -17,6 +19,7 @@ class Room extends EventEmitter {
 
     #socket?: WebSocket;
     #ignored: Set<ChatEventType> = new Set();
+    #blocked: Map<number, number> = new Map();
 
     /**
      * Creates an instance of Room.
@@ -28,6 +31,49 @@ class Room extends EventEmitter {
     constructor(client: Client, public id: number) {
         super();
         this.#client = client;
+    }
+
+    /**
+     * Blocks a user for a given amount of time (or forever)
+     *
+     * @param user user to block
+     * @param howLong how long to block the user (in seconds)
+     * @returns {void}
+     * @memberof Room
+     */
+    public block(user: number | User, howLong = Infinity): void {
+        const uid = typeof user === "number" ? user : user.id;
+        this.#blocked.set(uid, howLong);
+
+        if (howLong < Infinity) {
+            delay(howLong * 1e3).then(() => this.unblock(uid));
+        }
+    }
+
+    /**
+     * Unblocks users
+     *
+     * @param users users to unblock
+     * @returns {void}
+     * @memberof Room
+     */
+    public unblock(...users: (number | User)[]): void {
+        users.forEach((u) => {
+            const uid = typeof u === "number" ? u : u.id;
+            this.#blocked.delete(uid);
+        });
+    }
+
+    /**
+     * Checks if a user is blocked
+     *
+     * @param user user to check
+     * @returns {boolean}
+     * @memberof Room
+     */
+    public isBlocked(user: number | User): boolean {
+        const uid = typeof user === "number" ? user : user.id;
+        return this.#blocked.has(uid);
     }
 
     /**
@@ -115,7 +161,12 @@ class Room extends EventEmitter {
             for (const event of events) {
                 const msg = new WebsocketEvent(this.#client, event);
 
-                if (this.isIgnored(msg.eventType)) continue;
+                const skipRules = [
+                    this.isIgnored(msg.eventType),
+                    msg.userId && this.isBlocked(msg.userId),
+                ];
+
+                if (skipRules.some(Boolean)) continue;
 
                 this.emit("message", msg);
             }
