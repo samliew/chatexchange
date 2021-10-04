@@ -1,6 +1,6 @@
-import Client from "./Client";
+import Client, { Host } from "./Client";
 import { ChatEventType } from "./WebsocketEvent";
 
-export { ChatEventType };
+export { ChatEventType, Host };
 
 export default Client;

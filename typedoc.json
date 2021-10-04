@@ -3,7 +3,14 @@
     "out": "docs",
     "readme": "readme.md",
     "entryPoints": [
-        "src"
+        "src",
+        "src/Room.ts",
+        "src/Browser.ts",
+        "src/Message.ts",
+        "src/User.ts"
     ],
-    "excludeExternals": true
+    "excludeExternals": true,
+    "cleanOutputDir": true,
+    "treatWarningsAsErrors": true,
+    "excludePrivate": true
 }

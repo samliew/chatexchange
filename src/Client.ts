@@ -50,7 +50,7 @@ export class Client {
      * @returns {string}
      * @memberof Client#
      */
-    public get root() {
+    public get root(): string {
         const { host } = this;
         return `https://chat.${host}/`;
     }
