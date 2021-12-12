@@ -240,6 +240,19 @@ describe("Room", () => {
             const msg = (await promise) as WebsocketEvent;
             expect(msg.eventType).toBe(notIgnored);
         });
+
+        test("should ignore all other events if added via Room#only()", () => {
+            const roomId = 5;
+            const client = new Client("stackoverflow.com");
+            const room = new Room(client, roomId);
+
+            room.only(ChatEventType.FILE_ADDED);
+
+            Object.values(ChatEventType).forEach((v) => {
+                const ignored = room.isIgnored(v as ChatEventType);
+                expect(v === ChatEventType.FILE_ADDED || ignored).toBe(true);
+            });
+        });
     });
 
     it("Should create a room with id", () => {
