@@ -114,6 +114,20 @@ class Room extends EventEmitter {
     }
 
     /**
+     * @summary exclusively subscribes to a list of events
+     * @param eventType event type 
+     */
+    public only(...eventType: ChatEventType[]): void {
+        const allow = new Set(eventType);
+
+        const ignore = Object
+            .values(ChatEventType)
+            .filter((v) => !allow.has(v as ChatEventType));
+
+        return this.ignore(...ignore as ChatEventType[]);
+    }
+
+    /**
      * Join a chat room
      *
      * @returns {Promise<boolean>} A promise when the user succesfully joins this room
