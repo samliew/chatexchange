@@ -281,4 +281,36 @@ describe("Client", () => {
             expect(status).toBe(false);
         });
     });
+
+    describe("broadcasting", () => {
+        test("should return a status map of roomId -> status", async () => {
+            expect.assertions(2);
+
+            const mockSend = jest.fn();
+
+            jest.doMock("../../src/Room", () => {
+                const real = jest.requireActual<typeof import("../../src/Room")>("../../src/Room");
+                real.default.prototype.sendMessage = mockSend;
+                return real;
+            });
+
+            const { default: Client } = await import("../../src/Client");
+            const client = new Client("meta.stackexchange.com");
+
+            const fineId = 42;
+            const brokenId = 24;
+
+            client.getRoom(fineId);
+            client.getRoom(brokenId);
+
+            mockSend
+                .mockResolvedValueOnce(void 0)
+                .mockRejectedValueOnce(void 0);
+
+            const statusMap = await client.broadcast("BBC wants to apologize for the following");
+
+            expect(statusMap.get(fineId)).toBe(true);
+            expect(statusMap.get(brokenId)).toBe(false);
+        });
+    });
 });
