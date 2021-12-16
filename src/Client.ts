@@ -5,6 +5,7 @@ import InvalidArgumentError from "./Exceptions/InvalidArgumentError";
 import Message from "./Message";
 import Room from "./Room";
 import User from "./User";
+import { delay } from "./utils";
 
 export type Host =
     | "stackexchange.com"
@@ -194,6 +195,42 @@ export class Client {
      */
     public leaveAll(): Promise<boolean> {
         return this._browser.leaveAllRooms();
+    }
+
+    /**
+     * Broadcasts a message to all joined rooms
+     * @param message message to broadcast
+     */
+    public async broadcast(message: string): Promise<Map<number, boolean>> {
+        const rooms = this.#rooms;
+
+        const statusMap: Map<number, boolean> = new Map();
+
+        let throttled = false;
+        for (const [roomId, room] of rooms) {
+            try {
+                await room.sendMessage(message);
+
+                statusMap.set(roomId, true);
+
+                // second message can be sent immediately
+                // https://meta.stackexchange.com/a/167749/786798
+                if (throttled) {
+                    // respect the stated delay between messages
+                    // https://meta.stackexchange.com/a/164900/786798
+                    await delay(1e3 + 4);
+
+                    throttled = false;
+                    continue;
+                }
+
+                throttled = true;
+            } catch (error) {
+                statusMap.set(roomId, false);
+            }
+        }
+
+        return statusMap;
     }
 }
 
