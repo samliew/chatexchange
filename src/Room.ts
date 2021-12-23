@@ -115,7 +115,7 @@ class Room extends EventEmitter {
 
     /**
      * @summary exclusively subscribes to a list of events
-     * @param eventType event type 
+     * @param eventType event type
      */
     public only(...eventType: ChatEventType[]): void {
         const allow = new Set(eventType);
@@ -163,10 +163,7 @@ class Room extends EventEmitter {
 
         ws.on("message", (rawMsg) => {
             const json = JSON.parse(rawMsg.toString());
-            if (
-                typeof json[`r${this.id}`] === "undefined" ||
-                typeof json[`r${this.id}`].e === "undefined"
-            ) {
+            if (typeof json[`r${this.id}`]?.e === "undefined") {
                 return;
             }
 
