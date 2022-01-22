@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import got, { Method, OptionsOfJSONResponseBody, Response } from "got";
+import got, { Method, OptionsOfJSONResponseBody, type Response } from "got";
 import { Cookie, CookieJar } from "tough-cookie";
 import { URL } from "url";
 import WebSocket from "ws";
@@ -85,7 +85,7 @@ export class Browser {
      * @returns {string}
      * @memberof Browser#
      */
-    public get root() {
+    public get root(): string {
         return this.#client.root;
     }
 
@@ -272,7 +272,7 @@ export class Browser {
 
         const l = this.#times.get(roomid);
         if (!l) {
-            const entries = [...this.#times.entries()];
+            const entries = [...this.#times];
             const report = entries
                 .map(([k, v]) => `${k} : ${v || "missing"}`)
                 .join("\n");
