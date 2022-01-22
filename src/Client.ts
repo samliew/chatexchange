@@ -1,5 +1,5 @@
 import { validate } from "email-validator";
-import Browser, { IProfileData } from "./Browser";
+import Browser, { type IProfileData } from "./Browser";
 import ChatExchangeError from "./Exceptions/ChatExchangeError";
 import InvalidArgumentError from "./Exceptions/InvalidArgumentError";
 import Message from "./Message";
@@ -102,6 +102,15 @@ export class Client {
 
     public getRoomsAsArray(): Room[] {
         return [...this.#rooms.values()];
+    }
+
+    /**
+     * @summary gets the chat profile of a given {@link User}
+     * @param user user or user ID to get the chat profile of
+     */
+    public getProfile(user: number | User): Promise<IProfileData> {
+        const browser = this.#browser;
+        return browser.getProfile(user);
     }
 
     public getRoom(id: number): Room {
