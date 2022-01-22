@@ -180,23 +180,17 @@ export class Client {
     }
 
     /**
-     * @summary Joins a given room, and returns the {@link Room} instance
+     * @summary Joins a given room
      * @param room The room or ID to join
-     * @returns {Promise<Room>} The {@link Room} instance
+     * @returns {Promise<boolean>}
      * @memberof Client#
      */
-    public async joinRoom(room: number | Room): Promise<Room> {
-        const roomToJoin = typeof room === "number" ?
-            this.getRoom(room) :
-            room;
-
-        await roomToJoin.join();
-
-        return roomToJoin;
+    public async joinRoom(room: number | Room): Promise<boolean> {
+        return this.#browser.joinRoom(room);
     }
 
     /**
-     * @summary Leaves a room
+     * @summary Leaves a given room
      * @param room The room or ID to leave
      * @returns {Promise<boolean>}
      * @memberof Client#
