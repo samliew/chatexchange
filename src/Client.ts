@@ -1,5 +1,5 @@
 import { validate } from "email-validator";
-import Browser, { type IProfileData } from "./Browser";
+import Browser, { type ITranscriptData, type IProfileData } from "./Browser";
 import ChatExchangeError from "./Exceptions/ChatExchangeError";
 import InvalidArgumentError from "./Exceptions/InvalidArgumentError";
 import Message from "./Message";
@@ -124,6 +124,15 @@ export class Client {
         this.#rooms.set(id, room);
 
         return room;
+    }
+
+    /**
+     * @summary gets a given chat message transcript info
+     * @param message message or message ID to get the transcript for
+     */
+    public getTranscript(message: number | Message): Promise<ITranscriptData> {
+        const browser = this.#browser;
+        return browser.getTranscript(message);
     }
 
     public getUser(
