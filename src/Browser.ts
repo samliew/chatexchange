@@ -169,19 +169,7 @@ export class Browser {
 
         const loginUrl = `https://${loginHost}/users/login`;
 
-        const $ = await this.#get$(loginUrl);
-
-        const fkeySelector = 'input[name="fkey"]';
-        const fkeyElem = $(fkeySelector);
-        const fkey = fkeyElem.val();
-
-        if (typeof fkey === "undefined") {
-            throw new ScrapingError(
-                "fkey missing (login)",
-                $.html(),
-                fkeySelector
-            );
-        }
+        const fkey = await this.#scrapeFkey("users/login");
 
         await this.#post(loginUrl, { email, fkey, password }, "text");
 
@@ -583,6 +571,36 @@ export class Browser {
         );
 
         return cookies.find((cookie: Cookie) => cookie.key === key);
+    }
+
+    /**
+     * @private
+     *
+     * @summary gets an fkey value for a given path
+     * @param path path on the {@link Browser#loginHost}
+     *
+     * @throws {ScrapingError} if fkey is missing
+     */
+    async #scrapeFkey(path: string): Promise<string> {
+        const { loginHost } = this;
+
+        const url = `https://${loginHost}/${path.replace(/^\//, "")}`;
+
+        const $ = await this.#get$(url);
+
+        const fkeySelector = 'input[name="fkey"]';
+        const fkeyElem = $(fkeySelector);
+        const fkey = fkeyElem.val();
+
+        if (typeof fkey === "undefined") {
+            throw new ScrapingError(
+                `fkey missing (${path})`,
+                $.html(),
+                fkeySelector
+            );
+        }
+
+        return fkey;
     }
 }
 
