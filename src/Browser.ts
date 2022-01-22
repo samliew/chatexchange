@@ -8,6 +8,7 @@ import ChatExchangeError from "./Exceptions/ChatExchangeError";
 import LoginError from "./Exceptions/LoginError";
 import ScrapingError from "./Exceptions/ScrapingError";
 import Message from "./Message";
+import type Room from "./Room.js";
 import User from "./User";
 import { arrayToKvp, lazy, parseAgoString } from "./utils";
 import { ChatEventsResponse } from "./WebsocketEvent";
@@ -199,12 +200,14 @@ export class Browser {
     }
 
     /**
-     * @summary Joins a room with the provided ID
-     * @param {number} id The room ID to join
+     * @summary Joins a given room
+     * @param room The room or room ID to join
      * @returns {Promise<boolean>} A promise that resolves when the user has successfully joined the room
      * @memberof Browser#
      */
-    public async joinRoom(id: number): Promise<boolean> {
+    public async joinRoom(room: number | Room): Promise<boolean> {
+        const id = typeof room === "number" ? room : room.id;
+
         const { body, statusCode } = await this.#postKeyed<ChatEventsResponse>(
             `chats/${id}/events`,
             {
@@ -220,12 +223,14 @@ export class Browser {
     }
 
     /**
-     * @summary Leaves a room with the provided ID
-     * @param {number} id The room ID to leave
+     * @summary Leaves a given room
+     * @param room The room or room ID to leave
      * @returns {Promise<boolean>} A promise that resolves when the user leaves the room
      * @memberof Browser#
      */
-    public async leaveRoom(id: number): Promise<boolean> {
+    public async leaveRoom(room: number | Room): Promise<boolean> {
+        const id = typeof room === "number" ? room : room.id;
+
         const { statusCode } = await this.#postKeyed<ChatEventsResponse>(
             `chats/leave/${id}`,
             { quiet: true }

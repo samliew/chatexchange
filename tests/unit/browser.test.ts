@@ -252,24 +252,34 @@ describe("Browser", () => {
         const roomId = 29;
 
         it("should attempt to join the room", async () => {
-            expect.assertions(1);
+            expect.assertions(2);
 
             const host: Host = "stackexchange.com";
             const client = new Client(host);
             const browser = new Browser(client);
 
-            const joinStatus = await browser.joinRoom(roomId);
-            expect(joinStatus).toEqual(true);
+            const joinViaId = await browser.joinRoom(roomId);
+            expect(joinViaId).toEqual(true);
+
+            const room = client.getRoom(roomId);
+
+            const joinViaRoom = await browser.joinRoom(room);
+            expect(joinViaRoom).toEqual(true);
         });
 
         it("should attempt to leave the room", async () => {
-            expect.assertions(1);
+            expect.assertions(2);
 
             const client = new Client("meta.stackexchange.com");
             const browser = new Browser(client);
 
-            const leaveStatus = await browser.leaveRoom(roomId);
-            expect(leaveStatus).toEqual(true);
+            const leaveViaId = await browser.leaveRoom(roomId);
+            expect(leaveViaId).toEqual(true);
+
+            const room = client.getRoom(roomId);
+
+            const leaveViaRoom = await browser.leaveRoom(room);
+            expect(leaveViaRoom).toEqual(true);
         });
 
         it("should attempt to leave all rooms", async () => {
