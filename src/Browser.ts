@@ -302,15 +302,16 @@ export class Browser {
     }
 
     /**
-     * @summary Fetches a users profile
-     * @param {number} userId The user to fetch
+     * @summary Fetches a given user's profile
+     * @param user The user or user ID to fetch
      * @returns {Promise<IProfileData>} The profile object
      * @memberof Browser#
      */
-    public async getProfile(userId: number): Promise<IProfileData> {
+    public async getProfile(user: number | User): Promise<IProfileData> {
+        const userId = typeof user === "number" ? user : user.id;
+
         const $ = await this.#get$(`users/${userId}`);
 
-        const id = userId;
         const name = $("h1").text();
         const isModerator = $(".user-status").first().text().includes("♦");
 
@@ -342,7 +343,7 @@ export class Browser {
 
         return {
             about,
-            id,
+            id: userId,
             isModerator,
             lastMessage,
             lastSeen,
