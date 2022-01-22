@@ -171,7 +171,7 @@ describe("Client", () => {
         const room = await client.joinRoom(roomId);
         const room2 = client.getRoom(roomId);
 
-        expect(client._browser.joinRoom).toHaveBeenCalledWith(roomId);
+        expect(client._browser.joinRoom).toHaveBeenCalledWith(room);
         expect(room).toMatchObject(room2);
     });
 
