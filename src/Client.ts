@@ -23,9 +23,8 @@ export const AllowedHosts: Host[] = [
  * @class
  */
 export class Client {
-    /* @internal */
-    public _browser: Browser;
 
+    #browser: Browser;
     #rooms = new Map<number, Room>();
     #users = new Map<number, User>();
 
@@ -43,7 +42,15 @@ export class Client {
             );
         }
 
-        this._browser = new Browser(this);
+        this.#browser = new Browser(this);
+    }
+
+    /**
+     * @summary swaps out the internal {@link Browser} instance
+     * @param browser instance of {@link Browser} to swap with
+     */
+    public set browser(browser: Browser) {
+        this.#browser = browser;
     }
 
     /**
@@ -62,8 +69,7 @@ export class Client {
      * @memberof Client#
      */
     public get fkey(): Promise<string> {
-        const { _browser } = this;
-        return _browser.chatFKey;
+        return this.#browser.chatFKey;
     }
 
     /**
@@ -74,11 +80,13 @@ export class Client {
      * @memberof Client#
      */
     public async getMe(): Promise<User> {
-        if (!this._browser.loggedIn) {
+        const browser = this.#browser;
+
+        if (!browser.loggedIn) {
             throw new ChatExchangeError("Cannot get user, not logged in.");
         }
 
-        return new User(this, await this._browser.userId);
+        return new User(this, await browser.userId);
     }
 
     public getMessage(id: number): Message {
@@ -140,9 +148,7 @@ export class Client {
 
         if (!validate(email)) throw new InvalidArgumentError("Invalid email");
 
-        const result = await this._browser.login(email, password);
-
-        return result;
+        return this.#browser.login(email, password);
     }
 
     /**
@@ -151,7 +157,7 @@ export class Client {
      * @memberof Client#
      */
     public async logout(): Promise<boolean> {
-        const browser = this._browser;
+        const browser = this.#browser;
 
         return !browser.loggedIn || browser.logout();
     }
@@ -170,7 +176,7 @@ export class Client {
             throw new InvalidArgumentError("cookieString is required.");
         }
 
-        await this._browser.loginCookie(cookieString);
+        return this.#browser.loginCookie(cookieString);
     }
 
     /**
@@ -196,7 +202,7 @@ export class Client {
      * @memberof Client#
      */
     public leaveRoom(room: number | Room): Promise<boolean> {
-        return this._browser.leaveRoom(room);
+        return this.#browser.leaveRoom(room);
     }
 
     /**
@@ -205,7 +211,7 @@ export class Client {
      * @memberof Client#
      */
     public leaveAll(): Promise<boolean> {
-        return this._browser.leaveAllRooms();
+        return this.#browser.leaveAllRooms();
     }
 
     /**
@@ -242,6 +248,17 @@ export class Client {
         }
 
         return statusMap;
+    }
+
+    /**
+     * @summary sends a message to a given room
+     * @param message message to send
+     * @param room room or room ID to send to
+     */
+    public async send(message: string, room: number | Room): Promise<[boolean, Message]> {
+        const roomToSendTo = typeof room === "number" ? this.getRoom(room) : room;
+        const msg = await roomToSendTo.sendMessage(message);
+        return [true, msg];
     }
 }
 
