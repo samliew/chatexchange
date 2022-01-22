@@ -6,6 +6,7 @@ import Message from "./Message";
 import Room from "./Room";
 import User from "./User";
 import { delay } from "./utils";
+import WebsocketEvent, { type ChatEvent } from "./WebsocketEvent";
 
 export type Host =
     | "stackexchange.com"
@@ -256,6 +257,51 @@ export class Client {
 
         const msg = await browser.sendMessage(roomId, message);
         return [true, msg];
+    }
+
+    /**
+     * @summary watches a given {@link Room} for new events
+     * @param room room or room ID to watch
+     */
+    public async watch(room: number | Room) {
+        const browser = this.#browser;
+
+        const watched = typeof room === "number" ? this.getRoom(room) : room;
+
+        const ws = await browser.watchRoom(watched);
+
+        ws.on("message", (rawMsg) => {
+            const json = JSON.parse(rawMsg.toString());
+            if (typeof json[`r${watched.id}`]?.e === "undefined") {
+                return;
+            }
+
+            const events: ChatEvent[] = json[`r${watched.id}`].e;
+
+            for (const event of events) {
+                const msg = new WebsocketEvent(this, event);
+
+                const skipRules = [
+                    watched.isIgnored(msg.eventType),
+                    msg.userId && watched.isBlocked(msg.userId),
+                ];
+
+                if (skipRules.some(Boolean)) continue;
+
+                watched.emit("message", msg);
+            }
+        });
+
+        ws.on("close", () => {
+            if (watched.leaving) {
+                watched.emit("close");
+            } else {
+                ws.removeAllListeners();
+                watched.watch();
+            }
+        });
+
+        return ws;
     }
 }
 

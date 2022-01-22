@@ -5,7 +5,7 @@ import InvalidArgumentError from "./Exceptions/InvalidArgumentError";
 import Message from "./Message";
 import User from "./User";
 import { delay } from "./utils";
-import WebsocketEvent, { ChatEvent, ChatEventType } from "./WebsocketEvent";
+import { ChatEventType } from "./WebsocketEvent";
 
 /* eslint-disable no-underscore-dangle */
 /**
@@ -157,40 +157,7 @@ class Room extends EventEmitter {
      * @memberof Room
      */
     public async watch(): Promise<Room> {
-        const ws = await this.#client._browser.watchRoom(this);
-
-        ws.on("message", (rawMsg) => {
-            const json = JSON.parse(rawMsg.toString());
-            if (typeof json[`r${this.id}`]?.e === "undefined") {
-                return;
-            }
-
-            const events: ChatEvent[] = json[`r${this.id}`].e;
-
-            for (const event of events) {
-                const msg = new WebsocketEvent(this.#client, event);
-
-                const skipRules = [
-                    this.isIgnored(msg.eventType),
-                    msg.userId && this.isBlocked(msg.userId),
-                ];
-
-                if (skipRules.some(Boolean)) continue;
-
-                this.emit("message", msg);
-            }
-        });
-
-        ws.on("close", () => {
-            if (this.#isClosing) {
-                this.emit("close");
-            } else {
-                ws.removeAllListeners();
-                this.watch();
-            }
-        });
-
-        this.#socket = ws;
+        this.#socket = await this.#client.watch(this);
         return this;
     }
 
