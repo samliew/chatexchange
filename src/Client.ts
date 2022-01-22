@@ -250,8 +250,11 @@ export class Client {
      * @param room room or room ID to send to
      */
     public async send(message: string, room: number | Room): Promise<[boolean, Message]> {
-        const roomToSendTo = typeof room === "number" ? this.getRoom(room) : room;
-        const msg = await roomToSendTo.sendMessage(message);
+        const browser = this.#browser;
+
+        const roomId = typeof room === "number" ? room : room.id;
+
+        const msg = await browser.sendMessage(roomId, message);
         return [true, msg];
     }
 }
