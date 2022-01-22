@@ -188,6 +188,23 @@ export class Browser {
     }
 
     /**
+     * @summary attempts to logout from the Stack Exchange network
+     * @returns {Promise<boolean>} status of the logout attempt
+     * @memberof Browser#
+     */
+    public async logout(): Promise<boolean> {
+        const { loginHost } = this;
+
+        const logoutUrl = `https://${loginHost}/users/logout`;
+
+        const fkey = await this.#scrapeFkey("users/logout");
+
+        const res = await this.#post(logoutUrl, { fkey }, "text");
+
+        return (this.loggedIn = res.statusCode === 200);
+    }
+
+    /**
      * @summary Joins a given room
      * @param room The room or room ID to join
      * @returns {Promise<boolean>} A promise that resolves when the user has successfully joined the room

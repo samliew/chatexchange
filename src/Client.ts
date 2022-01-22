@@ -146,6 +146,17 @@ export class Client {
     }
 
     /**
+     * @summary attempts to logout from the Stack Exchange network
+     * @returns {Promise<boolean>} status of the logout
+     * @memberof Client#
+     */
+    public async logout(): Promise<boolean> {
+        const browser = this._browser;
+
+        return !browser.loggedIn || browser.logout();
+    }
+
+    /**
      * Attempts to login to stack exchange, using the provided
      * cookie jar string, which was retrieved from the `login`
      * method.

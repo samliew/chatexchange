@@ -60,4 +60,15 @@ describe("Real Site Login", () => {
 
         await room.leave();
     });
+
+    testIf("Should logout correctly", async () => {
+        expect.assertions(1);
+
+        const client = new Client("stackoverflow.com");
+        await client.loginCookie(sharedCookie);
+
+        const status = await client.logout();
+
+        expect(status).toBe(true);
+    });
 });
