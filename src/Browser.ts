@@ -356,13 +356,17 @@ export class Browser {
     }
 
     /**
-     * Scrapes the transcript for a message, and returns the message metadata
-     *
-     * @param {number} msgId The message ID to scrape
+     * @summary Scrapes the transcript for a message, and returns the message metadata
+     * @param message The message or message ID to scrape
      * @returns {Promise<ITranscriptData>}
      * @memberof Browser#
      */
-    public async getTranscript(msgId: number): Promise<ITranscriptData> {
+    public async getTranscript(message: number | Message): Promise<ITranscriptData> {
+        const msgId = typeof message === "number" ? message : message.id;
+        if (!msgId) {
+            throw new ChatExchangeError("cannot get a transcript of an invalid message");
+        }
+
         const $ = await this.#get$(`transcript/message/${msgId}`);
 
         const $msg = $(".message.highlight");
