@@ -60,7 +60,7 @@ class Message {
     get roomId(): Promise<number> {
         return lazy<number>(
             () => this.#transcriptData?.roomId,
-            () => this._scrapeTranscript()
+            () => this.#scrapeTranscript()
         );
     }
 
@@ -75,8 +75,7 @@ class Message {
     get content(): Promise<string> {
         return lazy<string>(
             () => this.#transcriptData?.content,
-            /* istanbul ignore next */
-            () => this._scrapeTranscript()
+            () => this.#scrapeTranscript()
         );
     }
 
@@ -90,16 +89,14 @@ class Message {
     get user(): Promise<User> {
         return lazy<User>(
             () => this.#transcriptData?.user,
-            /* istanbul ignore next */
-            () => this._scrapeTranscript()
+            () => this.#scrapeTranscript()
         );
     }
 
     get parentMessageId(): Promise<number> {
         return lazy<number>(
             () => this.#transcriptData?.parentMessageId,
-            /* istanbul ignore next */
-            () => this._scrapeTranscript()
+            () => this.#scrapeTranscript()
         );
     }
 
@@ -109,14 +106,12 @@ class Message {
         this.#room = this.#client.getRoom(roomId);
     }
 
-    private async _scrapeTranscript(): Promise<void> {
+    async #scrapeTranscript(): Promise<void> {
         if (!this.id) {
             throw new ChatExchangeError("This is not a valid message.");
         }
 
-        this.#transcriptData = await this.#client._browser.getTranscript(
-            this.id
-        );
+        this.#transcriptData = await this.#client.getTranscript(this);
     }
 
     /**
