@@ -162,12 +162,11 @@ class Room extends EventEmitter {
     }
 
     /**
-     * Sends a message to this room
-     *
-     * @param {string} message The message to send
+     * @summary Sends a message to this room
+     * @param message The message to send
      * @throws {InvalidArgumentError} If `content` > 500 character, empty, or isn't a string.
      * @returns {Promise<Message>} A promise with the message that was sent
-     * @memberof Room
+     * @memberof Room#
      */
     public async sendMessage(message: string): Promise<Message> {
         if (typeof message !== "string") {
@@ -184,9 +183,9 @@ class Room extends EventEmitter {
             );
         }
 
-        const res = await this.#client._browser.sendMessage(this.id, message);
+        const [, msg] = await this.#client.send(message, this);
 
-        return res;
+        return msg;
     }
 }
 
