@@ -15,11 +15,12 @@ import WebsocketEvent, { ChatEvent, ChatEventType } from "./WebsocketEvent";
  */
 class Room extends EventEmitter {
     #client: Client;
-    #isClosing: boolean = false;
 
     #socket?: WebSocket;
     #ignored: Set<ChatEventType> = new Set();
     #blocked: Map<number, number> = new Map();
+
+    leaving = false;
 
     /**
      * Creates an instance of Room.
@@ -133,8 +134,8 @@ class Room extends EventEmitter {
      * @memberof Room#
      */
     public join(): Promise<boolean> {
-        this.#isClosing = false;
-        return this.#client._browser.joinRoom(this);
+        this.leaving = false;
+        return this.#client.joinRoom(this);
     }
 
     /**
@@ -143,9 +144,9 @@ class Room extends EventEmitter {
      * @memberof Room#
      */
     public leave(): Promise<boolean> {
-        this.#isClosing = true;
+        this.leaving = true;
         this.#socket?.close();
-        return this.#client._browser.leaveRoom(this);
+        return this.#client.leaveRoom(this);
     }
 
     /**
