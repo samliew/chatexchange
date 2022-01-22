@@ -71,7 +71,7 @@ export class Client {
      *
      * @returns {Promise<User>} The user object
      * @throws {ChatExchangeError} If no user is currently logged in
-     * @memberof Client
+     * @memberof Client#
      */
     public async getMe(): Promise<User> {
         if (!this._browser.loggedIn) {
@@ -131,7 +131,7 @@ export class Client {
      * @param {string} email Email
      * @param {string} password Password
      * @returns {Promise<string>} Request Cookie Jar (Optionally to save to `loginCookie`)
-     * @memberof Client
+     * @memberof Client#
      */
     public async login(email: string, password: string): Promise<string> {
         if (!password) {
@@ -152,7 +152,7 @@ export class Client {
      *
      * @param {string} cookieString A cookie jar string
      * @returns {Promise<void>} A promise representing when login is complete
-     * @memberof Client
+     * @memberof Client#
      */
     public async loginCookie(cookieString: string): Promise<void> {
         if (typeof cookieString !== "string" || cookieString === "") {
@@ -163,11 +163,10 @@ export class Client {
     }
 
     /**
-     * Joins a room, and returns the room object
-     *
-     * @param {number} id The ID of the room to join
-     * @returns {Promise<Room>} The room object
-     * @memberof Client
+     * @summary Joins a given room, and returns the {@link Room} instance
+     * @param room The room or ID to join
+     * @returns {Promise<Room>} The {@link Room} instance
+     * @memberof Client#
      */
     public async joinRoom(room: number | Room): Promise<Room> {
         const roomToJoin = typeof room === "number" ?
@@ -180,20 +179,19 @@ export class Client {
     }
 
     /**
-     * Leaves a room
-     *
+     * @summary Leaves a room
+     * @param room The room or ID to leave
      * @returns {Promise<boolean>}
-     * @memberof Client
+     * @memberof Client#
      */
     public leaveRoom(room: number | Room): Promise<boolean> {
         return this._browser.leaveRoom(room);
     }
 
     /**
-     * Leaves all rooms (on same chat server)
-     *
+     * @summary Leaves all rooms (on same chat server)
      * @returns {Promise<boolean>}
-     * @memberof Client
+     * @memberof Client#
      */
     public leaveAll(): Promise<boolean> {
         return this._browser.leaveAllRooms();
