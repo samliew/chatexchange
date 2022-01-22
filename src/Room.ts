@@ -128,27 +128,24 @@ class Room extends EventEmitter {
     }
 
     /**
-     * Join a chat room
-     *
+     * @summary Join a chat room
      * @returns {Promise<boolean>} A promise when the user succesfully joins this room
-     * @memberof Room
+     * @memberof Room#
      */
     public join(): Promise<boolean> {
         this.#isClosing = false;
-        return this.#client._browser.joinRoom(this.id);
+        return this.#client._browser.joinRoom(this);
     }
 
     /**
-     * Leave a chat room
-     *
+     * @summary Leave a chat room
      * @returns {Promise<boolean>} A promise when the user succesfully leaves this room
-     * @returns {boolean} Status of leaving the room
-     * @memberof Room
+     * @memberof Room#
      */
     public leave(): Promise<boolean> {
         this.#isClosing = true;
         this.#socket?.close();
-        return this.#client._browser.leaveRoom(this.id);
+        return this.#client._browser.leaveRoom(this);
     }
 
     /**

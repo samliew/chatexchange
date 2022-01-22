@@ -285,8 +285,8 @@ describe("Room", () => {
         await room.join();
         await room.leave();
 
-        expect(client._browser.joinRoom).toHaveBeenCalledWith(roomId);
-        expect(client._browser.leaveRoom).toHaveBeenCalledWith(roomId);
+        expect(client._browser.joinRoom).toHaveBeenCalledWith(room);
+        expect(client._browser.leaveRoom).toHaveBeenCalledWith(room);
     });
 
     describe("sendMessage", () => {
@@ -383,7 +383,7 @@ describe("Room", () => {
 
         await room.watch();
 
-        expect(mockWebsocketWatch).toHaveBeenCalledWith(roomId);
+        expect(mockWebsocketWatch).toHaveBeenCalledWith(room);
         expect(mockWebsocketOn).toBeCalledTimes(2);
     });
 
@@ -436,13 +436,13 @@ describe("Room", () => {
         websocketMock.emit("message", "{}");
 
         expect(client._browser.watchRoom).toHaveBeenCalledTimes(1);
-        expect(client._browser.watchRoom).toHaveBeenCalledWith(roomId);
+        expect(client._browser.watchRoom).toHaveBeenCalledWith(room);
 
         // Simulate server disconnect
         websocketMock.emit("close");
 
         expect(client._browser.watchRoom).toHaveBeenCalledTimes(2);
-        expect(client._browser.watchRoom).toHaveBeenCalledWith(roomId);
+        expect(client._browser.watchRoom).toHaveBeenCalledWith(room);
 
         expect(messageSpy).toHaveBeenCalledTimes(1);
         expect(closeSpy).toHaveBeenCalledTimes(0);
@@ -450,13 +450,13 @@ describe("Room", () => {
 
         await room.leave();
 
-        expect(client._browser.leaveRoom).toHaveBeenCalledWith(roomId);
+        expect(client._browser.leaveRoom).toHaveBeenCalledWith(room);
 
         websocketMock.emit("close");
 
         expect(closeSpy).toHaveBeenCalledTimes(1);
 
-        const msg = messageSpy.mock.calls[0][0];
+        const [[msg]] = messageSpy.mock.calls;
 
         expect(msg).toBeInstanceOf(Message);
         expect(msg.id).toEqual(44396284);
