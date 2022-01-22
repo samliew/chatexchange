@@ -169,12 +169,14 @@ export class Client {
      * @returns {Promise<Room>} The room object
      * @memberof Client
      */
-    public async joinRoom(id: number): Promise<Room> {
-        const room = this.getRoom(id);
+    public async joinRoom(room: number | Room): Promise<Room> {
+        const roomToJoin = typeof room === "number" ?
+            this.getRoom(room) :
+            room;
 
-        await room.join();
+        await roomToJoin.join();
 
-        return room;
+        return roomToJoin;
     }
 
     /**
@@ -183,8 +185,8 @@ export class Client {
      * @returns {Promise<boolean>}
      * @memberof Client
      */
-    public leaveRoom(id: number): Promise<boolean> {
-        return this._browser.leaveRoom(id);
+    public leaveRoom(room: number | Room): Promise<boolean> {
+        return this._browser.leaveRoom(room);
     }
 
     /**
