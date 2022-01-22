@@ -23,7 +23,7 @@ describe("Message", () => {
 
     it("Should attempt to get the room ID", async () => {
         expect.assertions(3);
-        
+
         const getTranscriptMock = jest.fn(() => {
             return Promise.resolve({
                 content: "Content",
@@ -40,19 +40,14 @@ describe("Message", () => {
             getTranscript = getTranscriptMock;
         }
 
-        class MockClient extends Client {
-            _browser: Browser = new MockBrowser(this);
-        }
-
-        const client = new MockClient("stackoverflow.com");
+        const client = new Client("stackoverflow.com");
+        new MockBrowser(client);
 
         const msg = new Message(client, 29);
 
-        const roomId = await msg.roomId;
-
-        expect(roomId).toEqual(10)
+        expect(await msg.roomId).toEqual(10)
         expect(getTranscriptMock).toHaveBeenCalledTimes(1)
-        expect(getTranscriptMock).toHaveBeenCalledWith(29)
+        expect(getTranscriptMock).toHaveBeenCalledWith(msg)
     })
 
     it("Should attempt to send a message", async () => {
@@ -60,11 +55,8 @@ describe("Message", () => {
             sendMessage = jest.fn();
         }
 
-        class MockClient extends Client {
-            _browser: Browser = new MockBrowser(this);
-        }
-
-        const client = new MockClient("stackoverflow.com");
+        const client = new Client("stackoverflow.com");
+        const browser = new MockBrowser(client);
 
         const msg = new Message(client, 29, {
             roomId: 5,
@@ -72,7 +64,7 @@ describe("Message", () => {
 
         await msg.reply("Testing");
 
-        expect(client._browser.sendMessage).toHaveBeenCalledWith(
+        expect(browser.sendMessage).toHaveBeenCalledWith(
             5,
             ":29 Testing"
         );
@@ -106,16 +98,14 @@ describe("Message", () => {
         expect(parent).toBeUndefined();
     });
 
-    it("Should throw an error if you attempt to call _scrapeTranscript/reply with invalid message id", async () => {
-        expect.assertions(2)
+    it("Should throw an error if you attempt to call reply with invalid message id", async () => {
+        expect.assertions(1);
         const msg = new Message(new Client("stackoverflow.com"), undefined);
 
-        //@ts-expect-error
-        await expect(msg._scrapeTranscript()).rejects.toThrowError(ChatExchangeError);
         await expect(msg.reply("A message here")).rejects.toThrowError(ChatExchangeError);
     })
 
-    it('"_scrapeTranscript" should set the properties from transript', async () => {
+    it('accessing a property on a message should scrape the transcript', async () => {
         const host: Host = "stackoverflow.com";
 
         const content = "<div class='test'></div>";
@@ -136,16 +126,11 @@ describe("Message", () => {
             }
         }
 
-        const client = {
-            _browser: new MockBrowser(testClient),
-        } as unknown as Client;
+        new MockBrowser(testClient);
 
-        const msg = new Message(client, 5);
+        const msg = new Message(testClient, 5);
+        expect(msg.id).toEqual(5);
 
-        //@ts-expect-error
-        await msg._scrapeTranscript();
-
-        expect(await msg.id).toEqual(5);
         expect(await msg.content).toEqual(content);
         expect(await msg.parentMessageId).toEqual(42);
         expect(await msg.roomId).toEqual(10);

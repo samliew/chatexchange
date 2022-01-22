@@ -1,3 +1,4 @@
+import Client from "../../src/Client";
 import User from '../../src/User';
 
 describe('User', () => {
@@ -20,12 +21,8 @@ describe('User', () => {
             reputation: 2048
         }));
 
-        const client = {
-            _browser: {
-                getProfile: getProfileMock
-            }
-        };
-
+        const client = new Client("stackoverflow.com");
+        client.browser = { getProfile: getProfileMock };
 
         const user = new User(client, 4);
 
@@ -40,7 +37,7 @@ describe('User', () => {
         expect(await user.lastMessage).toEqual(120);
         expect(await user.reputation).toEqual(2048);
 
-        expect(getProfileMock).toHaveBeenLastCalledWith(4);
+        expect(getProfileMock).toHaveBeenLastCalledWith(user);
     });
 
     it('Should not call scrapeProfile twice', async () => {
@@ -57,11 +54,8 @@ describe('User', () => {
 
         const getProfileMock = jest.fn(() => Promise.resolve(fieldValues));
 
-        const client = {
-            _browser: {
-                getProfile: getProfileMock
-            }
-        };
+        const client = new Client("stackoverflow.com");
+        client.browser = { getProfile: getProfileMock };
 
         const fields = ['name', 'about', 'isModerator', 'messageCount', 'roomCount', 'lastSeen', 'lastMessage', 'reputation'];
 
@@ -76,7 +70,7 @@ describe('User', () => {
             expect(await user[field]).toEqual(fieldValues[field]);
 
             expect(getProfileMock).toHaveBeenCalledTimes(1);
-            expect(getProfileMock).toHaveBeenLastCalledWith(4);
+            expect(getProfileMock).toHaveBeenLastCalledWith(user);
         }
     });
 });

@@ -366,7 +366,6 @@ describe("Browser", () => {
             const host: Host = "stackexchange.com";
             const client = new Client(host);
             const browser = new MockedBrowser(client);
-            client._browser = browser;
 
             const msg = await browser.sendMessage(roomId, text);
 
