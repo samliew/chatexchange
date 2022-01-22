@@ -68,6 +68,7 @@ export class Browser {
     constructor(client: Client) {
         this.#client = client;
         this.#cookieJar = new CookieJar();
+        client.browser = this;
     }
 
     /**
