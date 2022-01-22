@@ -159,7 +159,7 @@ class Room extends EventEmitter {
      * @memberof Room
      */
     public async watch(): Promise<Room> {
-        const ws = await this.#client._browser.watchRoom(this.id);
+        const ws = await this.#client._browser.watchRoom(this);
 
         ws.on("message", (rawMsg) => {
             const json = JSON.parse(rawMsg.toString());

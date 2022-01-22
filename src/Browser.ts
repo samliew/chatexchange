@@ -264,12 +264,14 @@ export class Browser {
 
     /**
      * @summary Watch a room, and returns the websocket
-     * @param {number} roomid The room ID to join
+     * @param room The room or room ID to join
      * @returns {Promise<WebSocket>} The websocket of this room
      * @memberof Browser#
      */
-    public async watchRoom(roomid: number): Promise<WebSocket> {
+    public async watchRoom(room: number | Room): Promise<WebSocket> {
         const { root } = this;
+
+        const roomid = typeof room === "number" ? room : room.id;
 
         const { body } = await this.#postKeyed<{ url: string }>("ws-auth", {
             roomid,
