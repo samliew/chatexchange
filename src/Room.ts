@@ -5,7 +5,7 @@ import InvalidArgumentError from "./Exceptions/InvalidArgumentError";
 import Message from "./Message";
 import User from "./User";
 import { delay } from "./utils";
-import WebsocketEvent, { ChatEvent, ChatEventType } from "./WebsocketEvent";
+import { ChatEventType } from "./WebsocketEvent";
 
 /* eslint-disable no-underscore-dangle */
 /**
@@ -15,11 +15,12 @@ import WebsocketEvent, { ChatEvent, ChatEventType } from "./WebsocketEvent";
  */
 class Room extends EventEmitter {
     #client: Client;
-    #isClosing: boolean = false;
 
     #socket?: WebSocket;
     #ignored: Set<ChatEventType> = new Set();
     #blocked: Map<number, number> = new Map();
+
+    leaving = false;
 
     /**
      * Creates an instance of Room.
@@ -128,27 +129,24 @@ class Room extends EventEmitter {
     }
 
     /**
-     * Join a chat room
-     *
+     * @summary Join a chat room
      * @returns {Promise<boolean>} A promise when the user succesfully joins this room
-     * @memberof Room
+     * @memberof Room#
      */
     public join(): Promise<boolean> {
-        this.#isClosing = false;
-        return this.#client._browser.joinRoom(this.id);
+        this.leaving = false;
+        return this.#client.joinRoom(this);
     }
 
     /**
-     * Leave a chat room
-     *
+     * @summary Leave a chat room
      * @returns {Promise<boolean>} A promise when the user succesfully leaves this room
-     * @returns {boolean} Status of leaving the room
-     * @memberof Room
+     * @memberof Room#
      */
     public leave(): Promise<boolean> {
-        this.#isClosing = true;
+        this.leaving = true;
         this.#socket?.close();
-        return this.#client._browser.leaveRoom(this.id);
+        return this.#client.leaveRoom(this);
     }
 
     /**
@@ -159,50 +157,16 @@ class Room extends EventEmitter {
      * @memberof Room
      */
     public async watch(): Promise<Room> {
-        const ws = await this.#client._browser.watchRoom(this.id);
-
-        ws.on("message", (rawMsg) => {
-            const json = JSON.parse(rawMsg.toString());
-            if (typeof json[`r${this.id}`]?.e === "undefined") {
-                return;
-            }
-
-            const events: ChatEvent[] = json[`r${this.id}`].e;
-
-            for (const event of events) {
-                const msg = new WebsocketEvent(this.#client, event);
-
-                const skipRules = [
-                    this.isIgnored(msg.eventType),
-                    msg.userId && this.isBlocked(msg.userId),
-                ];
-
-                if (skipRules.some(Boolean)) continue;
-
-                this.emit("message", msg);
-            }
-        });
-
-        ws.on("close", () => {
-            if (this.#isClosing) {
-                this.emit("close");
-            } else {
-                ws.removeAllListeners();
-                this.watch();
-            }
-        });
-
-        this.#socket = ws;
+        this.#socket = await this.#client.watch(this);
         return this;
     }
 
     /**
-     * Sends a message to this room
-     *
-     * @param {string} message The message to send
+     * @summary Sends a message to this room
+     * @param message The message to send
      * @throws {InvalidArgumentError} If `content` > 500 character, empty, or isn't a string.
      * @returns {Promise<Message>} A promise with the message that was sent
-     * @memberof Room
+     * @memberof Room#
      */
     public async sendMessage(message: string): Promise<Message> {
         if (typeof message !== "string") {
@@ -219,9 +183,9 @@ class Room extends EventEmitter {
             );
         }
 
-        const res = await this.#client._browser.sendMessage(this.id, message);
+        const [, msg] = await this.#client.send(message, this);
 
-        return res;
+        return msg;
     }
 }
 

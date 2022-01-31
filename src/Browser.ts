@@ -1,5 +1,5 @@
 import * as cheerio from "cheerio";
-import got, { Method, OptionsOfJSONResponseBody, Response } from "got";
+import got, { Method, OptionsOfJSONResponseBody, type Response } from "got";
 import { Cookie, CookieJar } from "tough-cookie";
 import { URL } from "url";
 import WebSocket from "ws";
@@ -8,6 +8,7 @@ import ChatExchangeError from "./Exceptions/ChatExchangeError";
 import LoginError from "./Exceptions/LoginError";
 import ScrapingError from "./Exceptions/ScrapingError";
 import Message from "./Message";
+import type Room from "./Room.js";
 import User from "./User";
 import { arrayToKvp, lazy, parseAgoString } from "./utils";
 import { ChatEventsResponse } from "./WebsocketEvent";
@@ -67,6 +68,7 @@ export class Browser {
     constructor(client: Client) {
         this.#client = client;
         this.#cookieJar = new CookieJar();
+        client.browser = this;
     }
 
     /**
@@ -84,7 +86,7 @@ export class Browser {
      * @returns {string}
      * @memberof Browser#
      */
-    public get root() {
+    public get root(): string {
         return this.#client.root;
     }
 
@@ -168,19 +170,7 @@ export class Browser {
 
         const loginUrl = `https://${loginHost}/users/login`;
 
-        const $ = await this.#get$(loginUrl);
-
-        const fkeySelector = 'input[name="fkey"]';
-        const fkeyElem = $(fkeySelector);
-        const fkey = fkeyElem.val();
-
-        if (typeof fkey === "undefined") {
-            throw new ScrapingError(
-                "fkey missing (login)",
-                $.html(),
-                fkeySelector
-            );
-        }
+        const fkey = await this.#scrapeFkey("users/login");
 
         await this.#post(loginUrl, { email, fkey, password }, "text");
 
@@ -199,12 +189,31 @@ export class Browser {
     }
 
     /**
-     * @summary Joins a room with the provided ID
-     * @param {number} id The room ID to join
+     * @summary attempts to logout from the Stack Exchange network
+     * @returns {Promise<boolean>} status of the logout attempt
+     * @memberof Browser#
+     */
+    public async logout(): Promise<boolean> {
+        const { loginHost } = this;
+
+        const logoutUrl = `https://${loginHost}/users/logout`;
+
+        const fkey = await this.#scrapeFkey("users/logout");
+
+        const res = await this.#post(logoutUrl, { fkey }, "text");
+
+        return (this.loggedIn = res.statusCode === 200);
+    }
+
+    /**
+     * @summary Joins a given room
+     * @param room The room or room ID to join
      * @returns {Promise<boolean>} A promise that resolves when the user has successfully joined the room
      * @memberof Browser#
      */
-    public async joinRoom(id: number): Promise<boolean> {
+    public async joinRoom(room: number | Room): Promise<boolean> {
+        const id = typeof room === "number" ? room : room.id;
+
         const { body, statusCode } = await this.#postKeyed<ChatEventsResponse>(
             `chats/${id}/events`,
             {
@@ -220,12 +229,14 @@ export class Browser {
     }
 
     /**
-     * @summary Leaves a room with the provided ID
-     * @param {number} id The room ID to leave
+     * @summary Leaves a given room
+     * @param room The room or room ID to leave
      * @returns {Promise<boolean>} A promise that resolves when the user leaves the room
      * @memberof Browser#
      */
-    public async leaveRoom(id: number): Promise<boolean> {
+    public async leaveRoom(room: number | Room): Promise<boolean> {
+        const id = typeof room === "number" ? room : room.id;
+
         const { statusCode } = await this.#postKeyed<ChatEventsResponse>(
             `chats/leave/${id}`,
             { quiet: true }
@@ -254,12 +265,14 @@ export class Browser {
 
     /**
      * @summary Watch a room, and returns the websocket
-     * @param {number} roomid The room ID to join
+     * @param room The room or room ID to join
      * @returns {Promise<WebSocket>} The websocket of this room
      * @memberof Browser#
      */
-    public async watchRoom(roomid: number): Promise<WebSocket> {
+    public async watchRoom(room: number | Room): Promise<WebSocket> {
         const { root } = this;
+
+        const roomid = typeof room === "number" ? room : room.id;
 
         const { body } = await this.#postKeyed<{ url: string }>("ws-auth", {
             roomid,
@@ -267,7 +280,7 @@ export class Browser {
 
         const l = this.#times.get(roomid);
         if (!l) {
-            const entries = [...this.#times.entries()];
+            const entries = [...this.#times];
             const report = entries
                 .map(([k, v]) => `${k} : ${v || "missing"}`)
                 .join("\n");
@@ -290,15 +303,16 @@ export class Browser {
     }
 
     /**
-     * @summary Fetches a users profile
-     * @param {number} userId The user to fetch
+     * @summary Fetches a given user's profile
+     * @param user The user or user ID to fetch
      * @returns {Promise<IProfileData>} The profile object
      * @memberof Browser#
      */
-    public async getProfile(userId: number): Promise<IProfileData> {
+    public async getProfile(user: number | User): Promise<IProfileData> {
+        const userId = typeof user === "number" ? user : user.id;
+
         const $ = await this.#get$(`users/${userId}`);
 
-        const id = userId;
         const name = $("h1").text();
         const isModerator = $(".user-status").first().text().includes("♦");
 
@@ -330,7 +344,7 @@ export class Browser {
 
         return {
             about,
-            id,
+            id: userId,
             isModerator,
             lastMessage,
             lastSeen,
@@ -342,13 +356,17 @@ export class Browser {
     }
 
     /**
-     * Scrapes the transcript for a message, and returns the message metadata
-     *
-     * @param {number} msgId The message ID to scrape
+     * @summary Scrapes the transcript for a message, and returns the message metadata
+     * @param message The message or message ID to scrape
      * @returns {Promise<ITranscriptData>}
      * @memberof Browser#
      */
-    public async getTranscript(msgId: number): Promise<ITranscriptData> {
+    public async getTranscript(message: number | Message): Promise<ITranscriptData> {
+        const msgId = typeof message === "number" ? message : message.id;
+        if (!msgId) {
+            throw new ChatExchangeError("cannot get a transcript of an invalid message");
+        }
+
         const $ = await this.#get$(`transcript/message/${msgId}`);
 
         const $msg = $(".message.highlight");
@@ -578,6 +596,36 @@ export class Browser {
         );
 
         return cookies.find((cookie: Cookie) => cookie.key === key);
+    }
+
+    /**
+     * @private
+     *
+     * @summary gets an fkey value for a given path
+     * @param path path on the {@link Browser#loginHost}
+     *
+     * @throws {ScrapingError} if fkey is missing
+     */
+    async #scrapeFkey(path: string): Promise<string> {
+        const { loginHost } = this;
+
+        const url = `https://${loginHost}/${path.replace(/^\//, "")}`;
+
+        const $ = await this.#get$(url);
+
+        const fkeySelector = 'input[name="fkey"]';
+        const fkeyElem = $(fkeySelector);
+        const fkey = fkeyElem.val();
+
+        if (typeof fkey === "undefined") {
+            throw new ScrapingError(
+                `fkey missing (${path})`,
+                $.html(),
+                fkeySelector
+            );
+        }
+
+        return fkey;
     }
 }
 

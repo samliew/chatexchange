@@ -275,18 +275,15 @@ describe("Room", () => {
             leaveRoom = jest.fn();
         }
 
-        class MockClient extends Client {
-            _browser: Browser = new MockBrowser(this);
-        }
-
-        const client = new MockClient(host);
+        const client = new Client(host);
+        const browser = new MockBrowser(client);
         const room = new Room(client, roomId);
 
         await room.join();
         await room.leave();
 
-        expect(client._browser.joinRoom).toHaveBeenCalledWith(roomId);
-        expect(client._browser.leaveRoom).toHaveBeenCalledWith(roomId);
+        expect(browser.joinRoom).toHaveBeenCalledWith(room);
+        expect(browser.leaveRoom).toHaveBeenCalledWith(room);
     });
 
     describe("sendMessage", () => {
@@ -300,16 +297,13 @@ describe("Room", () => {
                 sendMessage = jest.fn();
             }
 
-            class MockClient extends Client {
-                _browser: Browser = new MockBrowser(this);
-            }
-
-            const client = new MockClient(host);
+            const client = new Client(host);
+            const browser = new MockBrowser(client);
             const room = new Room(client, roomId);
 
             await room.sendMessage("This is a test message");
 
-            expect(client._browser.sendMessage).lastCalledWith(
+            expect(browser.sendMessage).lastCalledWith(
                 roomId,
                 "This is a test message"
             );
@@ -373,17 +367,14 @@ describe("Room", () => {
             watchRoom = mockWebsocketWatch;
         }
 
-        class MockClient extends Client {
-            _browser: Browser = new MockBrowser(this);
-        }
-
-        const client = new MockClient(host);
+        const client = new Client(host);
+        new MockBrowser(client);
 
         const room = new Room(client, roomId);
 
         await room.watch();
 
-        expect(mockWebsocketWatch).toHaveBeenCalledWith(roomId);
+        expect(mockWebsocketWatch).toHaveBeenCalledWith(room);
         expect(mockWebsocketOn).toBeCalledTimes(2);
     });
 
@@ -410,11 +401,8 @@ describe("Room", () => {
             watchRoom = jest.fn(() => Promise.resolve(websocketMock));
         }
 
-        class MockClient extends Client {
-            _browser: Browser = new MockBrowser(this);
-        }
-
-        const client = new MockClient(host);
+        const client = new Client(host);
+        const browser = new MockBrowser(client);
 
         const room = new Room(client, roomId);
 
@@ -435,28 +423,28 @@ describe("Room", () => {
         websocketMock.emit("message", JSON.stringify(wrappedEvent));
         websocketMock.emit("message", "{}");
 
-        expect(client._browser.watchRoom).toHaveBeenCalledTimes(1);
-        expect(client._browser.watchRoom).toHaveBeenCalledWith(roomId);
+        expect(browser.watchRoom).toHaveBeenCalledTimes(1);
+        expect(browser.watchRoom).toHaveBeenCalledWith(room);
 
         // Simulate server disconnect
         websocketMock.emit("close");
 
-        expect(client._browser.watchRoom).toHaveBeenCalledTimes(2);
-        expect(client._browser.watchRoom).toHaveBeenCalledWith(roomId);
+        expect(browser.watchRoom).toHaveBeenCalledTimes(2);
+        expect(browser.watchRoom).toHaveBeenCalledWith(room);
 
         expect(messageSpy).toHaveBeenCalledTimes(1);
         expect(closeSpy).toHaveBeenCalledTimes(0);
-        expect(client._browser.leaveRoom).toHaveBeenCalledTimes(0);
+        expect(browser.leaveRoom).toHaveBeenCalledTimes(0);
 
         await room.leave();
 
-        expect(client._browser.leaveRoom).toHaveBeenCalledWith(roomId);
+        expect(browser.leaveRoom).toHaveBeenCalledWith(room);
 
         websocketMock.emit("close");
 
         expect(closeSpy).toHaveBeenCalledTimes(1);
 
-        const msg = messageSpy.mock.calls[0][0];
+        const [[msg]] = messageSpy.mock.calls;
 
         expect(msg).toBeInstanceOf(Message);
         expect(msg.id).toEqual(44396284);

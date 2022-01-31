@@ -37,7 +37,7 @@ describe("Client", () => {
                 }
             }
 
-            client._browser = new BrowserMock(client);
+            client.browser = new BrowserMock(client);
 
             const user = await client.getMe();
 
@@ -91,7 +91,7 @@ describe("Client", () => {
 
         const client = new Client(host);
 
-        client._browser = new BrowserMock(client);
+        client.browser = new BrowserMock(client);
 
         const cookieStr = "testing";
 
@@ -154,25 +154,23 @@ describe("Client", () => {
         });
     });
 
-    test("Should attempt to join a room and fetch existing room", async () => {
+    test("Should attempt to join a room", async () => {
         expect.assertions(2);
 
         const roomId = 5;
         const host: Host = "stackoverflow.com";
 
         class BrowserMock extends Browser {
-            joinRoom = jest.fn();
+            joinRoom = jest.fn(() => Promise.resolve(true));
         }
 
         const client = new Client(host);
+        const browser = new BrowserMock(client);
 
-        client._browser = new BrowserMock(client);
+        const status = await client.joinRoom(roomId);
 
-        const room = await client.joinRoom(roomId);
-        const room2 = client.getRoom(roomId);
-
-        expect(client._browser.joinRoom).toHaveBeenCalledWith(roomId);
-        expect(room).toMatchObject(room2);
+        expect(browser.joinRoom).toHaveBeenCalledWith(roomId);
+        expect(status).toBe(true);
     });
 
     test("Should correctly get root", () => {

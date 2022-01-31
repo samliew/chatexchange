@@ -145,10 +145,10 @@ class User {
      * to call directly. Simply await the properties
      *
      * @returns {Promise<void>}
-     * @memberof User
+     * @memberof User#
      */
     public async scrapeProfile(): Promise<void> {
-        this.#profileData = await this.#client._browser.getProfile(this.id);
+        this.#profileData = await this.#client.getProfile(this);
     }
 }
 

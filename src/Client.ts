@@ -1,11 +1,12 @@
 import { validate } from "email-validator";
-import Browser, { IProfileData } from "./Browser";
+import Browser, { type ITranscriptData, type IProfileData } from "./Browser";
 import ChatExchangeError from "./Exceptions/ChatExchangeError";
 import InvalidArgumentError from "./Exceptions/InvalidArgumentError";
 import Message from "./Message";
 import Room from "./Room";
 import User from "./User";
 import { delay } from "./utils";
+import WebsocketEvent, { type ChatEvent } from "./WebsocketEvent";
 
 export type Host =
     | "stackexchange.com"
@@ -23,9 +24,8 @@ export const AllowedHosts: Host[] = [
  * @class
  */
 export class Client {
-    /* @internal */
-    public _browser: Browser;
 
+    #browser: Browser;
     #rooms = new Map<number, Room>();
     #users = new Map<number, User>();
 
@@ -43,7 +43,15 @@ export class Client {
             );
         }
 
-        this._browser = new Browser(this);
+        this.#browser = new Browser(this);
+    }
+
+    /**
+     * @summary swaps out the internal {@link Browser} instance
+     * @param browser instance of {@link Browser} to swap with
+     */
+    public set browser(browser: Browser) {
+        this.#browser = browser;
     }
 
     /**
@@ -62,8 +70,7 @@ export class Client {
      * @memberof Client#
      */
     public get fkey(): Promise<string> {
-        const { _browser } = this;
-        return _browser.chatFKey;
+        return this.#browser.chatFKey;
     }
 
     /**
@@ -71,14 +78,16 @@ export class Client {
      *
      * @returns {Promise<User>} The user object
      * @throws {ChatExchangeError} If no user is currently logged in
-     * @memberof Client
+     * @memberof Client#
      */
     public async getMe(): Promise<User> {
-        if (!this._browser.loggedIn) {
+        const browser = this.#browser;
+
+        if (!browser.loggedIn) {
             throw new ChatExchangeError("Cannot get user, not logged in.");
         }
 
-        return new User(this, await this._browser.userId);
+        return new User(this, await browser.userId);
     }
 
     public getMessage(id: number): Message {
@@ -95,6 +104,15 @@ export class Client {
         return [...this.#rooms.values()];
     }
 
+    /**
+     * @summary gets the chat profile of a given {@link User}
+     * @param user user or user ID to get the chat profile of
+     */
+    public getProfile(user: number | User): Promise<IProfileData> {
+        const browser = this.#browser;
+        return browser.getProfile(user);
+    }
+
     public getRoom(id: number): Room {
         let room = this.#rooms.get(id);
         if (room) {
@@ -106,6 +124,15 @@ export class Client {
         this.#rooms.set(id, room);
 
         return room;
+    }
+
+    /**
+     * @summary gets a given chat message transcript info
+     * @param message message or message ID to get the transcript for
+     */
+    public getTranscript(message: number | Message): Promise<ITranscriptData> {
+        const browser = this.#browser;
+        return browser.getTranscript(message);
     }
 
     public getUser(
@@ -131,7 +158,7 @@ export class Client {
      * @param {string} email Email
      * @param {string} password Password
      * @returns {Promise<string>} Request Cookie Jar (Optionally to save to `loginCookie`)
-     * @memberof Client
+     * @memberof Client#
      */
     public async login(email: string, password: string): Promise<string> {
         if (!password) {
@@ -140,9 +167,18 @@ export class Client {
 
         if (!validate(email)) throw new InvalidArgumentError("Invalid email");
 
-        const result = await this._browser.login(email, password);
+        return this.#browser.login(email, password);
+    }
 
-        return result;
+    /**
+     * @summary attempts to logout from the Stack Exchange network
+     * @returns {Promise<boolean>} status of the logout
+     * @memberof Client#
+     */
+    public async logout(): Promise<boolean> {
+        const browser = this.#browser;
+
+        return !browser.loggedIn || browser.logout();
     }
 
     /**
@@ -152,49 +188,43 @@ export class Client {
      *
      * @param {string} cookieString A cookie jar string
      * @returns {Promise<void>} A promise representing when login is complete
-     * @memberof Client
+     * @memberof Client#
      */
     public async loginCookie(cookieString: string): Promise<void> {
         if (typeof cookieString !== "string" || cookieString === "") {
             throw new InvalidArgumentError("cookieString is required.");
         }
 
-        await this._browser.loginCookie(cookieString);
+        return this.#browser.loginCookie(cookieString);
     }
 
     /**
-     * Joins a room, and returns the room object
-     *
-     * @param {number} id The ID of the room to join
-     * @returns {Promise<Room>} The room object
-     * @memberof Client
-     */
-    public async joinRoom(id: number): Promise<Room> {
-        const room = this.getRoom(id);
-
-        await room.join();
-
-        return room;
-    }
-
-    /**
-     * Leaves a room
-     *
+     * @summary Joins a given room
+     * @param room The room or ID to join
      * @returns {Promise<boolean>}
-     * @memberof Client
+     * @memberof Client#
      */
-    public leaveRoom(id: number): Promise<boolean> {
-        return this._browser.leaveRoom(id);
+    public async joinRoom(room: number | Room): Promise<boolean> {
+        return this.#browser.joinRoom(room);
     }
 
     /**
-     * Leaves all rooms (on same chat server)
-     *
+     * @summary Leaves a given room
+     * @param room The room or ID to leave
      * @returns {Promise<boolean>}
-     * @memberof Client
+     * @memberof Client#
+     */
+    public leaveRoom(room: number | Room): Promise<boolean> {
+        return this.#browser.leaveRoom(room);
+    }
+
+    /**
+     * @summary Leaves all rooms (on same chat server)
+     * @returns {Promise<boolean>}
+     * @memberof Client#
      */
     public leaveAll(): Promise<boolean> {
-        return this._browser.leaveAllRooms();
+        return this.#browser.leaveAllRooms();
     }
 
     /**
@@ -231,6 +261,65 @@ export class Client {
         }
 
         return statusMap;
+    }
+
+    /**
+     * @summary sends a message to a given room
+     * @param message message to send
+     * @param room room or room ID to send to
+     */
+    public async send(message: string, room: number | Room): Promise<[boolean, Message]> {
+        const browser = this.#browser;
+
+        const roomId = typeof room === "number" ? room : room.id;
+
+        const msg = await browser.sendMessage(roomId, message);
+        return [true, msg];
+    }
+
+    /**
+     * @summary watches a given {@link Room} for new events
+     * @param room room or room ID to watch
+     */
+    public async watch(room: number | Room) {
+        const browser = this.#browser;
+
+        const watched = typeof room === "number" ? this.getRoom(room) : room;
+
+        const ws = await browser.watchRoom(watched);
+
+        ws.on("message", (rawMsg) => {
+            const json = JSON.parse(rawMsg.toString());
+            if (typeof json[`r${watched.id}`]?.e === "undefined") {
+                return;
+            }
+
+            const events: ChatEvent[] = json[`r${watched.id}`].e;
+
+            for (const event of events) {
+                const msg = new WebsocketEvent(this, event);
+
+                const skipRules = [
+                    watched.isIgnored(msg.eventType),
+                    msg.userId && watched.isBlocked(msg.userId),
+                ];
+
+                if (skipRules.some(Boolean)) continue;
+
+                watched.emit("message", msg);
+            }
+        });
+
+        ws.on("close", () => {
+            if (watched.leaving) {
+                watched.emit("close");
+            } else {
+                ws.removeAllListeners();
+                watched.watch();
+            }
+        });
+
+        return ws;
     }
 }
 

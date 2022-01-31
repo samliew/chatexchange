@@ -17,6 +17,8 @@ describe("Real Site Login", () => {
     let sharedCookie: string;
 
     testIf("Should login with credentials", async () => {
+        jest.setTimeout(1e4);
+
         expect.assertions(2);
         const client = new Client("stackoverflow.com");
 
@@ -42,22 +44,35 @@ describe("Real Site Login", () => {
         const client = new Client("stackoverflow.com");
         await client.loginCookie(sharedCookie);
 
-        await expect(client.joinRoom(+TEST_ROOM_ID!)).resolves.toBeInstanceOf(
-            Room
-        );
+        const status = client.joinRoom(+TEST_ROOM_ID!);
+        await expect(status).resolves.toBe(true);
     });
 
     testIf("Should watch room after joining", async () => {
+        expect.assertions(2);
+
+        const client = new Client("stackoverflow.com");
+        await client.loginCookie(sharedCookie);
+
+        const room = client.getRoom(+TEST_ROOM_ID!);
+
+        const status = await room.join();
+        expect(status).toBe(true);
+
+        const roomWatched = await room.watch();
+        expect(roomWatched).toBeInstanceOf(Room);
+
+        await room.leave();
+    });
+
+    testIf("Should logout correctly", async () => {
         expect.assertions(1);
 
         const client = new Client("stackoverflow.com");
         await client.loginCookie(sharedCookie);
-        const room = await client.joinRoom(+TEST_ROOM_ID!);
 
-        const roomWatched = await room.watch();
+        const status = await client.logout();
 
-        expect(roomWatched).toBeInstanceOf(Room);
-
-        await room.leave();
+        expect(status).toBe(true);
     });
 });
