@@ -9,6 +9,7 @@
         "src/Message.ts",
         "src/User.ts"
     ],
+    "entryPointStrategy": "Expand",
     "excludeExternals": true,
     "cleanOutputDir": true,
     "treatWarningsAsErrors": true,
