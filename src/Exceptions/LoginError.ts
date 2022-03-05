@@ -1,7 +1,7 @@
 import { CookieJar } from "tough-cookie";
 import ChatExchangeError from "./ChatExchangeError";
 
-interface LoginErrorInfo {
+export interface LoginErrorInfo {
     email?: string;
     password?: string;
     cookie?: string | CookieJar.Serialized;
