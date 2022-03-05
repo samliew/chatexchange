@@ -8,8 +8,8 @@
     "docs": "rimraf docs && typedoc",
     "start": "ts-node src/index.ts",
     "build": "rimraf dist && tsc --declaration",
-    "prepublish": "npm run build",
-    "pretest": "npm run build",
+    "prepare": "npm run build",
+    "preversion": "npm test",
     "test": "jest --config='jest.config.json' --collectCoverage --collectCoverageFrom='src/**/*.ts' --coverageReporters='lcov' --silent=false",
     "pretest-coveralls": "npm run build",
     "test-coveralls": "jest --config='jest.config.json' --collectCoverage --collectCoverageFrom='src/**/*.ts' --coverageProvider='v8' --coverageReporters='text-lcov' | coveralls && tslint 'src/**/*.ts'"
