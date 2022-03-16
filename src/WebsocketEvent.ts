@@ -16,6 +16,9 @@ export enum ChatEventType {
     MESSAGE_FLAGGED = 9,
     MESSAGE_DELETED = 10,
     FILE_ADDED = 11,
+    MESSAGE_REPLIED = 18,
+    MESSAGE_MOVED_OUT = 19,
+    MESSAGE_MOVED_IN = 20,
 }
 
 /**
