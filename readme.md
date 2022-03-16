@@ -4,11 +4,11 @@
 [![Build Status](https://travis-ci.org/samliew/chatexchange.svg?branch=master)](https://travis-ci.com/samliew/chatexchange)
 [![Coverage Status](https://coveralls.io/repos/github/samliew/chatexchange/badge.svg?branch=master)](https://coveralls.io/github/samliew/chatexchange?branch=master)
 
-A node.js API for talking to Stack Exchange chat (Largely based on [ChatExchange](https://github.com/Manishearth/ChatExchange) for python)
+A Node.js API for talking to Stack Exchange chat (Largely based on [ChatExchange](https://github.com/Manishearth/ChatExchange) for python)
 
 ## Installation
 
-Using npm:
+Using NPM:
 
 ```bash
 $ npm i chatexchange
@@ -20,8 +20,10 @@ This API is still in development, and thus should be considered unstable. Be war
 
 ## Example
 
-```javascript
+```typescript
 const Client = require("chatexchange");
+
+const { ChatEventType } = require("chatexchange");
 
 const main = async () => {
   const client = new Client("stackoverflow.com");
@@ -30,19 +32,43 @@ const main = async () => {
 
   const me = await client.getMe();
 
-  const room = await client.joinRoom(167908);
+  const myProfile = await client.getProfile(me);
 
-  room.on("message", async (msg) => {
-    console.log("Got Message", msg);
+  const { roomCount } = myProfile;
+  console.log(`Rooms I am in: ${roomCount}`);
 
-    // eventType 8 (Someone has messaged me)
-    if (msg.eventType === 8 && msg.targetUserId === me.id) {
-      await msg.reply("Hello World!");
-    }
-  });
+  const room = client.getRoom(167908);
 
-  // Connect to the room, and listen for new events
-  await room.watch();
+  room.ignore(ChatEventType.FILE_ADDED);
+
+  const joined = await client.joinRoom(room);
+  if(joined) {
+    room.on("message", async (msg) => {
+        console.log("Got Message", msg);
+
+        const { eventType, targetUserId } = msg;
+
+        if (eventType === ChatEventType.USER_MENTIONED && targetUserId === me.id) {
+            await msg.reply("Hello World!");
+        }
+
+        if(eventType === ChatEventType.USER_LEFT) {
+            await msg.send("See you around!", room);
+        }
+    });
+
+    // Leave the room after five minutes
+    setTimeout(async () => {
+        await room.sendMessage("Bye everyone!");
+        await client.leaveRoom(room);
+    }, 3e5);
+
+    // Connect to the room, and listen for new events
+    await room.watch();
+    return;
+  }
+
+  await client.logout();
 };
 
 main();
