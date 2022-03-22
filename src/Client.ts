@@ -212,7 +212,7 @@ export class Client {
      * @memberof Client#
      */
     public async joinRoom(room: number | Room): Promise<boolean> {
-        return this.#browser.joinRoom(room);
+        return this.#browser.joinRoom(this.getRoom(room));
     }
 
     /**

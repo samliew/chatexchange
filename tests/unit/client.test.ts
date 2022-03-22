@@ -185,10 +185,11 @@ describe("Client", () => {
 
         const client = new Client(host);
         const browser = new BrowserMock(client);
+        const room = client.getRoom(roomId);
 
-        const status = await client.joinRoom(roomId);
+        const status = await room.join();
 
-        expect(browser.joinRoom).toHaveBeenCalledWith(roomId);
+        expect(browser.joinRoom).toHaveBeenCalledWith(room);
         expect(status).toBe(true);
     });
 
