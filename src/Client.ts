@@ -1,5 +1,5 @@
 import { validate } from "email-validator";
-import Browser, { type ITranscriptData, type IProfileData } from "./Browser";
+import Browser, { type IProfileData, type ITranscriptData } from "./Browser";
 import ChatExchangeError from "./Exceptions/ChatExchangeError";
 import InvalidArgumentError from "./Exceptions/InvalidArgumentError";
 import Message from "./Message";
@@ -113,17 +113,24 @@ export class Client {
         return browser.getProfile(user);
     }
 
-    public getRoom(id: number): Room {
-        let room = this.#rooms.get(id);
-        if (room) {
-            return room;
+    /**
+     * @summary gets a {@link Room} instance from the client
+     * @param room {@link Room} or {@link Room.id} to get
+     */
+    public getRoom(room: number | Room): Room {
+        const rooms = this.#rooms;
+
+        const isId = typeof room === "number";
+        const roomId = isId ? room : room.id;
+
+        const existingRoom = rooms.get(roomId);
+        if (existingRoom) {
+            return existingRoom;
         }
 
-        room = new Room(this, id);
-
-        this.#rooms.set(id, room);
-
-        return room;
+        const newRoom = isId ? new Room(this, roomId) : room;
+        rooms.set(roomId, newRoom);
+        return newRoom;
     }
 
     /**
