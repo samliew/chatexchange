@@ -217,12 +217,14 @@ export class Client {
 
     /**
      * @summary Leaves a given room
-     * @param room The room or ID to leave
+     * @param room The {@link Room} or ID to leave
      * @returns {Promise<boolean>}
-     * @memberof Client#
      */
-    public leaveRoom(room: number | Room): Promise<boolean> {
-        return this.#browser.leaveRoom(room);
+    public async leaveRoom(room: number | Room): Promise<boolean> {
+        const roomToLeave = this.getRoom(room);
+        const status = await this.#browser.leaveRoom(roomToLeave);
+        if (status) this.#rooms.delete(roomToLeave.id);
+        return status;
     }
 
     /**
