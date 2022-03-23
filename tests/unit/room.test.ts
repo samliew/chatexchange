@@ -10,6 +10,15 @@ import type { ChatEvent } from "../../src/WebsocketEvent";
 import WebsocketEvent, { ChatEventType } from "../../src/WebsocketEvent";
 
 describe("Room", () => {
+
+    describe("getters", () => {
+        test("should correctly get transcript URL", () => {
+            const client = new Client("stackexchange.com");
+            const { transcriptURL } = client.getRoom(42);
+            expect(transcriptURL).toEqual("https://chat.stackexchange.com/transcript/42");
+        });
+    });
+
     describe("blocking users", () => {
         beforeEach(() => jest.resetModules());
 

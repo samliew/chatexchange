@@ -35,6 +35,15 @@ class Room extends EventEmitter {
     }
 
     /**
+     * @summary returns the room's transcript URL
+     */
+    get transcriptURL(): string {
+        const { host } = this.#client;
+        const { id } = this;
+        return `https://chat.${host}/transcript/${id}`;
+    }
+
+    /**
      * Blocks a user for a given amount of time (or forever)
      *
      * @param user user to block
