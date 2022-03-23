@@ -3,6 +3,7 @@ import Client, { Host } from "../../src/Client";
 import ChatExchangeError from "../../src/Exceptions/ChatExchangeError";
 import InvalidArgumentError from "../../src/Exceptions/InvalidArgumentError";
 import Message from "../../src/Message";
+import Room from "../../src/Room";
 import User from "../../src/User";
 
 describe("Client", () => {
@@ -20,6 +21,24 @@ describe("Client", () => {
         await expect(
             new Client("stackoverflow.com").getMe()
         ).rejects.toThrowError(ChatExchangeError);
+    });
+
+    describe("Rooms", () => {
+        test("Should add rooms to the internal list of rooms when requested", () => {
+            const client = new Client("stackexchange.com");
+
+            const room1Id = 42;
+            const room2Id = 24;
+
+            client.getRoom(room1Id);
+            client.getRoom(new Room(client, room2Id));
+
+            const rooms = client.getRooms();
+
+            expect(rooms.size).toEqual(2);
+            expect(rooms.get(room1Id)?.id).toEqual(room1Id);
+            expect(rooms.get(room2Id)?.id).toEqual(room2Id);
+        });
     });
 
     describe("Login", () => {
@@ -166,10 +185,11 @@ describe("Client", () => {
 
         const client = new Client(host);
         const browser = new BrowserMock(client);
+        const room = client.getRoom(roomId);
 
-        const status = await client.joinRoom(roomId);
+        const status = await room.join();
 
-        expect(browser.joinRoom).toHaveBeenCalledWith(roomId);
+        expect(browser.joinRoom).toHaveBeenCalledWith(room);
         expect(status).toBe(true);
     });
 
