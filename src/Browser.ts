@@ -572,13 +572,14 @@ export class Browser {
      * @param {string} uri request URI
      * @param {object} [data] request data
      * @param {object} [qs] query string data
+     * @param {boolean} [json] whether to parse response data as JSON
      * @returns {Promise<Response<any>>}
      */
-    async #postKeyed<T>(uri: string, data: object = {}, qs: object = {}) {
+    async #postKeyed<T>(uri: string, data: object = {}, qs: object = {}, json = true) {
         return this.#post<T>(
             uri,
             { ...data, fkey: await this.chatFKey },
-            "json",
+            json ? "json" : "text",
             qs
         );
     }
