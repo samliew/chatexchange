@@ -1,5 +1,6 @@
 import { EventEmitter } from "events";
 import WebSocket from "ws";
+import { DeleteMessageStatus } from "./Browser.js";
 import Client from "./Client";
 import InvalidArgumentError from "./Exceptions/InvalidArgumentError";
 import Message from "./Message";
@@ -168,6 +169,14 @@ class Room extends EventEmitter {
     public async watch(): Promise<Room> {
         this.#socket = await this.#client.watch(this);
         return this;
+    }
+
+    /**
+     * @summary deletes a given message
+     * @param message {@link Message} or ID to delete
+     */
+    public async delete(message: number | Message): Promise<DeleteMessageStatus> {
+        return this.#client.delete(message);
     }
 
     /**
