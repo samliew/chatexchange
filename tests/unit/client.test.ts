@@ -1,4 +1,4 @@
-import Browser from "../../src/Browser";
+import Browser, { DeleteMessageStatus } from "../../src/Browser";
 import Client, { Host } from "../../src/Client";
 import ChatExchangeError from "../../src/Exceptions/ChatExchangeError";
 import InvalidArgumentError from "../../src/Exceptions/InvalidArgumentError";
@@ -86,6 +86,26 @@ describe("Client", () => {
             await expect(
                 new Client("stackexchange.com").login("invalid", "a12B$")
             ).rejects.toThrowError(InvalidArgumentError);
+        });
+    });
+
+    describe("Messages", () => {
+        test("Should correctly attempt to delete a message", async () => {
+            expect.assertions(1);
+
+            jest.doMock("../../src/Browser", () => {
+                const real = jest.requireActual("../../src/Browser");
+                real.default.prototype.deleteMessage = () => Promise.resolve(DeleteMessageStatus.SUCCESS);
+                return real;
+            });
+
+            const { default: Client } = await import("../../src/Client");
+
+            const client = new Client("meta.stackexchange.com");
+
+            const status = await client.delete(42);
+
+            expect(status).toEqual(DeleteMessageStatus.SUCCESS);
         });
     });
 
