@@ -1,5 +1,5 @@
 import { validate } from "email-validator";
-import Browser, { type IProfileData, type ITranscriptData } from "./Browser";
+import Browser, { DeleteMessageStatus, type IProfileData, type ITranscriptData } from "./Browser";
 import ChatExchangeError from "./Exceptions/ChatExchangeError";
 import InvalidArgumentError from "./Exceptions/InvalidArgumentError";
 import Message from "./Message";
@@ -270,6 +270,20 @@ export class Client {
         }
 
         return statusMap;
+    }
+
+    /**
+     * @summary deletes a given message
+     * @param message {@link Message} or ID to delete
+     */
+    public async delete(message: number | Message): Promise<DeleteMessageStatus> {
+        const browser = this.#browser;
+
+        const messageId = typeof message === "number" ? message : message.id;
+
+        if (!messageId) return DeleteMessageStatus.UNKNOWN;
+
+        return browser.deleteMessage(messageId);
     }
 
     /**

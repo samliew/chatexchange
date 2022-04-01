@@ -1,6 +1,6 @@
 import { Cookie, CookieJar } from "tough-cookie";
 import type { URL } from "url";
-import { Browser } from "../../src/Browser";
+import { Browser, DeleteMessageStatus } from "../../src/Browser";
 import Client, { Host } from "../../src/Client";
 import { ChatExchangeError } from "../../src/Exceptions/ChatExchangeError";
 import LoginError from "../../src/Exceptions/LoginError";
@@ -35,6 +35,10 @@ function mockGot() {
                 body: '<div class="my-profile"></div>',
             }),
             "https://stackexchange\\.com/": async () => common,
+            "https://chat\\..+\\.com/messages/\\d+/delete": async () => ({
+                ...common,
+                body: "ok"
+            }),
             "https://chat\\..+\\.com/chats/\\d+/events": () =>
                 Promise.resolve({
                     ...common,
@@ -372,6 +376,17 @@ describe("Browser", () => {
             expect(msg).toBeInstanceOf(Message);
             expect(await msg.roomId).toEqual(roomId);
             expect(await msg.content).toEqual(text);
+        });
+
+        it("should attempt to delete a message", async () => {
+            expect.assertions(1);
+
+            const client = new Client("meta.stackexchange.com");
+            const browser = new Browser(client);
+
+            const msgId = 42;
+
+            expect(await browser.deleteMessage(msgId)).toEqual(DeleteMessageStatus.SUCCESS);
         });
     });
 });

@@ -43,6 +43,13 @@ export interface ITranscriptData {
 
 type ContentType = "json" | "text";
 
+export enum DeleteMessageStatus {
+    SUCCESS = 0,
+    TOO_OLD = 1,
+    DELETED = 2,
+    UNKNOWN = 4
+}
+
 /**
  * Used internally by {@link Client} to provide the low-level
  * interaction with SE servers.
@@ -407,6 +414,29 @@ export class Browser {
     }
 
     /**
+     * @summary Deletes a message
+     * @param {number} messageId ID of the message to delete
+     */
+    public async deleteMessage(messageId: number): Promise<DeleteMessageStatus> {
+        const { host } = this.#client;
+
+        const { body } = await this.#postKeyed<string>(
+            `https://chat.${host}/messages/${messageId}/delete`,
+            {}, {}, false
+        );
+
+        const statusMap: Record<string, DeleteMessageStatus> = {
+            "ok": DeleteMessageStatus.SUCCESS,
+            "It is too late to delete this message": DeleteMessageStatus.TOO_OLD,
+            "This message has already been deleted.": DeleteMessageStatus.DELETED
+        };
+
+        return statusMap[body] !== void 0 ?
+            statusMap[body] :
+            DeleteMessageStatus.UNKNOWN;
+    }
+
+    /**
      * @summary Sends a message to a room
      * @param {number} roomId The room ID to send to
      * @param {string} text The message to send
@@ -572,13 +602,14 @@ export class Browser {
      * @param {string} uri request URI
      * @param {object} [data] request data
      * @param {object} [qs] query string data
+     * @param {boolean} [json] whether to parse response data as JSON
      * @returns {Promise<Response<any>>}
      */
-    async #postKeyed<T>(uri: string, data: object = {}, qs: object = {}) {
+    async #postKeyed<T>(uri: string, data: object = {}, qs: object = {}, json = true) {
         return this.#post<T>(
             uri,
             { ...data, fkey: await this.chatFKey },
-            "json",
+            json ? "json" : "text",
             qs
         );
     }
