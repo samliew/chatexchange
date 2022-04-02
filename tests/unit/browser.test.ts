@@ -32,7 +32,7 @@ function mockGot() {
             }),
             "https://stackoverflow\\.com/": async () => ({
                 ...common,
-                body: '<div class="my-profile"></div>',
+                body: '<div><input type="hidden" name="fkey" value="abc" /></div>',
             }),
             "https://stackexchange\\.com/": async () => common,
             "https://chat\\..+\\.com/messages/\\d+/delete": async () => ({

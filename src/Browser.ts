@@ -149,7 +149,7 @@ export class Browser {
 
         const $ = await this.#get$(`https://${this.#client.host}/`);
 
-        const res = $(".my-profile");
+        const res = $("input[name=fkey]:not([value=''])");
 
         if (res.length === 0) {
             throw new LoginError(
