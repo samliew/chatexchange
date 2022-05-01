@@ -281,7 +281,7 @@ export class Browser {
 
         const roomid = typeof room === "number" ? room : room.id;
 
-        const { body } = await this.#postKeyed<{ url: string }>("ws-auth", {
+        const { body } = await this.#postKeyed<{ url: string; }>("ws-auth", {
             roomid,
         });
 
@@ -330,14 +330,11 @@ export class Browser {
 
         const reputation = parseInt(repElems.attr("title") || "1", 10) || 1;
 
+        const statsCells = $(".user-keycell,.user-valuecell");
+
         // Filter out only text (Ignore HTML entirely)
-        const statsElements: string[] = $(".user-keycell,.user-valuecell")
-            .map((_i, el) =>
-                $(el)
-                    .text()
-                    .trim()
-                    .replace(/\s{2,}[\w\s()]*/u, "")
-            )
+        const statsElements: string[] = statsCells
+            .map((_i, el) => $(el).text().trim().replace(/\s{2,}[\w\s()]*/u, ""))
             .get();
 
         const {
@@ -444,7 +441,7 @@ export class Browser {
      * @memberof Browser#
      */
     public async sendMessage(roomId: number, text: string): Promise<Message> {
-        const { body } = await this.#postKeyed<{ id: number }>(
+        const { body } = await this.#postKeyed<{ id: number; }>(
             `chats/${roomId}/messages/new`,
             { text }
         );
