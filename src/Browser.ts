@@ -29,6 +29,7 @@ export interface IProfileData {
     reputation: number;
     lastSeen: number;
     lastMessage: number;
+    parentId?: number;
 }
 
 export interface ITranscriptData {
@@ -346,7 +347,7 @@ export class Browser {
         const lastMessage = lmsg !== void 0 ? parseAgoString(lmsg) : -1;
         const lastSeen = lseen !== void 0 ? parseAgoString(lseen) : -1;
 
-        return {
+        const profile: IProfileData = {
             about,
             id: userId,
             isModerator,
@@ -357,6 +358,18 @@ export class Browser {
             reputation,
             roomCount,
         };
+
+        const [parentCell] = statsCells.filter((_, el) => $(el).text().trim() === "parent user");
+        const [parentValueCell] = $(parentCell).next();
+
+        const parentHref = $(parentValueCell).find("a[href*='/users/']").attr("href")?.trim();
+
+        // https://regex101.com/r/SqNlXB/1
+        const parentIdUnparsed = parentHref?.replace(/.+?\/users\/(\d+).*$/, "$1");
+        const parentId = parentIdUnparsed && parseInt(parentIdUnparsed, 10);
+        if (parentId) profile.parentId = parentId;
+
+        return profile;
     }
 
     /**

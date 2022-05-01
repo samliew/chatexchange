@@ -35,6 +35,7 @@ describe('Profile', () => {
             lastSeen: 14,
             lastMessage: 2940,
             messageCount: 8671,
+            parentId: 4875631,
             about: 'You\'re awesome!'
         });
     });

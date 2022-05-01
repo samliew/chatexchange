@@ -168,7 +168,7 @@ describe("Browser", () => {
         beforeEach(() => jest.resetModules());
 
         it("getProfile", async () => {
-            expect.assertions(4);
+            expect.assertions(6);
 
             const mockGot = jest.fn();
             jest.doMock("got", () => {
@@ -183,6 +183,7 @@ describe("Browser", () => {
             const mockLseen = "n/a";
             const mockLmsg = "just now";
             const mockRep = 9001;
+            const mockParentId = 42;
             const mockProfile = `
             <div class="reputation-score" title="${mockRep}">
                 <table>
@@ -190,6 +191,10 @@ describe("Browser", () => {
                     <td class="user-valuecell">${mockLmsg}</td>
                     <td class="user-keycell">last seen</td>
                     <td class="user-valuecell">${mockLseen}</td>
+                    <td class="user-keycell">parent user</td>
+                    <td class="user-valuecell">
+                        <a href="//stackoverflow.com/users/${mockParentId}/answer">Answer</a>
+                    </td>
                 </table>
             </div>`;
 
@@ -198,12 +203,13 @@ describe("Browser", () => {
                 body: mockProfile,
             });
 
-            const { reputation, lastMessage, lastSeen } =
+            const { reputation, lastMessage, lastSeen, parentId } =
                 await browser.getProfile(-1);
 
             expect(reputation).toEqual(mockRep);
             expect(lastMessage).toEqual(0);
             expect(lastSeen).toEqual(-1);
+            expect(parentId).toEqual(42);
 
             const emptyResponse = "";
 
@@ -214,6 +220,7 @@ describe("Browser", () => {
 
             const empty = await browser.getProfile(-1);
             expect(empty.reputation).toEqual(1);
+            expect(empty.parentId).toBeUndefined();
         });
     });
 
