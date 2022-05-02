@@ -9,7 +9,8 @@ describe('User', () => {
     });
 
     it('Should fetch data correctly', async () => {
-        expect.assertions(9);
+        expect.assertions(12);
+
         const getProfileMock = jest.fn(() => Promise.resolve({
             name: 'test',
             about: 'Just a test user',
@@ -18,7 +19,10 @@ describe('User', () => {
             roomCount: 51,
             lastSeen: 50,
             lastMessage: 120,
-            reputation: 2048
+            reputation: 2048,
+            parentId: 42,
+            parentHost: "stackoverflow.com",
+            parentSite: "stackoverflow.com"
         }));
 
         const client = new Client("stackoverflow.com");
@@ -36,6 +40,11 @@ describe('User', () => {
         expect(await user.lastSeen).toEqual(50);
         expect(await user.lastMessage).toEqual(120);
         expect(await user.reputation).toEqual(2048);
+
+        const parent = await user.parent;
+        expect(parent.id).toEqual(42);
+        expect(parent.host).toEqual("stackoverflow.com");
+        expect(parent.site).toEqual("stackoverflow.com");
 
         expect(getProfileMock).toHaveBeenLastCalledWith(user);
     });

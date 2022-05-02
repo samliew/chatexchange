@@ -1,5 +1,5 @@
 import { IProfileData } from "./Browser";
-import Client from "./Client";
+import Client, { Host } from "./Client";
 import { lazy } from "./utils";
 
 /**
@@ -135,6 +135,24 @@ class User {
     get reputation(): Promise<number> {
         return lazy(
             () => this.#profileData?.reputation,
+            () => this.scrapeProfile()
+        );
+    }
+
+    /**
+     * @summary gets this {@link User}'s parent info
+     * @readonly
+     */
+    get parent(): Promise<{ id?: number, host?: Host, site?: string; }> {
+        return lazy(
+            () => {
+                const profile = this.#profileData;
+                if (!profile) return;
+
+                const { parentHost, parentId, parentSite } = profile;
+
+                return { id: parentId, host: parentHost, site: parentSite };
+            },
             () => this.scrapeProfile()
         );
     }
