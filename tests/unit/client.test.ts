@@ -1,5 +1,5 @@
 import Browser, { DeleteMessageStatus } from "../../src/Browser";
-import Client, { Host } from "../../src/Client";
+import Client, { AllowedHosts, Host, isAllowedHost } from "../../src/Client";
 import ChatExchangeError from "../../src/Exceptions/ChatExchangeError";
 import InvalidArgumentError from "../../src/Exceptions/InvalidArgumentError";
 import Message from "../../src/Message";
@@ -7,6 +7,18 @@ import Room from "../../src/Room";
 import User from "../../src/User";
 
 describe("Client", () => {
+    test(isAllowedHost.name, () => {
+        expect.assertions(1 + AllowedHosts.length);
+
+        const notAllowed = isAllowedHost("example.com");
+        expect(notAllowed).toEqual(false);
+
+        AllowedHosts.forEach((host) => {
+            const allowed = isAllowedHost(host);
+            expect(allowed).toEqual(true);
+        });
+    });
+
     test("Should throw error if invalid host", () => {
         expect.assertions(1);
 

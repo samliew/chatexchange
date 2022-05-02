@@ -20,6 +20,14 @@ export const AllowedHosts: Host[] = [
 ];
 
 /**
+ * @summary checks if a given host is an allowed {@link Host}
+ * @param host host string to check
+ */
+export const isAllowedHost = (host?: string): host is Host => {
+    return AllowedHosts.some((h) => h === host);
+};
+
+/**
  * Represents the main chatexchange Client class.
  * @class
  */
