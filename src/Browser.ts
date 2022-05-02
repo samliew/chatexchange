@@ -31,6 +31,7 @@ export interface IProfileData {
     lastMessage: number;
     parentId?: number;
     parentHost?: Host;
+    parentSite?: string;
 }
 
 export interface ITranscriptData {
@@ -378,6 +379,7 @@ export class Browser {
             parentSite?.replace(/^.+?\.(?=stackoverflow|stackexchange)/, "") as Host | undefined;
 
         profile.parentHost = parentHost;
+        profile.parentSite = parentSite;
 
         return profile;
     }
