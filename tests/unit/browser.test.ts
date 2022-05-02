@@ -168,7 +168,7 @@ describe("Browser", () => {
         beforeEach(() => jest.resetModules());
 
         it("getProfile", async () => {
-            expect.assertions(6);
+            expect.assertions(7);
 
             const mockGot = jest.fn();
             jest.doMock("got", () => {
@@ -203,13 +203,14 @@ describe("Browser", () => {
                 body: mockProfile,
             });
 
-            const { reputation, lastMessage, lastSeen, parentId } =
+            const { reputation, lastMessage, lastSeen, parentId, parentHost } =
                 await browser.getProfile(-1);
 
             expect(reputation).toEqual(mockRep);
             expect(lastMessage).toEqual(0);
             expect(lastSeen).toEqual(-1);
             expect(parentId).toEqual(42);
+            expect(parentHost).toEqual("stackoverflow.com");
 
             const emptyResponse = "";
 

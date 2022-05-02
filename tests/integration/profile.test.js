@@ -36,6 +36,7 @@ describe('Profile', () => {
             lastMessage: 2940,
             messageCount: 8671,
             parentId: 4875631,
+            parentHost: "stackoverflow.com",
             about: 'You\'re awesome!'
         });
     });

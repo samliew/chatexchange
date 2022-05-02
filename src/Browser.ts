@@ -3,7 +3,7 @@ import got, { Method, OptionsOfJSONResponseBody, type Response } from "got";
 import { Cookie, CookieJar } from "tough-cookie";
 import { URL } from "url";
 import WebSocket from "ws";
-import Client, { Host } from "./Client";
+import Client, { Host, isAllowedHost } from "./Client";
 import ChatExchangeError from "./Exceptions/ChatExchangeError";
 import LoginError from "./Exceptions/LoginError";
 import ScrapingError from "./Exceptions/ScrapingError";
@@ -30,6 +30,7 @@ export interface IProfileData {
     lastSeen: number;
     lastMessage: number;
     parentId?: number;
+    parentHost?: Host;
 }
 
 export interface ITranscriptData {
@@ -368,6 +369,15 @@ export class Browser {
         const parentIdUnparsed = parentHref?.replace(/.+?\/users\/(\d+).*$/, "$1");
         const parentId = parentIdUnparsed && parseInt(parentIdUnparsed, 10);
         if (parentId) profile.parentId = parentId;
+
+        // https://regex101.com/r/Aqx7Qs/3
+        const parentSite = parentHref?.replace(/(?:https?:|^)\/{2}(.+?)\/users.*?$/, "$1");
+        const parentHost = isAllowedHost(parentSite) ?
+            parentSite :
+            // https://regex101.com/r/i6c9zB/1
+            parentSite?.replace(/^.+?\.(?=stackoverflow|stackexchange)/, "") as Host | undefined;
+
+        profile.parentHost = parentHost;
 
         return profile;
     }
