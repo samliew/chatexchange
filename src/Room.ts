@@ -180,6 +180,13 @@ class Room extends EventEmitter {
     }
 
     /**
+     * @summary returns a list of users currently in the room
+     */
+    public async listUsers(): Promise<User[]> {
+        return this.#client.listUsers(this);
+    }
+
+    /**
      * @summary Sends a message to this room
      * @param message The message to send
      * @throws {InvalidArgumentError} If `content` > 500 character, empty, or isn't a string.
