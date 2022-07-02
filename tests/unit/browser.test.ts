@@ -30,6 +30,12 @@ function mockGot() {
                     encoding: "utf-8",
                 }),
             }),
+            "https://chat\\..+\\.com/rooms/info/\\d+": async () => ({
+                ...common,
+                body: await fs.readFile("./tests/mocks/room_info.html", {
+                    encoding: "utf-8"
+                })
+            }),
             "https://stackoverflow\\.com/": async () => ({
                 ...common,
                 body: '<div><input type="hidden" name="fkey" value="abc" /></div>',
@@ -396,6 +402,28 @@ describe("Browser", () => {
             const msgId = 42;
 
             expect(await browser.deleteMessage(msgId)).toEqual(DeleteMessageStatus.SUCCESS);
+        });
+    });
+
+    describe("room info", () => {
+        describe(Browser.prototype.listUsers.name, () => {
+            it('should correctly list users in the room', async () => {
+                expect.assertions(4);
+
+                const { default: Browser } = await import("../../src/Browser");
+
+                const client = new Client("stackoverflow.com");
+                const browser = new Browser(client);
+
+                const users = await browser.listUsers(42);
+                expect(users.length).toEqual(7);
+
+                const [user] = users;
+
+                expect(user.id).toEqual(11407695);
+                expect(await user.isModerator).toBe(false);
+                expect(await user.about).not.toBe(undefined);
+            });
         });
     });
 });
