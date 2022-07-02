@@ -51,6 +51,27 @@ describe("Client", () => {
             expect(rooms.get(room1Id)?.id).toEqual(room1Id);
             expect(rooms.get(room2Id)?.id).toEqual(room2Id);
         });
+
+        test(Client.prototype.listUsers.name, async () => {
+            expect.assertions(2);
+
+            jest.doMock("../../src/Browser", () => {
+                const real = jest.requireActual<typeof import("../../src/Browser")>("../../src/Browser");
+                real.default.prototype.listUsers = async (_room) => {
+                    return [new User(new Client("stackexchange.com"), 42)];
+                };
+                return real;
+            });
+
+            const { default: Client } = await import("../../src/Client");
+
+            const client = new Client("stackexchange.com");
+
+            const users = await client.listUsers(42);
+
+            expect(users.length).toEqual(1);
+            expect(users[0].id).toEqual(42);
+        });
     });
 
     describe("Login", () => {
