@@ -167,6 +167,14 @@ export class Client {
     }
 
     /**
+     * @summary lists users in a given {@link room}
+     * @param room room or room ID to list current users from
+     */
+    public async listUsers(room: number | Room): Promise<User[]> {
+        return this.#browser.listUsers(room);
+    }
+
+    /**
      * Attempts to login to the stackexchange network
      * with the provided username and password
      *

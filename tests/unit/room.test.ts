@@ -353,6 +353,24 @@ describe("Room", () => {
         });
     });
 
+    describe(Room.prototype.listUsers.name, () => {
+        test("should correctly list users", async () => {
+            expect.assertions(2);
+
+            class MockClient extends Client {
+                async listUsers(): Promise<User[]> {
+                    return [new User(this, 42)];
+                }
+            }
+
+            const room = new Room(new MockClient("stackexchange.com"), 42);
+
+            const users = await room.listUsers();
+            expect(users.length).toEqual(1);
+            expect(users[0].id).toEqual(42);
+        });
+    });
+
     it("Should attempt to watch the room, and attach websockets", async () => {
         expect.assertions(2);
 

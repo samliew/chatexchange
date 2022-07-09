@@ -274,6 +274,43 @@ export class Browser {
     }
 
     /**
+     * @summary lists users in a given room
+     * @param room The room or room ID
+     */
+    public async listUsers(room: number | Room): Promise<User[]> {
+        const { root } = this;
+
+        const roomid = typeof room === "number" ? room : room.id;
+
+        const $ = await this.#get$(`${root}rooms/info/${roomid}`, {
+            id: roomid,
+            tag: "general",
+            users: "current",
+        });
+
+        const client = this.#client;
+
+        const users: User[] = [];
+
+        $("#room-usercards .usercard").each((_, card) => {
+            const userName = $(card).find(".user-header")?.attr("title") || "";
+            const name = userName.replace(/\s\u2666$/, '');
+
+            const userLink = $(card).find(`.user-header a[href*="/users/"]`)?.attr("href") || "";
+            const [, userId] = /(\d+)/.exec(userLink) || [];
+            if (Number.isNaN(+userId)) return;
+
+            const about = $(card).find(".user-message-info")?.attr("title") || "";
+
+            const isModerator = !!$(card).find(".user-header .moderator").length;
+
+            users.push(new User(client, +userId, { about, isModerator, name, }));
+        });
+
+        return users;
+    }
+
+    /**
      * @summary Watch a room, and returns the websocket
      * @param room The room or room ID to join
      * @returns {Promise<WebSocket>} The websocket of this room
