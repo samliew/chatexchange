@@ -69,3 +69,9 @@ const main = async () => {
 
 main();
 ```
+
+## Implementations
+
+Featured projects using ChatExchange:
+
+- [se-electionbot](https://github.com/samliew/se-electionbot)
