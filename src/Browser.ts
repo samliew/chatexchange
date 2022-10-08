@@ -150,7 +150,7 @@ export class Browser {
     ): Promise<void> {
         this.#cookieJar = CookieJar.deserializeSync(cookie);
 
-        const $ = await this.#get$(`https://${this.#client.host}/`);
+        const [, $] = await this.#get$(`https://${this.#client.host}/`);
 
         const res = $("input[name=fkey]:not([value=''])");
 
@@ -282,7 +282,7 @@ export class Browser {
 
         const roomid = typeof room === "number" ? room : room.id;
 
-        const $ = await this.#get$(`${root}rooms/info/${roomid}`, {
+        const [, $] = await this.#get$(`${root}rooms/info/${roomid}`, {
             id: roomid,
             tag: "general",
             users: "current",
@@ -358,7 +358,7 @@ export class Browser {
     public async getProfile(user: number | User): Promise<IProfileData> {
         const userId = typeof user === "number" ? user : user.id;
 
-        const $ = await this.#get$(`users/${userId}`);
+        const [, $] = await this.#get$(`users/${userId}`);
 
         const name = $("h1").text();
         const isModerator = $(".user-status").first().text().includes("♦");
@@ -433,7 +433,7 @@ export class Browser {
             throw new ChatExchangeError("cannot get a transcript of an invalid message");
         }
 
-        const $ = await this.#get$(`transcript/message/${msgId}`);
+        const [, $] = await this.#get$(`transcript/message/${msgId}`);
 
         const $msg = $(".message.highlight");
         const $room = $(".room-name a");
@@ -561,7 +561,7 @@ export class Browser {
      * @returns {Promise<void>}
      */
     async #updateChatFKeyAndUser(): Promise<void> {
-        const $ = await this.#get$("chats/join/favorite");
+        const [, $] = await this.#get$("chats/join/favorite");
         this.#loadFKey($);
         this.#loadUser($);
     }
@@ -626,13 +626,12 @@ export class Browser {
      * @private
      *
      * @summary cheeiro parsed data request helper
-     * @param {string} uri request URI
-     * @param {object} [qs] query string data
-     * @returns {Promise<import("cheerio").Root>}
+     * @param uri request URI
+     * @param [qs] query string data
      */
-    async #get$(uri: string, qs = {}) {
+    async #get$(uri: string, qs = {}): Promise<[code: number, page: cheerio.Root]> {
         const res = await this.#request<string>("get", uri, {}, qs);
-        return cheerio.load(res.body);
+        return [res.statusCode, cheerio.load(res.body)];
     }
 
     /**
@@ -701,7 +700,7 @@ export class Browser {
 
         const url = `https://${loginHost}/${path.replace(/^\//, "")}`;
 
-        const $ = await this.#get$(url);
+        const [, $] = await this.#get$(url);
 
         const fkeySelector = 'input[name="fkey"]';
         const fkeyElem = $(fkeySelector);
