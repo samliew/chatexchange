@@ -53,6 +53,19 @@ export enum DeleteMessageStatus {
     UNKNOWN = 4
 }
 
+interface RequestOptions {
+    /** request method (i.e. "get") */
+    method?: Method,
+    /** request body */
+    data?: Record<string, unknown>,
+    /** HTTP error status codes (>= 400) to not throw on */
+    mutedStatusCodes?: number[];
+    /** query string parameters */
+    params?: Record<string, string | number | boolean>,
+    /** Content-Type header config (JSON or plain text) */
+    type?: ContentType,
+}
+
 /**
  * Used internally by {@link Client} to provide the low-level
  * interaction with SE servers.
@@ -182,7 +195,7 @@ export class Browser {
 
         const fkey = await this.#scrapeFkey("users/login");
 
-        await this.#post(loginUrl, { email, fkey, password }, "text");
+        await this.#post(loginUrl, { data: { email, fkey, password }, type: "text" });
 
         const acctCookie = await this.#getCookie("acct");
 
@@ -210,7 +223,7 @@ export class Browser {
 
         const fkey = await this.#scrapeFkey("users/logout");
 
-        const res = await this.#post(logoutUrl, { fkey }, "text");
+        const res = await this.#post(logoutUrl, { data: { fkey }, type: "text" });
 
         return (this.loggedIn = res.statusCode === 200);
     }
@@ -227,9 +240,11 @@ export class Browser {
         const { body, statusCode } = await this.#postKeyed<ChatEventsResponse>(
             `chats/${id}/events`,
             {
-                mode: "Messages",
-                msgCount: 100,
-                since: 0,
+                data: {
+                    mode: "Messages",
+                    msgCount: 100,
+                    since: 0,
+                }
             }
         );
 
@@ -249,7 +264,7 @@ export class Browser {
 
         const { statusCode } = await this.#postKeyed<ChatEventsResponse>(
             `chats/leave/${id}`,
-            { quiet: true }
+            { data: { quiet: true } }
         );
 
         const isSuccess = statusCode === 200;
@@ -265,7 +280,7 @@ export class Browser {
     public async leaveAllRooms(): Promise<boolean> {
         const { statusCode } = await this.#postKeyed<ChatEventsResponse>(
             `chats/leave/all`,
-            { quiet: true }
+            { data: { quiet: true } }
         );
 
         const isSuccess = statusCode === 200;
@@ -283,9 +298,11 @@ export class Browser {
         const roomid = typeof room === "number" ? room : room.id;
 
         const [, $] = await this.#get$(`${root}rooms/info/${roomid}`, {
-            id: roomid,
-            tag: "general",
-            users: "current",
+            params: {
+                id: roomid,
+                tag: "general",
+                users: "current",
+            }
         });
 
         const client = this.#client;
@@ -321,9 +338,10 @@ export class Browser {
 
         const roomid = typeof room === "number" ? room : room.id;
 
-        const { body } = await this.#postKeyed<{ url: string; }>("ws-auth", {
-            roomid,
-        });
+        const { body } = await this.#postKeyed<{ url: string; }>(
+            "ws-auth",
+            { data: { roomid, } }
+        );
 
         const l = this.#times.get(roomid);
         if (!l) {
@@ -481,7 +499,7 @@ export class Browser {
 
         const { body } = await this.#postKeyed<string>(
             `https://chat.${host}/messages/${messageId}/delete`,
-            {}, {}, false
+            { type: "text" }
         );
 
         const statusMap: Record<string, DeleteMessageStatus> = {
@@ -505,7 +523,7 @@ export class Browser {
     public async sendMessage(roomId: number, text: string): Promise<Message> {
         const { body } = await this.#postKeyed<{ id: number; }>(
             `chats/${roomId}/messages/new`,
-            { text }
+            { data: { text } }
         );
 
         return new Message(this.#client, body.id, { roomId });
@@ -582,24 +600,25 @@ export class Browser {
      * @private
      *
      * @summary abstract request helper
-     * @param {Method} method request method (i.e. "GET")
-     * @param {string} url request URL
-     * @param {Record<string, unknown>} form form data
-     * @param {object} searchParams query string data
-     * @param {ContentType} [type] parse response as json?
-     * @returns {Promise<Response<any>>}
+     * @param url request URL
+     * @param config request configuration
      */
     async #request<T>(
-        method: Method,
         url: string,
-        form: Record<string, unknown>,
-        searchParams: Record<string, string | number | boolean>,
-        type?: ContentType
+        config: RequestOptions,
     ) {
+        const {
+            data,
+            method = "GET",
+            mutedStatusCodes: muteErrors = [],
+            params,
+            type
+        } = config;
+
         const options: OptionsOfJSONResponseBody = {
             cookieJar: this.#cookieJar,
             method,
-            searchParams,
+            searchParams: params,
         };
 
         if (type === "json") {
@@ -608,12 +627,14 @@ export class Browser {
 
         //ensures empty body is not added on GET requests
         if (method.toUpperCase() !== "GET") {
-            options.form = form;
+            options.form = data;
         }
 
         const res = await got<T>(this.#forceAbsoluteURL(url), options);
 
-        if (res.statusCode >= 400) {
+        const { statusCode } = res;
+
+        if (statusCode >= 400 && !muteErrors.includes(statusCode)) {
             throw new ChatExchangeError(
                 `Remote server threw ${res.statusCode} error\nURL: ${url}`
             );
@@ -627,10 +648,10 @@ export class Browser {
      *
      * @summary cheeiro parsed data request helper
      * @param uri request URI
-     * @param [qs] query string data
+     * @param config request configuration
      */
-    async #get$(uri: string, qs = {}): Promise<[code: number, page: cheerio.Root]> {
-        const res = await this.#request<string>("get", uri, {}, qs);
+    async #get$(uri: string, config: Omit<RequestOptions, "method"> = {}): Promise<[code: number, page: cheerio.Root]> {
+        const res = await this.#request<string>(uri, config);
         return [res.statusCode, cheerio.load(res.body)];
     }
 
@@ -638,37 +659,36 @@ export class Browser {
      * @private
      *
      * @summary POST request helper
-     * @param {string} uri request URI
-     * @param {object} data request data
-     * @param {ContentType} type response parse type
-     * @param {object} [qs] query string data
-     * @returns {Promise<Response<any>>}
+     * @param uri request URI
+     * @param config request configuration
      */
     #post<T>(
         uri: string,
-        data: Record<string, unknown>,
-        type: ContentType,
-        qs = {}
+        config: Omit<RequestOptions, "method">,
     ) {
-        return this.#request<T>("post", uri, data, qs, type);
+        return this.#request<T>(uri, { method: "post", ...config });
     }
 
     /**
      * @private
      *
      * @summary POST request helper with fkey parameter set
-     * @param {string} uri request URI
-     * @param {object} [data] request data
-     * @param {object} [qs] query string data
-     * @param {boolean} [json] whether to parse response data as JSON
-     * @returns {Promise<Response<any>>}
+     * @param uri request URI
+     * @param confg request configuration
      */
-    async #postKeyed<T>(uri: string, data: object = {}, qs: object = {}, json = true) {
+    async #postKeyed<T>(
+        uri: string,
+        config: Omit<RequestOptions, "method">,
+    ) {
         return this.#post<T>(
             uri,
-            { ...data, fkey: await this.chatFKey },
-            json ? "json" : "text",
-            qs
+            {
+                ...config,
+                data: {
+                    ...config.data,
+                    fkey: await this.chatFKey
+                },
+            }
         );
     }
 
