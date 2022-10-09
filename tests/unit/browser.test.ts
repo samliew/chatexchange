@@ -173,8 +173,8 @@ describe("Browser", () => {
     describe("profile scraping", () => {
         beforeEach(() => jest.resetModules());
 
-        it("getProfile", async () => {
-            expect.assertions(8);
+        it(Browser.prototype.getProfile.name, async () => {
+            expect.assertions(9);
 
             const mockGot = jest.fn();
             jest.doMock("got", () => {
@@ -182,6 +182,9 @@ describe("Browser", () => {
             });
 
             const { default: Browser } = await import("../../src/Browser");
+            const { ScrapingError } = await import(
+                "../../src/Exceptions/ScrapingError"
+            );
 
             const client = new Client("meta.stackexchange.com");
             const browser = new Browser(client);
@@ -229,6 +232,13 @@ describe("Browser", () => {
             const empty = await browser.getProfile(-1);
             expect(empty.reputation).toEqual(1);
             expect(empty.parentId).toBeUndefined();
+
+            mockGot.mockReturnValueOnce({
+                statusCode: 404,
+                body: "not found",
+            });
+
+            await expect(browser.getProfile(0)).rejects.toBeInstanceOf(ScrapingError);
         });
     });
 

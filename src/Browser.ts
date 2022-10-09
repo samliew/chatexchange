@@ -376,7 +376,11 @@ export class Browser {
     public async getProfile(user: number | User): Promise<IProfileData> {
         const userId = typeof user === "number" ? user : user.id;
 
-        const [, $] = await this.#get$(`users/${userId}`);
+        const [code, $] = await this.#get$(`users/${userId}`, { mutedStatusCodes: [404] });
+
+        if (code === 404) {
+            throw new ScrapingError(`failed to get user #${userId}`, $.html());
+        }
 
         const name = $("h1").text();
         const isModerator = $(".user-status").first().text().includes("♦");
@@ -451,7 +455,11 @@ export class Browser {
             throw new ChatExchangeError("cannot get a transcript of an invalid message");
         }
 
-        const [, $] = await this.#get$(`transcript/message/${msgId}`);
+        const [code, $] = await this.#get$(`transcript/message/${msgId}`, { mutedStatusCodes: [404] });
+
+        if (code === 404) {
+            throw new ScrapingError(`failed to get message #${msgId}`, $.html());
+        }
 
         const $msg = $(".message.highlight");
         const $room = $(".room-name a");
