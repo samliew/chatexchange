@@ -302,12 +302,12 @@ export class Browser {
         const name = $("h1").text();
         const isModerator = $(".user-status").first().text().includes("♦");
 
-        const roomCount = parseInt($(".user-room-count-xxl").text(), 10);
-        const messageCount = parseInt($(".user-message-count-xxl").text(), 10);
+        const roomCount = Number($(".user-room-count-xxl").text());
+        const messageCount = Number($(".user-message-count-xxl").text());
 
         const repElems = $(".reputation-score");
 
-        const reputation = parseInt(repElems.attr("title") || "1", 10) || 1;
+        const reputation = Number(repElems.attr("title") || "1") || 1;
 
         // Filter out only text (Ignore HTML entirely)
         const statsElements: string[] = $(".user-keycell,.user-valuecell")
@@ -354,15 +354,16 @@ export class Browser {
         const $msg = $(".message.highlight");
         const $room = $(".room-name a");
 
-        const $userDiv = $msg.parent().prev(".signature").find(".username a");
+        const $userDiv = $msg.parent().prev(".signature").find(".username a"); // Possible for $userDiv element to be missing for some reason
+        const $monologue = $msg.closest('.monologue'); // Fallback to the monologue element
 
-        const userId = parseInt($userDiv.attr("href")!.split("/")[2], 10);
+        const userId = Number($userDiv?.attr("href")?.split("/")[2] ?? $monologue?.attr('class')?.match(/\d+$/)?.pop());
         const userName = $userDiv.text();
 
         const user = this.#client.getUser(userId, { name: userName });
 
         const roomName = $room.text();
-        const roomId = parseInt($room.attr("href")!.split("/")[2], 10); // eslint-disable-line prefer-destructuring
+        const roomId = Number($room.attr("href")!.split("/")[2]); // eslint-disable-line prefer-destructuring
 
         const edited = $msg.find(".edits").length > 0;
         const content = $msg.find(".content").text().trim();
@@ -371,10 +372,7 @@ export class Browser {
 
         let parentMessageId;
         if (replyInfo.length > 0) {
-            parentMessageId = parseInt(
-                replyInfo.attr("href")!.split("#")[1],
-                10
-            );
+            parentMessageId = Number(replyInfo.attr("href")!.split("#")[1]);
         }
 
         return {
@@ -440,7 +438,7 @@ export class Browser {
         const userLink = $(".topbar-menu-links a");
 
         const [, , userId, userName] = userLink.attr("href")?.split("/") || [];
-        const id = parseInt(userId, 10);
+        const id = Number(userId);
 
         this.#userId = id;
         this.#userName = userName;
