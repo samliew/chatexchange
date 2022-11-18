@@ -1,9 +1,9 @@
 import * as cheerio from "cheerio";
-import got, { Method, OptionsOfJSONResponseBody, type Response } from "got";
+import got, { Method, OptionsOfJSONResponseBody } from "got";
 import { Cookie, CookieJar } from "tough-cookie";
 import { URL } from "url";
 import WebSocket from "ws";
-import Client, { Host, isAllowedHost } from "./Client";
+import Client, { isAllowedHost, type Host } from "./Client";
 import ChatExchangeError from "./Exceptions/ChatExchangeError";
 import LoginError from "./Exceptions/LoginError";
 import ScrapingError from "./Exceptions/ScrapingError";
@@ -11,7 +11,7 @@ import Message from "./Message";
 import type Room from "./Room.js";
 import User from "./User";
 import { arrayToKvp, lazy, parseAgoString } from "./utils";
-import { ChatEventsResponse } from "./WebsocketEvent";
+import type { ChatEventsResponse } from "./WebsocketEvent";
 
 got.extend({
     followRedirect: false,
@@ -42,6 +42,14 @@ export interface ITranscriptData {
     roomName: string;
     edited: boolean;
     parentMessageId?: number;
+}
+
+export interface IRoomSave {
+    defaultAccess?: "read-only" | "read-write",
+    description: string;
+    host: Host;
+    name: string;
+    tags?: string[];
 }
 
 type ContentType = "json" | "text";
@@ -226,6 +234,67 @@ export class Browser {
         const res = await this.#post(logoutUrl, { data: { fkey }, type: "text" });
 
         return (this.loggedIn = res.statusCode === 200);
+    }
+
+    /**
+     * @summary attempts to create a {@link Room}
+     * @param config room configuration options
+     */
+    public async createRoom(config: IRoomSave): Promise<number> {
+        const { tags = [], defaultAccess = "read-write" } = config;
+
+        const res = await this.#postKeyed("rooms/save", {
+            data: { 
+                ...config,
+                host: `chat.${config.host}`,
+                defaultAccess,
+                noDupeCheck: true,
+                tags: tags.join(" "),
+            },
+        });
+
+        // this is not a mistake
+        if(res.statusCode !== 302 || !res.headers.location) {
+            throw new ChatExchangeError("failed to create a room");
+        }
+
+        const [, roomId] = res.headers.location.match(/rooms\/info\/(\d+)/) || [];
+
+        const numericRoomId = +roomId;
+        if(!numericRoomId) {
+            throw new ChatExchangeError("failed to get created room id");
+        }
+
+        return numericRoomId;
+    }
+
+    /**
+     * @summary attempts to update a {@link Room}
+     * @param roomId id of the room to update
+     * @param config room configuration options
+     */
+    public async updateRoom(
+        roomId: number,
+        config: IRoomSave,
+    ): Promise<number> {
+        const { tags = [], defaultAccess = "read-write" } = config;
+
+        const res = await this.#postKeyed("rooms/save", {
+            data: {
+                ...config,
+                host: `chat.${config.host}`,
+                defaultAccess,
+                noDupeCheck: true,
+                tags: tags.join(" "),
+            },
+        });
+
+        // this is not a mistake
+        if(res.statusCode !== 302 || !res.headers.location) {
+            throw new ChatExchangeError("failed to update a room");
+        }
+
+        return roomId;
     }
 
     /**
