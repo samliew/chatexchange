@@ -82,6 +82,13 @@ export class Client {
     }
 
     /**
+     * @summary gets user login status
+     */
+    public get loggedIn(): boolean {
+        return this.#browser.loggedIn;
+    }
+
+    /**
      * Fetches the current logged-in user's profile
      *
      * @returns {Promise<User>} The user object
@@ -89,13 +96,11 @@ export class Client {
      * @memberof Client#
      */
     public async getMe(): Promise<User> {
-        const browser = this.#browser;
-
-        if (!browser.loggedIn) {
+        if (!this.loggedIn) {
             throw new ChatExchangeError("Cannot get user, not logged in.");
         }
 
-        return new User(this, await browser.userId);
+        return new User(this, await this.#browser.userId);
     }
 
     public getMessage(id: number): Message {
