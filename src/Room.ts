@@ -1,7 +1,7 @@
 import { EventEmitter } from "events";
-import WebSocket from "ws";
-import { DeleteMessageStatus } from "./Browser.js";
-import Client from "./Client";
+import type WebSocket from "ws";
+import { DeleteMessageStatus, type IRoomSave } from "./Browser.js";
+import type Client from "./Client";
 import InvalidArgumentError from "./Exceptions/InvalidArgumentError";
 import Message from "./Message";
 import User from "./User";
@@ -42,6 +42,20 @@ class Room extends EventEmitter {
         const { host } = this.#client;
         const { id } = this;
         return `https://chat.${host}/transcript/${id}`;
+    }
+
+    /**
+     * @summary attempts to update the room
+     * @param config {@link Room} configuration options
+     */
+    public async update(config: Omit<IRoomSave, "host">): Promise<boolean> {
+        try {
+            await this.#client.updateRoom(this, config);
+            return true;
+        } catch (error) {
+            console.error(error);
+            return false;
+        }
     }
 
     /**
@@ -131,11 +145,11 @@ class Room extends EventEmitter {
     public only(...eventType: ChatEventType[]): void {
         const allow = new Set(eventType);
 
-        const ignore = Object
-            .values(ChatEventType)
-            .filter((v) => !allow.has(v as ChatEventType));
+        const ignore = Object.values(ChatEventType).filter(
+            (v) => !allow.has(v as ChatEventType)
+        );
 
-        return this.ignore(...ignore as ChatEventType[]);
+        return this.ignore(...(ignore as ChatEventType[]));
     }
 
     /**
@@ -175,7 +189,9 @@ class Room extends EventEmitter {
      * @summary deletes a given message
      * @param message {@link Message} or ID to delete
      */
-    public async delete(message: number | Message): Promise<DeleteMessageStatus> {
+    public async delete(
+        message: number | Message
+    ): Promise<DeleteMessageStatus> {
         return this.#client.delete(message);
     }
 
