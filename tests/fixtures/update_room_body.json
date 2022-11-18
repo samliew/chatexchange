@@ -1,0 +1,5 @@
+{
+  "defaultAccess": "read-write",
+  "description": "Testing ChatExchange functionality",
+  "name": "CE test room"
+}
