@@ -1,11 +1,17 @@
 import { Cookie, CookieJar } from "tough-cookie";
 import type { URL } from "url";
-import { Browser, DeleteMessageStatus } from "../../src/Browser";
-import Client, { Host } from "../../src/Client";
+import {
+    Browser,
+    DeleteMessageStatus,
+    type IRoomSave,
+} from "../../src/Browser";
+import Client, { type Host } from "../../src/Client";
 import { ChatExchangeError } from "../../src/Exceptions/ChatExchangeError";
 import LoginError from "../../src/Exceptions/LoginError";
 import Message from "../../src/Message";
 import User from "../../src/User";
+import createRoomBody from "../fixtures/create_room_body.json";
+import updateRoomBody from "../fixtures/update_room_body.json";
 
 function mockGot() {
     const fn = jest.fn(async (url: string) => {
@@ -30,11 +36,17 @@ function mockGot() {
                     encoding: "utf-8",
                 }),
             }),
+            "https://chat\\..+\\.com/rooms/save": async () => ({
+                statusCode: 302,
+                headers: {
+                    location: "/rooms/info/42/test-public-room-ce?tab=general",
+                },
+            }),
             "https://chat\\..+\\.com/rooms/info/\\d+": async () => ({
                 ...common,
                 body: await fs.readFile("./tests/mocks/room_info.html", {
-                    encoding: "utf-8"
-                })
+                    encoding: "utf-8",
+                }),
             }),
             "https://stackoverflow\\.com/": async () => ({
                 ...common,
@@ -43,7 +55,7 @@ function mockGot() {
             "https://stackexchange\\.com/": async () => common,
             "https://chat\\..+\\.com/messages/\\d+/delete": async () => ({
                 ...common,
-                body: "ok"
+                body: "ok",
             }),
             "https://chat\\..+\\.com/chats/\\d+/events": () =>
                 Promise.resolve({
@@ -70,9 +82,9 @@ function mockGot() {
 jest.mock("got", mockGot);
 
 describe("Browser", () => {
-    describe("authentication", () => {
-        beforeEach(() => jest.resetModules());
+    beforeEach(() => jest.resetModules());
 
+    describe("authentication", () => {
         it("should override 'stackexchange.com' host to 'meta.stackexchange.com'", async () => {
             expect.assertions(1);
 
@@ -171,8 +183,6 @@ describe("Browser", () => {
     });
 
     describe("profile scraping", () => {
-        beforeEach(() => jest.resetModules());
-
         it(Browser.prototype.getProfile.name, async () => {
             expect.assertions(9);
 
@@ -212,8 +222,14 @@ describe("Browser", () => {
                 body: mockProfile,
             });
 
-            const { reputation, lastMessage, lastSeen, parentId, parentHost, parentSite } =
-                await browser.getProfile(-1);
+            const {
+                reputation,
+                lastMessage,
+                lastSeen,
+                parentId,
+                parentHost,
+                parentSite,
+            } = await browser.getProfile(-1);
 
             expect(reputation).toEqual(mockRep);
             expect(lastMessage).toEqual(0);
@@ -238,13 +254,13 @@ describe("Browser", () => {
                 body: "not found",
             });
 
-            await expect(browser.getProfile(0)).rejects.toBeInstanceOf(ScrapingError);
+            await expect(browser.getProfile(0)).rejects.toBeInstanceOf(
+                ScrapingError
+            );
         });
     });
 
     describe("getters", () => {
-        beforeEach(() => jest.resetModules());
-
         it("should throw a ScrapingError on missing fkey from transcript", async () => {
             expect.assertions(1);
 
@@ -280,52 +296,113 @@ describe("Browser", () => {
     describe("room interaction", () => {
         const roomId = 29;
 
-        it("should attempt to join the room", async () => {
-            expect.assertions(2);
+        describe(Browser.prototype.createRoom.name, () => {
+            it("should attempt to create a room", async () => {
+                expect.assertions(1);
 
-            const host: Host = "stackexchange.com";
-            const client = new Client(host);
-            const browser = new Browser(client);
+                const host: Host = "stackexchange.com";
+                const client = new Client(host);
+                const browser = new Browser(client);
 
-            const joinViaId = await browser.joinRoom(roomId);
-            expect(joinViaId).toEqual(true);
+                const roomId = await browser.createRoom(
+                    createRoomBody as IRoomSave
+                );
 
-            const room = client.getRoom(roomId);
+                expect(roomId).toEqual(42);
+            });
 
-            const joinViaRoom = await browser.joinRoom(room);
-            expect(joinViaRoom).toEqual(true);
+            it("should throw a ChatExchangeError on room creation failure", async () => {
+                const mockGot = jest.fn();
+                jest.doMock("got", () => {
+                    return Object.assign(mockGot, { extend: mockGot });
+                });
+    
+                const { default: Browser } = await import("../../src/Browser");
+                const { ChatExchangeError } = await import(
+                    "../../src/Exceptions/ChatExchangeError"
+                );
+    
+                mockGot.mockReturnValueOnce({
+                    statusCode: 400,
+                    body: "Bad request",
+                });
+    
+                const client = new Client("stackexchange.com");
+                const browser = new Browser(client);
+    
+                await expect(
+                    browser.createRoom(createRoomBody as IRoomSave)
+                ).rejects.toThrowError(ChatExchangeError);
+            });
         });
 
-        it("should attempt to leave the room", async () => {
-            expect.assertions(2);
+        describe(Browser.prototype.updateRoom.name, () => {
+            it("should attempt to update a room", async () => {
+                expect.assertions(1);
 
-            const client = new Client("meta.stackexchange.com");
-            const browser = new Browser(client);
+                const host: Host = "stackexchange.com";
+                const client = new Client(host);
+                const browser = new Browser(client);
 
-            const leaveViaId = await browser.leaveRoom(roomId);
-            expect(leaveViaId).toEqual(true);
+                const roomId = await browser.updateRoom(
+                    42,
+                    updateRoomBody as IRoomSave
+                );
 
-            const room = client.getRoom(roomId);
-
-            const leaveViaRoom = await browser.leaveRoom(room);
-            expect(leaveViaRoom).toEqual(true);
+                expect(roomId).toEqual(42);
+            });
         });
 
-        it("should attempt to leave all rooms", async () => {
-            expect.assertions(1);
+        describe(Browser.prototype.joinRoom.name, () => {
+            it("should attempt to join the room", async () => {
+                expect.assertions(2);
 
-            const client = new Client("stackoverflow.com");
-            const browser = new Browser(client);
+                const host: Host = "stackexchange.com";
+                const client = new Client(host);
+                const browser = new Browser(client);
 
-            const status = await browser.leaveAllRooms();
-            expect(status).toEqual(true);
+                const joinViaId = await browser.joinRoom(roomId);
+                expect(joinViaId).toEqual(true);
+
+                const room = client.getRoom(roomId);
+
+                const joinViaRoom = await browser.joinRoom(room);
+                expect(joinViaRoom).toEqual(true);
+            });
+        });
+
+        describe(Browser.prototype.leaveRoom.name, () => {
+            it("should attempt to leave the room", async () => {
+                expect.assertions(2);
+
+                const client = new Client("meta.stackexchange.com");
+                const browser = new Browser(client);
+
+                const leaveViaId = await browser.leaveRoom(roomId);
+                expect(leaveViaId).toEqual(true);
+
+                const room = client.getRoom(roomId);
+
+                const leaveViaRoom = await browser.leaveRoom(room);
+                expect(leaveViaRoom).toEqual(true);
+            });
+        });
+
+        describe(Browser.prototype.leaveAllRooms.name, () => {
+            it("should attempt to leave all rooms", async () => {
+                expect.assertions(1);
+
+                const client = new Client("stackoverflow.com");
+                const browser = new Browser(client);
+
+                const status = await browser.leaveAllRooms();
+                expect(status).toEqual(true);
+            });
         });
     });
 
     describe("watching", () => {
-        describe("watchRoom", () => {
-            beforeEach(() => jest.resetModules());
-
+        describe(Browser.prototype.watchRoom.name, () => {
             it("should throw on missing time key", async () => {
                 expect.assertions(1);
 
@@ -372,52 +449,55 @@ describe("Browser", () => {
     });
 
     describe("messaging", () => {
-        it("should attempt to send a message", async () => {
-            expect.assertions(3);
+        describe(Browser.prototype.sendMessage.name, () => {
+            it("should attempt to send a message", async () => {
+                expect.assertions(3);
 
-            const roomId = 29;
-            const text = "It's alive!";
+                const roomId = 29;
+                const text = "It's alive!";
 
-            class MockedBrowser extends Browser {
-                getTranscript() {
-                    return Promise.resolve({
-                        content: text,
-                        edited: false,
-                        id: 456,
-                        user: new User(client, 5),
-                        parentMessageId: 789,
-                        roomId,
-                        roomName: "Test",
-                    });
+                class MockedBrowser extends Browser {
+                    getTranscript() {
+                        return Promise.resolve({
+                            content: text,
+                            edited: false,
+                            id: 456,
+                            user: new User(client, 5),
+                            parentMessageId: 789,
+                            roomId,
+                            roomName: "Test",
+                        });
+                    }
                 }
-            }
 
-            const host: Host = "stackexchange.com";
-            const client = new Client(host);
-            const browser = new MockedBrowser(client);
+                const client = new Client("stackexchange.com");
+                const browser = new MockedBrowser(client);
 
-            const msg = await browser.sendMessage(roomId, text);
+                const msg = await browser.sendMessage(roomId, text);
 
-            expect(msg).toBeInstanceOf(Message);
-            expect(await msg.roomId).toEqual(roomId);
-            expect(await msg.content).toEqual(text);
+                expect(msg).toBeInstanceOf(Message);
+                expect(await msg.roomId).toEqual(roomId);
+                expect(await msg.content).toEqual(text);
+            });
         });
 
-        it("should attempt to delete a message", async () => {
-            expect.assertions(1);
+        describe(Browser.prototype.deleteMessage.name, () => {
+            it("should attempt to delete a message", async () => {
+                expect.assertions(1);
 
-            const client = new Client("meta.stackexchange.com");
-            const browser = new Browser(client);
+                const client = new Client("meta.stackexchange.com");
+                const browser = new Browser(client);
 
-            const msgId = 42;
-
-            expect(await browser.deleteMessage(msgId)).toEqual(DeleteMessageStatus.SUCCESS);
+                expect(await browser.deleteMessage(42)).toEqual(
+                    DeleteMessageStatus.SUCCESS
+                );
+            });
         });
     });
 
     describe("room info", () => {
         describe(Browser.prototype.listUsers.name, () => {
-            it('should correctly list users in the room', async () => {
+            it("should correctly list users in the room", async () => {
                 expect.assertions(4);
 
                 const { default: Browser } = await import("../../src/Browser");
