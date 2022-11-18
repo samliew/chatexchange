@@ -145,7 +145,7 @@ describe("Room", () => {
                     InvalidArgumentError
                 );
 
-                //@ts-expect-error
+                //@ts-ignore
                 expect(room.sendMessage()).rejects.toThrowError(
                     InvalidArgumentError
                 );
@@ -161,7 +161,7 @@ describe("Room", () => {
 
             const { WebSocket } = await import("ws");
 
-            //@ts-expect-error
+            //@ts-ignore
             const socket = new WebSocket(null);
 
             const mockWebsocketWatch = jest.fn(() => Promise.resolve(socket));
@@ -181,7 +181,7 @@ describe("Room", () => {
         it("Should correctly process message events", async () => {
             expect.assertions(2);
 
-            //@ts-expect-error
+            //@ts-ignore
             const socket = new WebSocket(null);
 
             mockBrowser({ watchRoom: () => Promise.resolve(socket) });
@@ -296,7 +296,7 @@ describe("Room", () => {
         it("should stop passing messages from blocked users", async () => {
             const events = { r42: { e: [{ user_id: 24 }, { user_id: 42 }] } };
 
-            // @ts-expect-error
+            // @ts-ignore
             const socket = new WebSocket(null);
 
             mockBrowser({ watchRoom: () => Promise.resolve(socket) });
@@ -369,7 +369,7 @@ describe("Room", () => {
                 },
             };
 
-            // @ts-expect-error
+            // @ts-ignore
             const socket = new WebSocket(null);
 
             mockBrowser({ watchRoom: () => Promise.resolve(socket) })
