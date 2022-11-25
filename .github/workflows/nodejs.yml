@@ -8,14 +8,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Using Node 14
-        uses: actions/setup-node@v1
+      - name: Using Node 16
+        uses: actions/setup-node@v2
         with:
-          node-version: 14
-      - name: Update npm version to latest
-        run: npm install -g npm@latest # stop showing warnings about the lockfile
+          node-version: 16
       - name: Install dependencies
-        run: npm install
+        run: npm ci
       - name: Run tests
         run: npm run test
       - name: "Run build"
