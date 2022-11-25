@@ -21,4 +21,3 @@ jobs:
           git add docs &&
           git commit -am "regenerated documentation at $( date -I'minutes' )"
           git push
-
