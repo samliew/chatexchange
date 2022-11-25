@@ -20,6 +20,8 @@ jobs:
         with:
           node-version: 16
           registry-url: "https://registry.npmjs.org"
+      - name: Update npm version
+        run: npm install -g npm@7.x # stop showing warnings about the lockfile
       - name: Install dependencies
         run: npm ci
       - name: Run tests
