@@ -13,7 +13,7 @@ jobs:
         with:
           node-version: 16
       - name: Update npm version to latest
-        run: npm ci -g npm@latest # stop showing warnings about the lockfile
+        run: npm install -g npm@latest # stop showing warnings about the lockfile
       - name: Install dependencies
         run: npm ci
       - name: Run tests
