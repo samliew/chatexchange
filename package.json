@@ -1,69 +1,69 @@
 {
-  "name": "chatexchange",
-  "version": "0.7.0",
-  "description": "A node.js wrapper for talking to Stack Exchange chat",
-  "license": "GPL-3.0-or-later",
-  "main": "dist/index.js",
-  "scripts": {
-    "docs": "rimraf docs && typedoc",
-    "start": "ts-node src/index.ts",
-    "build": "rimraf dist && tsc --declaration",
-    "prepare": "npm run build",
-    "preversion": "npm test",
-    "test": "jest --config='jest.config.json' --collectCoverage --collectCoverageFrom='src/**/*.ts' --coverageReporters='lcov' --silent=false",
-    "pretest-coveralls": "npm run build",
-    "test-coveralls": "jest --config='jest.config.json' --collectCoverage --collectCoverageFrom='src/**/*.ts' --coverageProvider='v8' --coverageReporters='text-lcov' | coveralls && tslint 'src/**/*.ts'"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/samliew/chatexchange.git"
-  },
-  "author": {
-    "name": "Daniel Beaupre",
-    "url": "https://github.com/danbopes"
-  },
-  "contributors": [
-    {
-      "name": "Oleg Valter",
-      "url": "https://github.com/Oaphi"
+    "name": "chatexchange",
+    "version": "0.7.1",
+    "description": "A node.js wrapper for talking to Stack Exchange chat",
+    "license": "GPL-3.0-or-later",
+    "main": "dist/index.js",
+    "scripts": {
+        "docs": "rimraf docs && typedoc",
+        "start": "ts-node src/index.ts",
+        "build": "rimraf dist && tsc --declaration",
+        "prepare": "npm run build",
+        "preversion": "npm test",
+        "test": "jest --config='jest.config.json' --collectCoverage --collectCoverageFrom='src/**/*.ts' --coverageReporters='lcov' --silent=false",
+        "pretest-coveralls": "npm run build",
+        "test-coveralls": "jest --config='jest.config.json' --collectCoverage --collectCoverageFrom='src/**/*.ts' --coverageProvider='v8' --coverageReporters='text-lcov' | coveralls && tslint 'src/**/*.ts'"
     },
-    {
-      "name": "Samuel Liew",
-      "url": "https://github.com/samliew"
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/samliew/chatexchange.git"
+    },
+    "author": {
+        "name": "Daniel Beaupre",
+        "url": "https://github.com/danbopes"
+    },
+    "contributors": [
+        {
+            "name": "Oleg Valter",
+            "url": "https://github.com/Oaphi"
+        },
+        {
+            "name": "Samuel Liew",
+            "url": "https://github.com/samliew"
+        }
+    ],
+    "bugs": {
+        "url": "https://github.com/samliew/chatexchange/issues"
+    },
+    "homepage": "https://github.com/samliew/chatexchange#readme",
+    "dependencies": {
+        "cheerio": "^1.0.0-rc.2",
+        "email-validator": "^2.0.4",
+        "got": "^11.8.2",
+        "tough-cookie": "^4.0.0",
+        "ws": "^8.2.3"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.14.5",
+        "@babel/core": "^7.1.2",
+        "@babel/node": "^7.0.0",
+        "@babel/preset-env": "^7.1.0",
+        "@babel/preset-flow": "^7.0.0",
+        "@types/cheerio": "^0.22.29",
+        "@types/jest": "^27.0.1",
+        "@types/request-promise-native": "^1.0.15",
+        "@types/ws": "^8.2.0",
+        "babel-core": "^7.0.0-bridge.0",
+        "babel-jest": "^27.0.2",
+        "coveralls": "^3.0.2",
+        "dotenv": "^10.0.0",
+        "jest": "^27.0.0",
+        "jsdoc": "^3.5.5",
+        "rimraf": "^2.6.2",
+        "ts-jest": "^27.0.3",
+        "tslint": "^6.1.3",
+        "typedoc": "^0.22.11",
+        "typedoc-plugin-rename-defaults": "^0.4.0",
+        "typescript": "^4.5.5"
     }
-  ],
-  "bugs": {
-    "url": "https://github.com/samliew/chatexchange/issues"
-  },
-  "homepage": "https://github.com/samliew/chatexchange#readme",
-  "dependencies": {
-    "cheerio": "^1.0.0-rc.2",
-    "email-validator": "^2.0.4",
-    "got": "^11.8.2",
-    "tough-cookie": "^4.0.0",
-    "ws": "^8.2.3"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.14.5",
-    "@babel/core": "^7.1.2",
-    "@babel/node": "^7.0.0",
-    "@babel/preset-env": "^7.1.0",
-    "@babel/preset-flow": "^7.0.0",
-    "@types/cheerio": "^0.22.29",
-    "@types/jest": "^27.0.1",
-    "@types/request-promise-native": "^1.0.15",
-    "@types/ws": "^8.2.0",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^27.0.2",
-    "coveralls": "^3.0.2",
-    "dotenv": "^10.0.0",
-    "jest": "^27.0.0",
-    "jsdoc": "^3.5.5",
-    "rimraf": "^2.6.2",
-    "ts-jest": "^27.0.3",
-    "tslint": "^6.1.3",
-    "typedoc": "^0.22.11",
-    "typedoc-plugin-rename-defaults": "^0.4.0",
-    "typescript": "^4.5.5"
-  }
 }
