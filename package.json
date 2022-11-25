@@ -1,6 +1,6 @@
 {
   "name": "chatexchange",
-  "version": "0.7",
+  "version": "0.7.0",
   "description": "A node.js wrapper for talking to Stack Exchange chat",
   "license": "GPL-3.0-or-later",
   "main": "dist/index.js",
