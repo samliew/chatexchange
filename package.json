@@ -4,6 +4,10 @@
     "description": "A node.js wrapper for talking to Stack Exchange chat",
     "license": "GPL-3.0-or-later",
     "main": "dist/index.js",
+    "engines": {
+        "npm": "7.x",
+        "node": "16.x"
+    },
     "scripts": {
         "docs": "rimraf docs && typedoc",
         "start": "ts-node src/index.ts",
