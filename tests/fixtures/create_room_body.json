@@ -1,0 +1,6 @@
+{
+  "defaultAccess": "read-only",
+  "description": "Test room for CE",
+  "name": "ChatExchange",
+  "tags": ["chat", "chatbot"]
+}

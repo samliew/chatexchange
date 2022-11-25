@@ -1,5 +1,5 @@
 import { validate } from "email-validator";
-import Browser, { DeleteMessageStatus, type IProfileData, type ITranscriptData } from "./Browser";
+import Browser, { DeleteMessageStatus, IRoomSave, type IProfileData, type ITranscriptData } from "./Browser";
 import ChatExchangeError from "./Exceptions/ChatExchangeError";
 import InvalidArgumentError from "./Exceptions/InvalidArgumentError";
 import Message from "./Message";
@@ -82,6 +82,13 @@ export class Client {
     }
 
     /**
+     * @summary gets user login status
+     */
+    public get loggedIn(): boolean {
+        return this.#browser.loggedIn;
+    }
+
+    /**
      * Fetches the current logged-in user's profile
      *
      * @returns {Promise<User>} The user object
@@ -89,13 +96,11 @@ export class Client {
      * @memberof Client#
      */
     public async getMe(): Promise<User> {
-        const browser = this.#browser;
-
-        if (!browser.loggedIn) {
+        if (!this.loggedIn) {
             throw new ChatExchangeError("Cannot get user, not logged in.");
         }
 
-        return new User(this, await browser.userId);
+        return new User(this, await this.#browser.userId);
     }
 
     public getMessage(id: number): Message {
@@ -119,6 +124,33 @@ export class Client {
     public getProfile(user: number | User): Promise<IProfileData> {
         const browser = this.#browser;
         return browser.getProfile(user);
+    }
+
+    /**
+     * @summary attempts to update a {@link Room}
+     * @param config {@link Room} configuration options
+     */
+    public async createRoom(config: Omit<IRoomSave, "host">): Promise<Room> {
+        const { host } = this;
+        const browser = this.#browser;
+        const roomId = await browser.createRoom({ ...config, host });
+        return new Room(this, roomId);
+    }
+    
+    /**
+     * @summary attempts to update a {@link Room}
+     * @param room {@link Room} or {@link Room.id} to update
+     * @param config {@link Room} configuration options
+     */
+    public async updateRoom(
+        room: number | Room,
+        config: Omit<IRoomSave, "host">,
+    ): Promise<Room> {
+        const { host } = this;
+        const roomId = typeof room === "number" ? room : room.id;
+        const broswer = this.#browser;
+        const newRoomId = await broswer.updateRoom(roomId, { ...config, host });
+        return new Room(this, newRoomId);
     }
 
     /**
