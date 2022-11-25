@@ -12,7 +12,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 16
-      - name: Update npm version to latest
+      - name: Update npm version
         run: npm install -g npm@7.x # stop showing warnings about the lockfile
       - name: Install dependencies
         run: npm ci
