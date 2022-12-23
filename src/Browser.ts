@@ -244,7 +244,7 @@ export class Browser {
         const { tags = [], defaultAccess = "read-write" } = config;
 
         const res = await this.#postKeyed("rooms/save", {
-            data: { 
+            data: {
                 ...config,
                 host: `chat.${config.host}`,
                 defaultAccess,
@@ -317,7 +317,10 @@ export class Browser {
             }
         );
 
-        const { time } = body;
+        // https://github.com/samliew/chatexchange/issues/207
+        const parsedBody = typeof body === "string" ? JSON.parse(body) : body;
+
+        const { time } = parsedBody;
         this.#times.set(id, time);
         return statusCode === 200;
     }
@@ -423,7 +426,15 @@ export class Browser {
             );
         }
 
-        const address = new URL(body.url);
+        // https://github.com/samliew/chatexchange/issues/207
+        const parsedBody = typeof body === "string" ? JSON.parse(body) : body;
+
+        const { url } = parsedBody;
+        if(!url) {
+            throw new ChatExchangeError(`missing URL in the ws-auth response:\n${body}`);
+        }
+
+        const address = new URL(url);
         address.searchParams.append("l", l.toString());
 
         const ws = new WebSocket(address, { origin: root });
